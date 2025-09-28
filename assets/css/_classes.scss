@@ -1,0 +1,553 @@
+@import "variables", "dir-mixins";
+
+@font-face {
+  font-family: 'main_font';
+  src: url('@/assets/webfonts/Cairo-VariableFont_wght.ttf');
+}
+
+::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 6px;
+  background-image: linear-gradient(to top, var(--main-bg), var(--main));
+}
+
+body {
+  background-color: #f1eff6;
+  font-family: 'main_font', sans-serif, 'Font Awesome 6 Free'; /* Use the custom font as the primary font */
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    transition: 0.3s;
+    @media (max-width: $screen-md) {
+      height: 1px;
+    }
+  }
+  /* Track */
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+  }
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background-image: linear-gradient(to top, var(--main-bg), var(--main));
+    border-radius: 3px;
+  }
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+}
+
+.hints {
+  .title {
+    font-size: 14px;
+    color: #000;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 170px;
+    direction: ltr;
+  }
+  .desc {
+    font-size: 12px;
+  }
+}
+
+.header {
+  background-color: #fff;
+  border-radius: 10px;
+  margin: 0 35px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  @media (max-width: $screen-xs) {
+    margin: 0;
+  }
+}
+
+.special-custom {
+  .p-dropdown-label, .p-multiselect-label {
+    padding: 10px;
+    text-align: start;
+  }
+}
+
+.navbar-btn {
+  background: #F6F6F6;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+// start to static header
+
+.main-disc {
+  font-size: 14px;
+  color: #878787;
+}
+
+.layout-activate {
+  justify-content: center;
+  margin: 25px 0 40px;
+  > div {
+      gap: 10px;
+      flex-wrap: wrap;
+  }
+}
+.otp-input {
+width: 50px;
+height: 40px;
+padding: 5px;
+font-size: 20px;
+border-radius: 6px;
+border: 1px solid #D9D9D9;
+text-align: center;
+margin: 0;
+@media (max-width: $screen-xs) {
+   width: 40px;
+   height: 40px;
+}
+&::placeholder {
+  font-size: 15px;
+  text-align: center;
+  font-weight: 600; 
+}
+
+&:focus-visible {
+  outline: 2px solid var(--main);
+}
+}
+
+.otpInput-container {
+  margin-bottom: 15px;
+
+  div:first-child {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+  }
+}
+
+.otp-input.is-complete {
+  border-color: var(--main);
+}
+
+.otp-input::-webkit-inner-spin-button,
+.otp-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.5s ease-in-out;
+}
+
+.fade-enter,
+.fade-leave-to {
+  transform: translateY(40px);
+  opacity: 0;
+}
+
+/********************* Prime Toast *********************/
+.p-toast {
+  max-width: calc(100% - 20px) !important;
+  @include dir-left(10px !important);
+  z-index: 2005 !important;
+  .p-toast-message {
+    margin-bottom: 8px;
+    border: 6px solid #1ea97c;
+    #{$ltr} & {
+      border-width: 0 0 0 6px !important;
+    }
+
+    #{$rtl} & {
+      border-width: 0 6px 0 0 !important;
+    }
+
+    .p-toast-message-content {
+      gap: 12px !important;
+      align-items: center !important;
+
+      @media screen and (max-width: $screen-xs) {
+        padding: 1rem 8px !important;
+      }
+
+      .p-toast-message-icon {
+        width: 20px !important;
+        height: 20px !important;
+
+        @media screen and (max-width: $screen-xs) {
+          width: 16px !important;
+          height: 16px !important;
+        }
+      }
+
+      .p-toast-message-text {
+        font-family: fontDemi;
+        margin: 0 !important;
+        font-size: 13px;
+
+        .p-toast-summary {
+          @media screen and (max-width: $screen-xs) {
+            font-size: 12px !important;
+          }
+        }
+
+        .p-toast-detail {
+          &:empty {
+            display: none;
+          }
+        }
+      }
+    }
+
+    &.p-toast-message-error {
+      background: #ffe7e6 !important;
+      border-color: #ff5757 !important;
+      color: #ff5757;
+    }
+  }
+}
+
+.spinner-border-sm {
+  margin-inline-start: 10px;
+}
+
+.dir-slider {
+  direction: ltr !important;
+}
+
+.login_logo {
+  max-width: 240px;
+
+  &.sm {
+    max-width: 170px;
+
+    @media screen and (max-width: $screen-xs) {
+      max-width: 140px;
+    }
+  }
+
+  &.res {
+    @media screen and (max-width: $screen-xs) {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0.1 !important;
+      z-index: -1;
+    }
+  }
+
+  &.position {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+  }
+}
+
+.p-dropdown-panel .p-dropdown-header .p-dropdown-filter {
+  height: 30px;
+  font-size: 13px;
+}
+
+.p-icon {
+  height: 12px;
+  }
+
+  .auth-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    min-height: calc(100vh - 40px);
+    align-items: center;
+    padding: 30px 0;
+
+    @media screen and (max-width: $screen-md) {
+      display: block;
+      padding: 0 15px;
+    }
+}
+
+.layout-enter-active,
+.layout-leave-active {
+  transition: all 0.4s;
+}
+.layout-enter-from,
+.layout-leave-to {
+  opacity: 0;
+  filter: blur(.5rem);
+}
+
+.AuthLang {
+  // width: 150px;
+  position: absolute;
+  @include dir-right(20px);
+  top: 50px;
+  z-index: 9999;
+  .drop-lang .hint-lang i, .drop-lang .hint-lang p, .drop-lang .dropdown-toggle::after {
+    color: rgba(226, 24, 118, 1);
+  }
+}
+
+
+.hint_success {
+  font-family: 'main_font';
+}
+
+// sidebar
+
+.sidebar {
+  width: 250px;
+  height: calc(100% - 30px);
+  background-color: #fff;
+  position: fixed;
+  top: 15px;
+  z-index: 1000;
+  padding: 25px 0 20px;
+  overflow: hidden;
+  transition: all 0.8s cubic-bezier(0.68, -0.3, 0.265, 1.3);
+  display: flex;
+  flex-direction: column;
+  @include dir-left(30px);
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 10%);
+  border-radius: 15px;
+  &.active {
+    #{$ltr} & {
+      transform: translateX(-100%);
+    }
+    #{$rtl} & {
+      transform: translateX(100%);
+    }
+    @media (max-width: $screen-xl) {
+      #{$ltr} & {
+        transform: none;
+      }
+      #{$rtl} & {
+        transform: none;
+      }
+    }
+    @include dir-left(0);
+    @media (max-width: $screen-xl) {
+      @include dir-left(15px);
+      
+    }
+  }
+
+  @media (max-width: $screen-xl) {
+    @include dir-left(0);
+    #{$ltr} & {
+      transform: translateX(-100%);
+    }
+    #{$rtl} & {
+      transform: translateX(100%);
+    }
+  }
+
+  @media (max-width: $screen-xs) {
+    width: 185px;
+  }
+
+  .sidebar-logo {
+    display: flex;
+    gap: 15px;
+    text-align: start;
+    margin-bottom: 15px;
+    padding: 25px 0;
+    @media (max-width: $screen-xs) {
+      padding: 20px 10px;
+    }
+    .logo {
+      width: 100%;
+      text-align: center;
+    }
+    p {
+      font-size: 15px;
+      @media (max-width: $screen-xs) {
+        font-size: 13px;
+      }
+    }
+    img {
+      max-width: 125px;
+      @media (max-width: $screen-xs) {
+        max-width: 100px;
+      }
+    }
+  }
+
+  .links {
+    flex-grow: 1;
+    overflow-y: auto;
+    transition: all 0.8s cubic-bezier(0.5, -0.7, 0.15, 1.55);
+    background-color: #fff !important;
+    padding: 0px 10px  20px;
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+      /* Track */
+      &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+      }
+      /* Handle */
+      &::-webkit-scrollbar-thumb {
+        background-image: linear-gradient(to right, var(--main), #FFEBFB);
+
+        border-radius: 15px;
+      }
+      /* Handle on hover */
+      &::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+      @media (max-width: $screen-xs) {
+        padding: 0px 8px 15px;
+      }
+    .item {
+      position: relative;
+      padding: 5px;
+      border-radius: 5px;
+      transition: 0.5s all ease-in-out;
+      overflow: hidden;
+      cursor: pointer;
+      &:not(:last-child) {
+        margin-bottom: 10px;
+      }
+    }
+
+    .link {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 7px 10px;
+      position: relative;
+      color: #000;
+      background: linear-gradient(#FFEBFB 0 0) var(--p, 0) / var(--p, 0) no-repeat;
+      transition: .6s, background-position 0s;
+      font-size: 13.5px;
+      overflow: hidden;
+      border-radius: 12px;
+      &.active, &:hover {
+        --p: 100%;
+        color: var(--main);
+        .hint-img {
+          background-color: #fff;
+          img {
+            filter: brightness(0) saturate(100%) invert(25%) sepia(90%) saturate(2000%) hue-rotate(310deg) brightness(90%) contrast(90%);
+          }
+        }
+      }
+      &:not(:last-child) {
+        margin-bottom: 15px;
+        @media (max-width: $screen-xs) {
+          margin-bottom: 10px;
+        }
+      }
+
+      @media (max-width: $screen-xs) {
+        padding: 8px 10px;
+      }
+
+      .hint-img {
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        background: #f1eff6;
+        justify-content: center;
+        border-radius: 5px;
+        img {
+            max-height: 18px;
+            object-fit: cover;
+            transition: 0.2s all ease-in-out;
+        }
+      }
+    }
+  }
+
+  .colse-icon {
+    position: absolute;
+    top: 15px;
+    @include dir-right(15px);
+    width: 25px;
+    height: 25px;
+    background-color: var(--main);
+    color: #fff;
+    font-size: 17px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    @media (max-width: $screen-xl) {
+      display: flex;
+    }
+
+    @media (max-width: $screen-xs) {
+      width: 20px;
+      height: 20px;
+      font-size: 13px;
+    }
+  }
+  
+}
+
+// overlay sidebar
+.overlay-sidebar {
+  @media (max-width: $screen-xl) {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 333;
+    background-color: #000;
+    opacity: 0.5;
+    transition: 0.5s;
+    #{$ltr} & {
+      transform: translateX(100%);
+    }
+    #{$rtl} & {
+      transform: translateX(-100%);
+    }
+    @include dir-right(0);
+    &.show {
+      #{$ltr} & {
+        transform: translateX(0);
+      }
+      #{$rtl} & {
+        transform: translateX(0);
+      }
+    }
+  }
+}
+
+.p-multiselect.p-multiselect-chip .p-multiselect-token {
+  padding: 0.275rem 0.65rem;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
