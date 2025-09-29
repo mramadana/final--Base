@@ -11,8 +11,11 @@ export const useFormValidation = () => {
         }
     });
     
-    // فحص الـ dropdowns
-    const dropdownsValid = formData.defaultSection && formData.defaultSection2;
+    // فحص الـ dropdowns بس لو موجودين في الـ formData
+    let dropdownsValid = true;
+    if (formData.hasOwnProperty('defaultSection') && formData.hasOwnProperty('defaultSection2')) {
+        dropdownsValid = formData.defaultSection && formData.defaultSection2;
+    }
     
     return fieldsValid && dropdownsValid;
   };

@@ -13,7 +13,7 @@
             readonly
             class="main_input"
           />
-          <img v-if="icon" :src="icon" alt="icon" class="input-icon position-absolute top-50" :class="localeDir" />
+          <img v-if="icon" :src="icon" alt="icon" class="input-icon" :class="localeDir" />
         </div>
       </template>
 
@@ -27,7 +27,7 @@
             class="main_input"
             :class="{ 'is-invalid': showErrors && hasError }"
           />
-          <img v-if="icon" :src="icon" alt="icon" class="input-icon position-absolute top-50" :class="localeDir" />
+          <img v-if="icon" :src="icon" alt="icon" class="input-icon" :class="localeDir" />
         </div>
   
         <!-- Display validation error message -->
@@ -75,34 +75,6 @@ const props = defineProps({
   icon: {
     type: String,
     required: false
-  },
-  inputHeight: {
-    type: String,
-    default: '64px'
-  },
-  borderRadius: {
-    type: String,
-    default: '32px'
-  },
-  inputFontSize: {
-    type: String,
-    required: false
-  },
-  inputColor: {
-    type: String,
-    required: false
-  },
-  borderColor: {
-    type: String,
-    required: false
-  },
-  inputFontWeight: {
-    type: String,
-    required: false
-  },
-  inputBgColor: {
-    type: String,
-    default: '#F0F0F0'
   },
   readonly: {
     type: Boolean,

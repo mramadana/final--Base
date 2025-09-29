@@ -147,6 +147,15 @@ export const useValidationSchema = () => {
         .required(t('validation.required_with_label', { field: t(labelKey) }))
         .label(t(labelKey));
 
+    // Password Schema
+    const password = (labelKey: string) =>
+      yup
+        .string()
+        .trim()
+        .required(t('validation.required_with_label', { field: t(labelKey) }))
+        .min(6, t('validation.min', { field: t(labelKey), min: 6 }))
+        .label(t(labelKey));
+
   
   return {
     required,
@@ -164,6 +173,7 @@ export const useValidationSchema = () => {
     iban,
     checkbox,
     radioButton,
-    multipleCheckboxes
+    multipleCheckboxes,
+    password
   }
 }

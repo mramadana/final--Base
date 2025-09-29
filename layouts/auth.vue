@@ -1,14 +1,16 @@
 <template>
   <section>
-    <div class="container">
-      <div class="auth-layout">
-        <div>
-            <slot />
+    <div class="inner-layout">
+      <div class="container">
+        <div class="auth-layout">
+          <div class="position-relative">
+              <div class="AuthLang">
+                <GlobalLang />
+              </div>
+              <slot />
+          </div>
+          <CommonWaveShape />
         </div>
-        <CommonWaveShape />
-      </div>
-      <div class="AuthLang">
-        <GlobalLang />
       </div>
     </div>
   </section>

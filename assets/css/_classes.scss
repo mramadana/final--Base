@@ -272,9 +272,7 @@ margin: 0;
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
     min-height: calc(100vh - 40px);
-    align-items: center;
     padding: 30px 0;
-
     @media screen and (max-width: $screen-md) {
       display: block;
       padding: 0 15px;
@@ -294,8 +292,7 @@ margin: 0;
 .AuthLang {
   // width: 150px;
   position: absolute;
-  @include dir-right(20px);
-  top: 50px;
+  inset-inline-start: 20px;
   z-index: 9999;
   .drop-lang .hint-lang i, .drop-lang .hint-lang p, .drop-lang .dropdown-toggle::after {
     color: rgba(226, 24, 118, 1);
