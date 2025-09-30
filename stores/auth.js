@@ -23,25 +23,8 @@ export const useAuthStore = defineStore("auth", {
     lng: null,
   }),
   actions: {
+
     // Sign In
-
-    // async signInHandler(formData) {
-    //   const resData = await axios.post("sign-in", formData);
-    //   console.log(resData.data.key);
-    //   if (resData.data.key == "needActive") {
-    //     navigateTo("/Auth/activateAccount");
-    //   }
-    //   if (response(resData) == "success") {
-    //     this.user = resData.data.data;
-    //     this.token = resData.data.data.token;
-    //     this.isLoggedIn = true;
-    //     navigateTo("/");
-    //     return { status: "success", msg: resData.data.msg };
-    //   } else {
-    //     return { status: "error", msg: resData.data.msg };
-    //   }
-
-    // },
 
     async signInHandler(formData) {
 
@@ -61,7 +44,7 @@ export const useAuthStore = defineStore("auth", {
         this.user = data.data;
         this.token = data.data.token;
         this.isLoggedIn = true;
-        navigateTo("/Auth/specialization");
+        navigateTo("/");
         return { status: "success", msg: data.msg };
       } else {
         return { status: "error", msg: data.msg };
@@ -69,17 +52,6 @@ export const useAuthStore = defineStore("auth", {
     },
 
     // Sign Up
-    
-    // async signUpHandler(formData) {
-    //   const resData = await axios.post("sign-up", formData);
-    //   if (response(resData) == "success") {
-    //     this.user = resData.data.data;
-    //     navigateTo("/Auth/activateAccount");
-    //     return { status: "success", msg: resData.data.msg };
-    //   } else {
-    //     return { status: "error", msg: resData.data.msg };
-    //   }
-    // },
 
     async signUpHandler(formData) {
       const { data, error } = await submitApiForm("sign-up", formData);

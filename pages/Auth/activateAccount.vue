@@ -1,37 +1,25 @@
 <template>
-    <div class="container">
-        <div class="layout-form custom-width">
-            <h1 class="main-title bold lg mb-5">{{ $t("Auth.activation_code") }}</h1>
+    <div class="container container_layout">
+        <div class="custom-width with-auth p-0 mt-4">
+            <img src="@/assets/images/Logo.svg" alt="login-image" class="logo-image d-block mx-auto mb-4" />
+            <h1 class="main-title bold lg mb-4">{{ $t("Auth.activation_code") }}</h1>
+            <p class="desc mb-4 auth-desc">{{ $t("Auth.verification_info") }}</p>
             <form @submit.prevent="verificationCode">
                 <div class="row">
                     <div class="col-12 col-md-8 mr-auto">
-                        <div class="text-center mb-5">
-                            <img src="@/assets/images/restore-image.svg" loading="lazy" alt="restore-image" class="restore-image mb-4">
-                            <p class="main-title">{{ $t("Auth.please_enter_activation_code") }}</p>
-                        </div>
 
-                        <div class="layout-activate d-flex" dir="ltr">
-                            <v-otp-input
-                            ref="otpInput"
-                            v-model:value="bindModal"
-                            input-classes="otp-input"
-                            separator=" "
-                            :num-inputs="6"
-                            :should-auto-focus="true"
-                            :is-input-num="true"
-                            />
-                        </div>
+                        <FormOtpVerification 
+                            v-model="bindModal"
+                            :num-inputs="4"
+                            :initial-countdown="60"
+                            @resend-code="resendCode"
+                            ref="otpComponent"
+                        />
 
-                        <button type="submit" class="custom-btn w-100 mr-auto"> {{ $t('Auth.confirmation') }} </button>
+                        <NuxtLink to="/Auth/completeInfo"> {{ $t('Titles.verification_code') }} </NuxtLink>
 
-                        <div class="new-sign mt-4">
-                            {{ $t('Auth.havent_received_code') }}
-                            <button type="button" @click="resendCode" :disabled="countStatus" :class="{'disabledClass' : countStatus}">{{ $t('Auth.resend_code') }}</button>
-                        </div>
+                        <button type="submit" class="custom-btn w-100 mr-auto"> {{ $t('Titles.verification_code') }} </button>
 
-                        <div class="text-center mt-3 main-cl" v-if="countStatus">
-                           <span>{{ countDown }} </span> : <span>00</span> 
-                        </div>
                     </div>
                 </div>
             </form>
@@ -39,46 +27,17 @@
     </div>
 </template>
 
-
-<!-- <script>
-
-definePageMeta({
-        name: "Home.activation_code",
-    });
-import VOtpInput from "vue3-otp-input";
-
-export default {
-    components: {
-        VOtpInput,
-    },
-  data() {
-    return {
-      otpInput: null,
-      bindModal: "",
-    };
-  },
-  methods: {
-
-    submitData() {   
-        this.$router.push('/')
-    }
-
-  },
-  
-  mounted() {
-    this.otpInput = this.$refs.otpInput;
-  },
-};
-</script> -->
-
-
 <script setup>
 
+import { useI18n } from "vue-i18n";
+const { t } = useI18n({ useScope: "global" });
+
 definePageMeta({
-        name: "Home.activation_code",
-    });
-/******************* Import *******************/
-import VOtpInput from "vue3-otp-input";
+    name: "Home.activation_code",
+    layout: "auth",
+    showBackLink: true,
+    backLinkUrl: "/Auth/register",
+});
 
 // success response
 const { response } = responseApi();
@@ -93,37 +52,22 @@ const axios = useApi();
 import { storeToRefs } from 'pinia';
 import { useAuthStore } from '~/stores/auth';
 
-/******************* Data *******************/
-
 // Store
 const store = useAuthStore();
 const { verificationHandler } = store;
 const { user, notificationToken } = storeToRefs(store);
 
-// variable
-const countStatus = ref(false);
-const countDown = ref(60);
+// Variables
 const loading = ref(false);
-const otpInput = ref(null);
 const bindModal = ref("");
+const otpComponent = ref(null);
 
-/******************* Methods *******************/
-
-const countDownTimer = () => {
-    countStatus.value = true;
-    if (countDown.value > 0) {
-        setTimeout(() => {
-            countDown.value -= 1;
-            countDownTimer();
-        }, 1000);
-    } else {
-        // Hide the countdown when countDown reaches 0
-        countStatus.value = false; 
-        countDown.value = 60;
-    }
-};
-
+// Verification function
 const verificationCode = async () => {
+    if (!bindModal.value) {
+        errorToast(t("validation.verification_code"));
+        return;
+    }
     loading.value = true;
     const fd = new FormData();
 
@@ -138,30 +82,36 @@ const verificationCode = async () => {
     res.status == "success" ? successToast(res.msg) : errorToast(res.msg);
 
     loading.value = false;
-
 }
 
-// resendCode Function
+// Resend code function
 const resendCode = async () => {
-    await axios.get(`resend-code?country_code=${user.value.country_code}&phone=${user.value.phone}`).then(res => {
+    try {
+        const res = await axios.get(`resend-code?country_code=${user.value.country_code}&phone=${user.value.phone}`);
         if (response(res) == "success") {
             successToast(res.data.msg);
-            countStatus.value = true;
-            countDownTimer();
         } else {
             errorToast(res.data.msg);
         }
-    }).catch(err => console.log(err));
+    } catch (err) {
+        console.log(err);
+        errorToast('حدث خطأ أثناء إعادة الإرسال');
+    }
 }
 
+// Start countdown on mount
 onMounted(() => {
-    countDownTimer();
+    if (otpComponent.value) {
+        otpComponent.value.startCountdown();
+    }
 });
 
-/******************* Computed *******************/
-
-/******************* Watch *******************/
-
-/******************* Mounted *******************/
-
 </script>
+
+<style lang="scss">
+.auth-desc {
+    width: 50%;
+    margin: auto;
+    max-width: 100%;
+}
+</style>

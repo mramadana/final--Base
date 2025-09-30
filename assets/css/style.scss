@@ -1094,13 +1094,12 @@ input.p-inputtext.p-component {
     text-align: center;
     font-size: 14px;
     color: #9f9f9f;
-    margin-bottom: 10px;
+    // margin-bottom: 10px;
     font-weight: bold;
     a, button {
       color: #fff !important;
       background-color: transparent;
       padding: 0;
-      margin-inline-start: 3px;
     }
 }
 
@@ -2049,4 +2048,40 @@ input.p-inputtext.p-component {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  flex-basis: 50%;
+}
+// loop margin right and left
+
+@for $i from 1 through 10 {
+  $value: $i + 10;
+  
+  .mr-#{$i} {
+    @include dir-margin-left(#{$value}px !important);
+    @media (max-width: $screen-xs) {
+      @include dir-margin-left(10px !important);
+    }
+  }
+  
+  .ml-#{$i} {
+    @include dir-margin-right(#{$value}px !important);
+    @media (max-width: $screen-xs) {
+      @include dir-margin-right(10px !important);
+    }
+  }
+}
+
+// loop font weight and font size
+
+@for $i from 200 through 900 {
+  $value: $i + 100;
+  .fw-#{$value} {
+    font-weight: $value !important;
+  }
+}
+
+@for $i from 10 through 50 {
+  $value: $i + 1;
+  .fz-#{$value} {
+    font-size: #{$value}px !important;
+  }
 }

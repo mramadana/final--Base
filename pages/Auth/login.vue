@@ -1,5 +1,5 @@
 <template>
-    <div class="custom-width with-auth">
+    <div class="container_layout">
         <h1 class="main-title bold lg mb-3">{{ $t("Auth.login") }}</h1>
         <h3 class="desc mb-4">{{ $t("Auth.enter_data_to_login") }}</h3>
         <form @submit.prevent="login" ref="loginForm">
@@ -20,7 +20,7 @@
                                 :validation-schema="validations.phone"
                                 :showErrors="false"
                                 :hasIcon="true"
-                                icon="/_nuxt/assets/images/sidebar/home.svg"
+                                icon="/_nuxt/assets/images/auth-img/mobile.svg"
                                 :with_icon="true"
                             />
                             <GlobalCountryDropdown
@@ -41,7 +41,7 @@
                         :validation-schema="validations.password"
                         :showErrors="showValidation"
                         :hasIcon="true"
-                        icon="/_nuxt/assets/images/sidebar/home.svg"
+                        icon="/_nuxt/assets/images/auth-img/lock.svg"
                         :with_icon="true"
                     />
 

@@ -35,7 +35,7 @@ body {
   }
   /* Handle */
   &::-webkit-scrollbar-thumb {
-    background-image: linear-gradient(to top, var(--main-bg), var(--main));
+    background-image: linear-gradient(to top, #9f9f9f, #3a3a3a);
     border-radius: 3px;
   }
   /* Handle on hover */
@@ -122,7 +122,7 @@ margin: 0;
 }
 
 &:focus-visible {
-  outline: 2px solid var(--main);
+  outline: 2px solid rgb(58 58 58);
 }
 }
 
@@ -268,11 +268,9 @@ margin: 0;
   }
 
   .auth-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+    display: flex;
     min-height: calc(100vh - 40px);
-    padding: 30px 0;
+    // padding: 30px 0;
     @media screen and (max-width: $screen-md) {
       display: block;
       padding: 0 15px;
@@ -299,8 +297,8 @@ margin: 0;
 .AuthLang {
   background: #3a3a3a;
   border-radius: 10px;
-  top: 15px;
-  position: absolute;
+  // top: 15px;
+  // position: absolute;
   inset-inline-start: 20px;
   .drop-lang .hint-lang i, .drop-lang .hint-lang p, .drop-lang .dropdown-toggle::after {
     color: rgba(226, 24, 118, 1);
@@ -550,6 +548,15 @@ margin: 0;
 .p-multiselect.p-multiselect-chip .p-multiselect-token {
   padding: 0.275rem 0.65rem;
 }
+
+.container_layout {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+}
+
 
 
 
