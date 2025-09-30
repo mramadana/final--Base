@@ -156,12 +156,33 @@ export const useValidationSchema = () => {
         .min(6, t('validation.min', { field: t(labelKey), min: 6 }))
         .label(t(labelKey));
 
+    // Job Title Schema  
+    const jobTitle = (labelKey: string) =>
+      yup
+        .string()
+        .trim()
+        .required(t('validation.required_with_label', { field: t(labelKey) }))
+        .min(3, t('validation.min', { field: t(labelKey), min: 3 }))
+        .max(100, t('validation.max', { field: t(labelKey), max: 100 }))
+        .label(t(labelKey));
+
+    // Customer Name Schema (same as fullName but with different label)
+    const customerName = (label: string) =>
+      yup
+        .string()
+        .trim()
+        .required(t('validation.required_with_label', { field: t('Auth.customer_name') }))
+        .min(3, t('Auth.customer_name') + " " + t('validation.min', { field: label, min: 3 }))
+        .max(50, t('Auth.customer_name') + " " + t('validation.max', { field: label, max: 50 }))
+        .label(label);
+
   
   return {
     required,
     phoneNumber,
     otpCode,
     fullName,
+    customerName,
     email,
     gender,
     message,
@@ -174,6 +195,7 @@ export const useValidationSchema = () => {
     checkbox,
     radioButton,
     multipleCheckboxes,
-    password
+    password,
+    jobTitle
   }
 }

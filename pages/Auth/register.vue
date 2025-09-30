@@ -11,164 +11,90 @@
                 <div class="row">
                     <div class="col-12 col-md-8 mr-auto">
 
-                        <!-- Profile image upload -->
-                        <div class="form-group">
-                            <label class="label">{{ $t('Auth.image') }}</label>
-                            <div class="input_auth without-edit">
-                                <img src="@/assets/images/noun_upload.svg" loading="lazy" alt="default-img" :class="{'hidden-default' : uploadedImage.length > 0, 'default-class': true}">
-                                <span>{{ $t("Global.attach_photo") }}</span>
-                                <GlobalImgUploader acceptedFiles="image/*" :newImages="logo" name="image" @uploaded-images-updated="updateUploadedImages_1" />
-                            </div>
-                        </div>
-
-                        <!-- Provider name input -->
-                        <div class="form-group">
-                            <label class="label">
-                                {{ $t('Auth.provider_Name') }}
-                            </label>
-                            <div class="main_input">
-                                <input type="text" class="custum-input-icon validInputs" valid="name" name="name" v-model="name" :placeholder="$t('Auth.full_name')">
-                            </div>
-                        </div>
+                        <!-- Customer name input -->
+                        <FormInput 
+                            v-model:modelValue="name"
+                            name="name"
+                            type="text"
+                            :label="$t('Auth.customer_name')"
+                            :placeholder="$t('Auth.customer_name')"
+                            :validation-schema="validations.name"
+                            :showErrors="showValidation"
+                            :hasIcon="true"
+                            icon="/_nuxt/assets/images/sidebar/profile.svg"
+                            :with_icon="true"
+                        />
 
                         <!-- Mobile number input with country dropdown -->
                         <div class="form-group">
                             <label class="label">
                                 {{ $t('Auth.mobile_number') }}
                             </label>
-                            <div class="with_cun_select">
-                                <input type="number" class="main_input validInputs" valid="phone" name="phone_email" v-model="phone" :placeholder="$t('Auth.please_mobile_number')">
+                            <div class="with_cun_select" :class="{ 'has-error': showValidation && phoneHasError }">
+                                <FormInput 
+                                    v-model:modelValue="phone"
+                                    name="phone"
+                                    type="number"
+                                    :placeholder="$t('Auth.enter_mobile_number')"
+                                    :validation-schema="validations.phone"
+                                    :showErrors="false"
+                                    :hasIcon="true"
+                                    icon="/_nuxt/assets/images/sidebar/home.svg"
+                                    :with_icon="true"
+                                />
                                 <GlobalCountryDropdown
                                     v-model="selectedCountry"
                                     :placeholder="$t('Auth.select_country')"
                                 />          
                             </div>
+                            <!-- Display validation error message for phone -->
+                            <p v-if="showValidation && phoneHasError" class="error-message text-danger mt-1">{{ phoneErrorMessage }}</p>
                         </div>
 
-                        <!-- Scope of work input -->
-                        <div class="form-group">
-                            <label class="label">
-                                {{ $t('Auth.scope_work') }}
-                            </label>
-                            <div class="main_input">
-                                <input type="text" class="custum-input-icon validInputs" valid="job" name="scope_work" v-model="scope_work" :placeholder="$t('Auth.enter_scope_work')">
-                            </div>
-                        </div>
+                        <!-- Email input -->
+                        <FormInput 
+                            v-model:modelValue="email"
+                            name="email"
+                            type="email"
+                            :label="$t('Auth.email')"
+                            :placeholder="$t('Auth.enter_email')"
+                            :validation-schema="validations.email"
+                            :showErrors="showValidation"
+                            :hasIcon="true"
+                            icon="/_nuxt/assets/images/sidebar/message.svg"
+                            :with_icon="true"
+                        />
 
-                        <!-- Service provider location input -->
-                        <div class="form-group">
-                            <label class="label">
-                                {{ $t('Auth.service_provider_location') }}
-                            </label>
-                            <div class="main_input pointer" @click="openmodal">
-                                <input name="address" v-model="address" class="custum-input-icon validInputs pointer" valid="password" readonly :placeholder=" $t('Auth.enter_service_provider_location') ">
-                                <button class="static-btn" type="button">
-                                    <font-awesome-icon :icon="['fas', 'location-crosshairs']" class="icon" />
-                                </button>
-                            </div>
-                        </div>
 
-                        <!-- Password input with visibility toggle -->
-                        <div class="form-group">
-                            <label class="label">
-                                {{ $t('Auth.password') }}
-                            </label>
-                            <div class="main_input">
-                                <input :type="inputType('definitelyNewPassword')" name="password" v-model="password" class="custum-input-icon validInputs" valid="password" :placeholder=" $t('Auth.please_enter_password') ">
-                                <button class="static-btn with_eye" type="button" @click="togglePasswordVisibility('definitelyNewPassword')" :class="{ 'active_class': passwordVisible.definitelyNewPassword }">
-                                    <i class="far fa-eye icon"></i>
-                                </button>
-                            </div>
-                        </div>
+                        <!-- Password input -->
+                        <FormInput 
+                            v-model:modelValue="password"
+                            name="password"
+                            type="password"
+                            :label="$t('Auth.password')"
+                            :placeholder="$t('Auth.please_enter_password')"
+                            :validation-schema="validations.password"
+                            :showErrors="showValidation"
+                            :hasIcon="true"
+                            icon="/_nuxt/assets/images/sidebar/home.svg"
+                            :with_icon="true"
+                        />
 
-                        <!-- Shop images upload (optional) -->
-                        <div class="form-group">
-                            <label class="label">{{ $t('Auth.shop_images') }} {{ $t('Auth.optional') }}</label>
-                            <div class="position-relative">
-                                <div class="input_auth without-edit">
-                                    <img src="@/assets/images/noun_upload.svg" loading="lazy" alt="default-img" :class="{'hidden-default' : uploadedImage_2.length > 0, 'default-class': true}">
-                                    <span>{{ $t("Global.attach_photos") }}</span>
-                                </div>
-                                <GlobalImgUploader
-                                    acceptedFiles="image/*, application/*" 
-                                    :IsMultible="true"
-                                    :newImages="logo" 
-                                    name="image" 
-                                    @uploaded-images-updated="updateUploadedImages_2" 
-                                />
-                            </div>
-                        </div>
-
-                        <!-- Delivery options -->
-                        <div class="row mb-3">
-                            <div class="col-12 col-lg-6">
-                                <label class="inner-radio">
-                                    <input type="radio" class="d-none radio-input" name="delivery" v-model="delivery" value="is_delivery">
-                                    <div class="check-inner">
-                                        <p class="hint-inner">
-                                            <span class="radio-body"></span>
-                                        </p>
-                                        <p class="hint-text">
-                                            {{ $t('Auth.delivery_available') }}
-                                        </p>
-                                    </div>
-                                </label>
-                            </div>
-    
-                            <div class="col-12 col-lg-6">
-                                <label class="inner-radio">
-                                    <input type="radio" class="d-none radio-input" name="delivery" v-model="delivery" value="not_delivery">
-                                    <div class="check-inner">
-                                        <p class="hint-inner">
-                                            <span class="radio-body"></span>
-                                        </p>
-                                        <p class="hint-text">
-                                            {{ $t('Auth.delivery_not_available') }}
-                                        </p>
-                                    </div>
-                                </label>
-                            </div>
-    
-                            <div class="col-12 col-lg-6">
-                                <label class="inner-radio">
-                                    <input type="radio" class="d-none radio-input" name="in_iraq" value="in_iraq" v-model="delivery_country">
-                                    <div class="check-inner">
-                                        <p class="hint-inner">
-                                            <span class="radio-body"></span>
-                                        </p>
-                                        <p class="hint-text">
-                                            {{ $t('Auth.all_over_Iraq') }}
-                                        </p>
-                                    </div>
-                                </label>
-                            </div>
-    
-                            <div class="col-12 col-lg-6">
-                                <label class="inner-radio">
-                                    <input type="radio" class="d-none radio-input" name="in_iraq" value="out_iraq" v-model="delivery_country">
-                                    <div class="check-inner">
-                                        <p class="hint-inner">
-                                            <span class="radio-body"></span>
-                                        </p>
-                                        <p class="hint-text">
-                                            {{ $t('Auth.within_specific_governorates') }}
-                                        </p>
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
+                        <!-- Confirm Password input -->
+                        <FormInput 
+                            v-model:modelValue="confirmPassword"
+                            name="confirmPassword"
+                            type="password"
+                            :label="$t('Auth.confirm_password_sm')"
+                            :placeholder="$t('Auth.please_confirm_password')"
+                            :validation-schema="validations.confirmPassword"
+                            :showErrors="showValidation"
+                            :hasIcon="true"
+                            icon="/_nuxt/assets/images/sidebar/home.svg"
+                            :with_icon="true"
+                        />
                         
-                        <!-- Governorates selection for out-of-Iraq delivery -->
-                        <div v-if="delivery_country === 'out_iraq'">
-                            <div class="form-group">
-                                <label class="label">{{$t('Auth.governorates_delivery')}}</label>
-                                <div class="card flex justify-content-center dropdown_card">
-                                    <MultiSelect v-model="selectedCities" display="chip" :options="cities" optionLabel="name" :placeholder="$t('Auth.select_governorates')"
-                                    :maxSelectedLabels="cities.length" class="custum-dropdown" />
-                                </div>
-                            </div>
-                        </div>
-                        
+ 
                         <!-- Submit button -->
                         <button type="submit" class="custom-btn w-100 mr-auto" :disabled="loading">
                             {{ $t('Auth.confirmation') }}
@@ -206,139 +132,166 @@
             </div>
         </Dialog>
 
-        <!-- global google map component -->
-        <GlobalGoogleMap
-            v-model:visible="visible"
-            @closeModal="updateAddress"
-            @updateAddress="handleUpdateAddress"
-            @handleClose="handleClose"
-            :show_inputs="show_inputs"
-            :lat="location.lat"
-            :lng="location.lng"
-            :current_location="currentLocation"
-            :isDraggable="true"
-            :closeModal_btn="closeModal_btn"
-            :current_location_button="true"
-            :title= "$t('Global.current_location')"
-        />
     </div>
 </template>
 
 <script setup>
 
-    // Cities data
-    const selectedCities = ref(null);
-    const cities = ref([
-        { name: 'New York', code: 'NY' },
-        { name: 'Rome', code: 'RM' },
-        { name: 'London', code: 'LDN' },
-        { name: 'Istanbul', code: 'IST' },
-        { name: 'Paris', code: 'PRS' },
-        { name: 'Tokyo', code: 'TKY' },
-        { name: 'Beijing', code: 'BJG' },
-        { name: 'Shanghai', code: 'SHG' },
-    ]);
-
     // Imports and utilities
     import { useI18n } from 'vue-i18n';
     const { t } = useI18n({ useScope: 'global' });
+    
+    // Form fields (moved before validation to avoid undefined errors)
+    const name = ref('');
+    const phone = ref('');
+    const email = ref('');
+    const password = ref('');
+    const confirmPassword = ref('');
+    const address = ref('');
+    
+    // Validation schemas
+    const { phoneNumber, password: passwordValidation, customerName, email: emailValidation } = useValidationSchema();
+    
+    // Validation schemas - exactly like login
+    const validations = {
+        name: customerName('Auth.customer_name'),
+        phone: phoneNumber('Auth.mobile_number'),
+        email: emailValidation('Auth.email'),
+        password: passwordValidation('Auth.password'),
+        confirmPassword: passwordValidation('Auth.confirm_password_sm')
+    };
+
+    // success response
+    const { response } = responseApi();
+
+    // Toast
     const { successToast, errorToast } = toastMsg();
 
-    // Form data
-    const successRegister = ref(false);
-    const phone = ref(null);
-    const { signUpHandler } = useAuthStore();
+    // Store
     const store = useAuthStore();
+    const { signUpHandler } = store;
     const { lat, lng } = storeToRefs(store);
-    const delivery = ref('is_delivery');
-    const delivery_country = ref('in_iraq');
-    const signUpForm = ref(null);
-    const selectedCountry = ref(null);
-    const uploadedImage = ref([]);
-    const uploadedImage_2 = ref([]);
-    const errors = ref([]);
-    const loading = ref(false);
-    const password = ref('');
 
-    // Google map related
-    const closeModal_btn = ref(true);
-    const handleClose = () => {
-        visible.value = false
-    }
-    const address = ref("");
-    const handleUpdateAddress = (newAddress) => {
-        location.value = newAddress;
-    };
-    const updateAddress = () => {
-        address.value = location.value.address;
-        handleClose();
-    };
-    const currentLocation = ref(false);
-    const openmodal = () => {
-        visible.value = true;
-        setTimeout(() => {
-            currentLocation.value = true;
-        }, 300);
-    };
-    const location = ref({
-        lat: lat.value,
-        lng: lng.value
+    // Form data
+    const loading = ref(false);
+    const showValidation = ref(false);
+    const successRegister = ref(false);
+    const signUpForm = ref(null);
+    
+    
+    // Countries
+    const selectedCountry = ref(null);
+    
+    // Form data (reactive object for validation)
+    const formData = computed(() => ({
+        name: name.value,
+        phone: phone.value,
+        email: email.value,
+        password: password.value,
+        confirmPassword: confirmPassword.value
+    }));
+
+    // Phone validation computed properties (same as login)
+    const phoneHasError = computed(() => {
+        if (!validations.phone) return false;
+        try {
+            validations.phone.validateSync(phone.value);
+            return false;
+        } catch (error) {
+            return true;
+        }
     });
-    const show_inputs = ref(false);
-    const visible = ref(false);
+
+    const phoneErrorMessage = computed(() => {
+        if (!phoneHasError.value) return '';
+        try {
+            validations.phone.validateSync(phone.value);
+            return '';
+        } catch (error) {
+            return error.message;
+        }
+    });
+
+    // Custom validation function for confirm password
+    const validateConfirmPassword = (formData, validations) => {
+        // First validate using the standard password validation
+        try {
+            validations.confirmPassword.validateSync(formData.confirmPassword);
+        } catch (error) {
+            return false;
+        }
+        
+        // Then check if passwords match
+        if (formData.password !== formData.confirmPassword) {
+            return false;
+        }
+        
+        return true;
+    };
+
+
+    // use the composable for the validation - exactly like login
+    const { isFormValid, scrollToFirstError } = useFormValidation();
+
 
     // Password visibility
-    const passwordVisible = ref({
-        definitelyNewPassword: false,
-    });
+  
 
-    // Image upload handlers
-    const updateUploadedImages_1 = (images) => {
-        uploadedImage.value = images;
-    };
-    const updateUploadedImages_2 = (images) => {
-        uploadedImage_2.value = Array.isArray(images) ? images : [images];
-        console.log(uploadedImage_2.value, "uploadedImage_2.value 222222")
-    };
-
-    // Password visibility toggle
-    const togglePasswordVisibility = (input) => {
-        passwordVisible.value[input] = !passwordVisible.value[input];
-    };
-    const inputType = (input) => {
-        return passwordVisible.value[input] ? 'text' : 'password';
-    }
-
-    // Form validation
-    function validate() {
-        let allInputs = document.querySelectorAll('.validInputs');
-        for (let i = 0; i < allInputs.length; i++) {
-            if (allInputs[i].value === '') {
-                errors.value.push(t(`validation.${allInputs[i].name}`));
-            }
-        }
-        if( address.value == '') {
-            errors.value.push(t(`validation.address`));
-        }
-        if(phone.value == 0) {
-            phone.value = null
-        }
-    };
-
-    // Sign up function
+    // Sign up function - same validation pattern as login
     const signUp = async () => {
-        const fd = new FormData(signUpForm.value);
-        fd.append('country_code', selectedCountry.value.key);
-        validate();
-        if (errors.value.length) {
-            errorToast(errors.value[0]);
-            loading.value = false;
-            errors.value = [];
+        showValidation.value = true;
+        
+        const isValid = isFormValid(formData.value, validations);
+        const isConfirmPasswordValid = validateConfirmPassword(formData.value, validations);
+        
+        console.log('Is Valid:', isValid);
+        console.log('Confirm Password Valid:', isConfirmPasswordValid);
+        
+        if(!isValid || !isConfirmPasswordValid){
+            // if the form has validation errors
+            if (!isConfirmPasswordValid && formData.value.password !== formData.value.confirmPassword) {
+                errorToast(t('validation.confirmPassword'));
+            }
+            scrollToFirstError(formData.value, validations);
+            console.log("Validation Failed");
         } else {
+            console.log("Validation Passed");
             loading.value = true;
-            const res = await signUpHandler(fd);
-            res.status == "success" ? successToast(res.msg) : errorToast(res.msg);
-            loading.value = false;
+            
+            try {
+                const fd = new FormData();
+                fd.append('name', name.value);
+                fd.append('phone_email', phone.value);
+                fd.append('email', email.value);
+                fd.append('password', password.value);
+                fd.append('password_confirmation', confirmPassword.value);
+                fd.append('country_code', selectedCountry.value?.key || '');
+                fd.append('device_id', 111);
+                fd.append('device_type', 'web');
+    
+                // Get Returned Data From Store
+                const res = await signUpHandler(fd);
+                
+                if (response(res) === "success") {
+                    successToast(res.msg);
+                    successRegister.value = true;
+                    // Reset form on success
+                    name.value = '';
+                    phone.value = '';
+                    email.value = '';
+                    password.value = '';
+                    confirmPassword.value = '';
+                    selectedCountry.value = null;
+                    showValidation.value = false;
+                } else {
+                    errorToast(res.msg);
+                }
+            } catch (error) {
+                console.error('Register error:', error);
+                errorToast(t('Auth.registration_failed'));
+            } finally {
+                loading.value = false;
+            }
         }
     };
 
@@ -348,3 +301,22 @@
         layout: 'auth'
     });
 </script>
+
+<style scoped>
+.with_cun_select.has-error {
+    border: 1px solid #e74c3c !important;
+    box-shadow: 0 0 5px rgba(231, 76, 60, 0.3) !important;
+}
+
+.main_input.is-invalid {
+    border: 1px solid #e74c3c !important;
+    box-shadow: 0 0 5px rgba(231, 76, 60, 0.3) !important;
+}
+
+.error-message {
+    font-size: 12px;
+    color: #e74c3c;
+    font-weight: 500;
+    margin-top: 5px;
+}
+</style>

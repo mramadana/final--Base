@@ -289,14 +289,33 @@ margin: 0;
   filter: blur(.5rem);
 }
 
+.inner-layout {
+  background-color: #000000;
+  .auth-layout {
+    background-color: #181818;
+  }
+}
+
 .AuthLang {
-  // width: 150px;
+  background: #3a3a3a;
+  border-radius: 10px;
+  top: 15px;
   position: absolute;
   inset-inline-start: 20px;
-  z-index: 9999;
   .drop-lang .hint-lang i, .drop-lang .hint-lang p, .drop-lang .dropdown-toggle::after {
     color: rgba(226, 24, 118, 1);
   }
+  .hint-lang {
+    padding: 10px 15px;
+  }
+  .drop-lang .dropdown-menu {
+    top: 0 !important;
+    min-width: 110px;
+  }
+}
+
+.logo-image {
+  max-width: 300px;
 }
 
 

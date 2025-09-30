@@ -3,6 +3,7 @@
         <h1 class="main-title bold lg mb-3">{{ $t("Auth.login") }}</h1>
         <h3 class="desc mb-4">{{ $t("Auth.enter_data_to_login") }}</h3>
         <form @submit.prevent="login" ref="loginForm">
+            <img src="@/assets/images/Logo.svg" alt="login-image" class="logo-image d-block mt-5 mx-auto mb-4">
             <div class="row">
                 <div class="col-12 col-md-8 mr-auto">
 

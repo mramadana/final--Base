@@ -1093,11 +1093,11 @@ input.p-inputtext.p-component {
 .new-sign {
     text-align: center;
     font-size: 14px;
-    color: #000;
+    color: #9f9f9f;
     margin-bottom: 10px;
     font-weight: bold;
     a, button {
-      color: var(--main) !important;
+      color: #fff !important;
       background-color: transparent;
       padding: 0;
       margin-inline-start: 3px;
@@ -1245,6 +1245,7 @@ input.p-inputtext.p-component {
 .custum-input-icon {
   width: 100%;
   height: 100%;
+  background-color: transparent;
 }
 
 .check-inner {
@@ -2036,4 +2037,16 @@ input.p-inputtext.p-component {
       width: 100%;
       height: 100%;
     }
+}
+
+.container_auth {
+  padding: 0 30px;
+}
+
+.inner-Auth {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }

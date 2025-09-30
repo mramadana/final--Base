@@ -1,17 +1,13 @@
 <template>
   <div class="dropdown drop-lang" :class="{ 'color-lang': colorLang }">
     <a class="dropdown-toggle hint-lang" href="#" data-bs-toggle="dropdown">
-      <i class="fas fa-globe icon"></i>
-      <div v-if="htmlLang === ''">
-        <p>العربية</p>
-      </div>
-      <div v-else>
-        <p>{{ htmlLang === "ar" ? "العربية" : "English" }}</p>
-      </div>
+      <!-- <i class="fas fa-globe icon"></i> -->
+       <img src="~/assets/images/language-skill.svg" alt="globe" class="icon">
+       <p>{{ htmlLang === "ar" ? "عربي" : "English" }}</p>
     </a>
 
     <ul class="dropdown-menu">
-      <button class="dropdown-item" @click="switchLang('ar')">العربيه</button>
+      <button class="dropdown-item" @click="switchLang('ar')">عربى</button>
       <button class="dropdown-item" @click="switchLang('en')">English</button>
     </ul>
   </div>
@@ -51,3 +47,14 @@ onBeforeMount(() => {
 });
 
 </script>
+
+<style lang="scss" scoped>
+.AuthLang {
+  .drop-lang .hint-lang p {
+    color: #fff !important;
+  }
+  .drop-lang .dropdown-toggle::after {
+    color: #fff !important;
+  }
+}
+</style>

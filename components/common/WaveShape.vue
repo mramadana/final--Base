@@ -1,30 +1,22 @@
 <template>
   <div class="wave-container">
-    <img src="@/assets/images/Subtract.svg" alt="">
+    <div class="w-100 h-100 d-flex align-items-center justify-content-center">
+      <img src="@/assets/images/Subtract.svg" alt="">
+    </div>
   </div>
 </template>
 
 <style lang="scss">
-.wave-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  &::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
+  .wave-container {
+    position: relative;
     width: 100%;
-    height: 100%;
-    background: linear-gradient(rgb(200 77 134), rgb(49, 52, 130));
-    mix-blend-mode: overlay;
+    height: 100vh;
+    img {
+      width: 100%;
+      height: calc(100% - 40px);
+    }
+    @media screen and (max-width: 768px) {
+      display: none;
+    }
   }
-  img {
-    width: 100%;
-    height: calc(100% - 40px);
-  }
-  @media screen and (max-width: 768px) {
-    display: none;
-  }
-}
 </style>
