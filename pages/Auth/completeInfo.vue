@@ -78,45 +78,47 @@
                             />
 
                             <!-- Logo Upload -->
-                            <div class="form-group">
-                                <label class="label">{{ $t('Auth.add_logo') }}</label>
-                                <div class="upload-area" @click="triggerFileInput('logo')">
-                                    <input 
-                                        ref="logoInput"
-                                        type="file" 
-                                        accept="image/*"
-                                        @change="handleFileUpload($event, 'logo')"
-                                        style="display: none;"
-                                    />
-                                    <div class="upload-content">
-                                        <i class="fa-solid fa-camera fz-24 mb-2"></i>
-                                        <p>{{ $t('Auth.add_logo') }}</p>
-                                    </div>
-                                    <div v-if="logoPreview" class="image-preview">
-                                        <img :src="logoPreview" alt="Logo Preview" />
+                            <div class="position-relative single-input-upload mb-4">
+                                <div class="main_input special-input without-edit">
+                                    <div
+                                        class="d-flex align-items-center justify-content-center gap-2 flex-grow-1 gray">
+                                        <i class="fa-solid fa-camera fz-20 ml-1"></i>
+                                        <span>{{ $t("Auth.add_logo") }}</span>
                                     </div>
                                 </div>
+                                <!-- if you want to remove the validation, you can set the required to false
+                                and remove showValidation -->
+                                <GlobalImgUploader 
+                                    ref="imageUploader"
+                                    acceptedFiles="image/*" 
+                                    :IsMultible="true" 
+                                    :resetTrigger="resetImageTrigger"
+                                    :showValidation="showValidation"
+                                    :required="true"
+                                    :errorMessage="t('validation.attach_logo')"
+                                    @uploaded-images-updated="updateUploadedImages" />
                             </div>
 
                             <!-- Profile Image Upload -->
-                            <div class="form-group">
-                                <label class="label">{{ $t('Auth.add_profile_image') }}</label>
-                                <div class="upload-area" @click="triggerFileInput('profile')">
-                                    <input 
-                                        ref="profileInput"
-                                        type="file" 
-                                        accept="image/*"
-                                        @change="handleFileUpload($event, 'profile')"
-                                        style="display: none;"
-                                    />
-                                    <div class="upload-content">
-                                        <i class="fa-solid fa-camera fz-24 mb-2"></i>
-                                        <p>{{ $t('Auth.add_profile_image') }}</p>
-                                    </div>
-                                    <div v-if="profilePreview" class="image-preview">
-                                        <img :src="profilePreview" alt="Profile Preview" />
+                            <div class="position-relative single-input-upload mb-4">
+                                <div class="main_input special-input without-edit">
+                                    <div
+                                        class="d-flex align-items-center justify-content-center gap-2 flex-grow-1 gray">
+                                        <i class="fa-solid fa-camera fz-20 ml-1"></i>
+                                        <span>{{ $t("Auth.add_profile_image") }}</span>
                                     </div>
                                 </div>
+                                <!-- if you want to remove the validation, you can set the required to false
+                                and remove showValidation -->
+                                <GlobalImgUploader 
+                                    ref="imageUploader"
+                                    acceptedFiles="image/*" 
+                                    :IsMultible="true" 
+                                    :resetTrigger="resetImageTrigger"
+                                    :showValidation="showValidation"
+                                    :required="true"
+                                    :errorMessage="t('validation.attach_profile_image')"
+                                    @uploaded-images-updated="updateUploadedProfileImage" />
                             </div>
 
                             <!-- Next Button -->
@@ -128,11 +130,73 @@
                     </div>
                 </div>
 
-                <!-- Step 2: Additional Info (placeholder) -->
+                <!-- Step 2: Additional Info -->
                 <div v-if="currentStep === 2" class="step-content">
-                    <h3>Step 2 Content</h3>
-                    <button type="button" @click="previousStep" class="custom-btn-outline mr-2">{{ $t('Auth.previous') }}</button>
-                    <button type="submit" class="custom-btn">{{ $t('Auth.next') }}</button>
+                    <div class="row">
+                        <div class="col-12 col-md-8 mx-auto">
+                        </div>
+                        <div class="col-12 col-md-8 mr-auto">
+                            <!-- Main Section Dropdown -->
+                            <GlobalCustomDropdown 
+                                v-model="mainSection" 
+                                :options="sectionOptions"
+                                option-value="value"
+                                placeholder="قم بتحديد القسم الرئيسي" 
+                                :label="$t('Auth.main_section')"
+                                :showValidation="showValidation"
+                            />
+
+                            <!-- Country Dropdown -->
+                            <GlobalCustomDropdown 
+                                v-model="country" 
+                                :options="countryOptions"
+                                option-value="value"
+                                placeholder="قم بتحديد الدولة" 
+                                :label="$t('Auth.country')"
+                                :showValidation="showValidation"
+                            />
+
+                            <!-- Region Dropdown -->
+                            <GlobalCustomDropdown 
+                                v-model="region" 
+                                :options="regionOptions"
+                                option-value="value"
+                                placeholder="قم بتحديد المنطقة" 
+                                :label="$t('Auth.region')"
+                                :showValidation="showValidation"
+                            />
+
+                            <!-- Location Input -->
+                            <div class="position-relative single-input-upload mb-4">
+                                <div class="main_input special-input without-edit">
+                                    <div class="d-flex align-items-center justify-content-start gap-2 flex-grow-1 gray">
+                                        <i class="fa-solid fa-location-dot fz-20 ml-1"></i>
+                                        <span>{{ $t("Auth.location") }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Commercial Registration Number Input -->
+                            <FormInput 
+                                v-model:modelValue="commercialRegNumber" 
+                                name="commercialRegNumber" 
+                                type="text" 
+                                :label="$t('Auth.commercial_reg_number')"
+                                :placeholder="$t('Auth.commercial_reg_number')" 
+                                :validation-schema="validationsStep2.commercialRegNumber"
+                                :showErrors="showValidation" 
+                            />
+
+                            <!-- Navigation Buttons -->
+                            <div class="d-flex gap-3 mt-4">
+                                <button type="submit" class="custom-btn flex-grow-1" :disabled="loading">
+                                    {{ $t('Auth.next') }}
+                                    <span class="spinner-border spinner-border-sm" v-if="loading" role="status" aria-hidden="true"></span>
+                                </button>
+                                <button type="button" @click="previousStep" class="custom-btn-outline flex-grow-1">{{ $t('Auth.previous') }}</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Step 3: Final Info (placeholder) -->
@@ -150,13 +214,20 @@
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n({ useScope: 'global' });
 
-// Form fields
+// Form fields - Step 1
 const projectNameAr = ref('');
 const projectNameEn = ref('');
 const projectDescAr = ref('');
 const projectDescEn = ref('');
 
-// Form data (reactive object for validation) - exactly like login
+// Form fields - Step 2
+const mainSection = ref(null);
+const country = ref(null);
+const region = ref(null);
+const location = ref('');
+const commercialRegNumber = ref('');
+
+// Form data (reactive object for validation)
 const formData = computed(() => ({
     projectNameAr: projectNameAr.value,
     projectNameEn: projectNameEn.value,
@@ -164,11 +235,15 @@ const formData = computed(() => ({
     projectDescEn: projectDescEn.value
 }));
 
-// File handling
-const logoFile = ref(null);
-const profileFile = ref(null);
-const logoPreview = ref('');
-const profilePreview = ref('');
+const formDataStep2 = computed(() => ({
+    mainSection: mainSection.value,
+    country: country.value,
+    region: region.value,
+    commercialRegNumber: commercialRegNumber.value
+}));
+
+// image uploader
+const imageUploader = ref(null);
 
 // Step management
 const currentStep = ref(1);
@@ -177,10 +252,11 @@ const showValidation = ref(false);
 
 // Refs
 const completeInfoForm = ref(null);
-const logoInput = ref(null);
-const profileInput = ref(null);
+const uploadedImage = ref([]);
+const uploadedProfileImage = ref([]);
+const resetImageTrigger = ref(0);
 
-// Validation schemas (like the example)
+// Validation schemas
 const {
     customerName,
     required
@@ -193,6 +269,29 @@ const validations = {
     projectDescEn: required('Auth.project_desc_en')
 };
 
+const validationsStep2 = {
+    commercialRegNumber: required('Auth.commercial_reg_number')
+};
+
+// Dropdown options
+const sectionOptions = ref([
+    { name: 'مستلزمات الأطفال', value: 'baby_supplies' },
+    { name: 'الأعشاب', value: 'herbs' },
+    { name: 'الطبخ', value: 'cuisine' }
+]);
+
+const countryOptions = ref([
+    { name: 'السعودية', value: 'saudi' },
+    { name: 'الإمارات', value: 'uae' },
+    { name: 'مصر', value: 'egypt' }
+]);
+
+const regionOptions = ref([
+    { name: 'الرياض', value: 'riyadh' },
+    { name: 'جدة', value: 'jeddah' },
+    { name: 'الدمام', value: 'dammam' }
+]);
+
 // Progress calculation
 const progressWidth = computed(() => {
     return (currentStep.value / 3) * 100;
@@ -201,30 +300,15 @@ const progressWidth = computed(() => {
 // use the composable for the validation - exactly like login
 const { isFormValid, scrollToFirstError } = useFormValidation();
 
-// File upload functions
-const triggerFileInput = (type) => {
-    if (type === 'logo') {
-        logoInput.value.click();
-    } else if (type === 'profile') {
-        profileInput.value.click();
-    }
+
+// simple function to update the images
+const updateUploadedImages = (images) => {
+    uploadedImage.value = images;
 };
 
-const handleFileUpload = (event, type) => {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            if (type === 'logo') {
-                logoFile.value = file;
-                logoPreview.value = e.target.result;
-            } else if (type === 'profile') {
-                profileFile.value = file;
-                profilePreview.value = e.target.result;
-            }
-        };
-        reader.readAsDataURL(file);
-    }
+// simple function to update the profile image
+const updateUploadedProfileImage = (images) => {
+    uploadedProfileImage.value = images;
 };
 
 // Step navigation
@@ -246,11 +330,11 @@ const previousStep = () => {
 const handleSubmit = async () => {
     if (currentStep.value === 1) {
         showValidation.value = true;
-        
+        const imagesValid = imageUploader.value?.validate() || false;
         const isValid = isFormValid(formData.value, validations);
         console.log('Is Valid:', isValid);
         
-        if (!isValid) {
+        if (!isValid || !imagesValid) {
             // if the inputs have errors
             scrollToFirstError(formData.value, validations);
             console.log("22222222222");
@@ -260,8 +344,16 @@ const handleSubmit = async () => {
             nextStep();
         }
     } else if (currentStep.value === 2) {
-        // Handle step 2 validation and move to step 3
-        nextStep();
+        showValidation.value = true;
+        const isValid = isFormValid(formDataStep2.value, validationsStep2);
+        
+        if (!isValid) {
+            scrollToFirstError(formDataStep2.value, validationsStep2);
+            console.log("Step 2 validation failed");
+        } else {
+            console.log("Step 2 validation passed");
+            nextStep();
+        }
     } else if (currentStep.value === 3) {
         // Final submission
         await submitCompleteInfo();
@@ -277,13 +369,13 @@ const submitCompleteInfo = async () => {
         fd.append('project_name_en', projectNameEn.value);
         fd.append('project_desc_ar', projectDescAr.value);
         fd.append('project_desc_en', projectDescEn.value);
-        
+        fd.append('images', uploadedImage.value);
         // Add files
-        if (logoFile.value) {
-            fd.append('logo', logoFile.value);
+        if (uploadedLogo.value) {
+            fd.append('logo', uploadedLogo.value);
         }
-        if (profileFile.value) {
-            fd.append('profile_image', profileFile.value);
+        if (uploadedProfileImage.value) {
+            fd.append('profile_image', uploadedProfileImage.value);
         }
         
         console.log('Submitting complete info...');
@@ -404,30 +496,4 @@ definePageMeta({
     }
 }
 
-.main_input {
-    resize: vertical;
-    min-height: 100px;
-}
-
-.error-message {
-    font-size: 12px;
-    color: #e74c3c;
-    font-weight: 500;
-    margin-top: 5px;
-}
-
-.custom-btn-outline {
-    background: transparent;
-    border: 1px solid #6c6c6c;
-    color: #fff;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    
-    &:hover {
-        background: #6c6c6c;
-        color: #fff;
-    }
-}
 </style>

@@ -53,7 +53,9 @@
         "phone_at_least_9": "يجب ان يحتوي رقم الجوال على 9 ارقام على الاقل",
         "phone_cannot_be_longer_than_10": "يجب ان لا يتجاوز رقم الجوال 10 ارقام على الاكثر",
         "job" : "مجال العمل مطلوب",
-        "verification_code" : "يرجى ادخال رمز التفعيل"
+        "verification_code" : "يرجى ادخال رمز التفعيل",
+        "attach_logo" : "قم باضافه صورة الشعار",
+        "attach_profile_image" : "قم باضافه صورة البروفيل"
       },
 
     "Auth": {
@@ -138,7 +140,12 @@
         "edit_profile" : "تعديل الملف الشخصي",
         "no_available_options" : "لا توجد خيارات متاحة",
         "emptyFilterMessage" : "لا توجد نتائج متاحة",
-        "new_request_statistics" : "إحصائية الطلبات الجديدة"
+        "new_request_statistics" : "إحصائية الطلبات الجديدة",
+        "main_section" : "قم بتحديد القسم الرئيسي",
+        "country" : "قم بتحديد الدولة",
+        "region" : "قم بتحديد المنطقة",
+        "location" : "قم بتحديد الموكيشن",
+        "commercial_reg_number" : "قم بإضافة رقم السجل التجاري"
     },
 
     "Global": {
