@@ -89,10 +89,47 @@ export const useValidationSchema = () => {
       yup
         .string()
         .trim()
-        .required(t('validation.required_with_label', { field: t('Auth.iban') }))
         .min(14, t('Auth.iban') + " " + t('validation.min', { field: label, min: 14 }))
         .max(29, t('Auth.iban') + " " + t('validation.max', { field: label, max: 29 }))
         // .matches(/^[0-9]+$/, t('validation.iban_only_digits'))
+        .label(label);
+
+    // commercial number Schema
+    const commerciaRumber = (label: string) =>
+      yup
+        .string()
+        .trim()
+        .required(t('validation.required_with_label', { field: t('Auth.commercial_reg_number') }))
+        .min(10, t('Auth.commerciaRumber') + " " + t('validation.min', { field: label, min: 10 }))
+        // .matches(/^[0-9]+$/, t('validation.commercial_reg_number_only_digits'))
+        .label(label);
+
+    // bank name Schema
+    const bankName = (label: string) =>
+      yup
+        .string()
+        .trim()
+        .required(t('validation.required_with_label', { field: t('Auth.bank_name') }))
+        .min(2, t('Auth.bank_name') + " " + t('validation.min', { field: label, min: 2 }))
+        .label(label);
+
+    // account number Schema
+    const accountNumber = (label: string) =>
+      yup
+        .string()
+        .trim()
+        .required(t('validation.required_with_label', { field: t('Auth.account_number') }))
+        .min(8, t('Auth.account_number') + " " + t('validation.min', { field: label, min: 8 }))
+        .matches(/^[0-9]+$/, t('validation.account_number_only_digits'))
+        .label(label);
+
+    // account holder name Schema
+    const accountHolderName = (label: string) =>
+      yup
+        .string()
+        .trim()
+        .required(t('validation.required_with_label', { field: t('Auth.account_holder_name') }))
+        .min(3, t('Auth.account_holder_name') + " " + t('validation.min', { field: label, min: 3 }))
         .label(label);
 
     // Select Gender Schema
@@ -196,6 +233,10 @@ export const useValidationSchema = () => {
     radioButton,
     multipleCheckboxes,
     password,
-    jobTitle
+    jobTitle,
+    commerciaRumber,
+    bankName,
+    accountNumber,
+    accountHolderName
   }
 }

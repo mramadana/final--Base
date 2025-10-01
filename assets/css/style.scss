@@ -1210,17 +1210,11 @@ input.p-inputtext.p-component {
 }
 
 .edit-label, .remove-btn {
-  width: 35px;
-  height: 35px;
+  width: 25px;
+  height: 25px;
   position: absolute;
-  top: 50%;
-  #{$ltr} & {
-    transform: translate(50%, -50%);
-  }
-  #{$rtl} & {
-    transform: translate(-50%, -50%);
-  }
-  @include dir-right(0);
+  top: -5%;
+  inset-inline-end: -5px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1229,10 +1223,6 @@ input.p-inputtext.p-component {
   font-size: 12px;
   border-radius: 50%;
   cursor: pointer;
-}
-
-.remove-btn {
-  @include dir-right(-2px);
 }
 
 .without_label {

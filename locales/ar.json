@@ -55,7 +55,9 @@
         "job" : "مجال العمل مطلوب",
         "verification_code" : "يرجى ادخال رمز التفعيل",
         "attach_logo" : "قم باضافه صورة الشعار",
-        "attach_profile_image" : "قم باضافه صورة البروفيل"
+        "attach_profile_image" : "قم باضافه صورة البروفيل",
+        "select_location" : "يرجى تحديد العنوان",
+        "account_number_only_digits" : "رقم الحساب يجب أن يحتوي على أرقام فقط"
       },
 
     "Auth": {
@@ -141,17 +143,27 @@
         "no_available_options" : "لا توجد خيارات متاحة",
         "emptyFilterMessage" : "لا توجد نتائج متاحة",
         "new_request_statistics" : "إحصائية الطلبات الجديدة",
-        "main_section" : "قم بتحديد القسم الرئيسي",
-        "country" : "قم بتحديد الدولة",
-        "region" : "قم بتحديد المنطقة",
+        "select_main_section" : "قم بتحديد القسم الرئيسي",
+        "main_section" : "القسم الرئيسي",
+        "country" : "الدولة",
+        "select_country" : "قم بتحديد الدولة",
+        "region" : "المنطقة",
+        "select_region" : "قم بتحديد المنطقة",
         "location" : "قم بتحديد الموكيشن",
-        "commercial_reg_number" : "قم بإضافة رقم السجل التجاري"
+        "commercial_reg_number" : "قم بإضافة رقم السجل التجاري",
+        "commerciaRumber" : "السجل التجاري",
+        "bank_name" : "اسم البنك",
+        "account_number" : "رقم الحساب",
+        "account_holder_name" : "اسم صاحب الحساب",
+        "iban" : "رقم الآيبان",
+        "project_data" : "بيانات المشروع",
+        "bank_data" : "بيانات الحساب البنكي",
+        "have_account" : "لديك حساب ؟"
     },
-
+    
     "Global": {
         "back" : "رجوع",
         "attach_photo" : "إرفاق صورة",
-        "save" : "حفظ",
         "delete_account" : "حذف الحساب",
         "Saving_changes" : "حفظ التغييرات",
         "enter_current_password_new_mobile" : "برجاء ادخال كلمة المرور الحالية و رقم الجوال الجديد",

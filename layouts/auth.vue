@@ -5,7 +5,11 @@
         <div class="auth-layout">
           <div class="inner-Auth">
             <div class="header-Auth">
-              <NuxtLink v-if="showBackLink" :to="backLinkUrl" class="back-link">
+              <button v-if="showBackLink && hasCustomHandler" @click="handleCustomBack" class="back-link back-button">
+                <i class="fa-solid fa-chevron-right fz-15 ml-1"></i>
+                {{ $t('Auth.back') }}
+              </button>
+              <NuxtLink v-else-if="showBackLink" :to="backLinkUrl" class="back-link">
                 <i class="fa-solid fa-chevron-right fz-15 ml-1"></i>
                 {{ $t('Auth.back') }}
               </NuxtLink>
@@ -23,17 +27,49 @@
 </template>
 
 <script setup>
+
+import { useI18n } from "vue-i18n";
+import { useRoute } from "#vue-router";
+
+const { t } = useI18n();
+
 // Get page meta data
 const route = useRoute();
 
 // Get back link configuration from page meta
 const showBackLink = computed(() => route.meta.showBackLink || false);
 const backLinkUrl = computed(() => route.meta.backLinkUrl || '/Auth/login');
+const hasCustomHandler = computed(() => route.meta.customBackHandler || false);
+
+// Get reference to the page component
+const pageRef = ref(null);
+
+// Handle custom back button click
+const handleCustomBack = () => {
+  // Emit a global event that the page can listen to
+  if (process.client) {
+    window.dispatchEvent(new CustomEvent('customBackClick'));
+  }
+};
+watchEffect(() => {
+  useHead({
+    title: `${t(route.name)}`,
+  });
+});
 </script>
 
 <style lang="scss">
 .back-link {
   color: #fff !important;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
 }
 .header-Auth {
   display: flex;
