@@ -9,6 +9,7 @@
                 :num-inputs="numInputs"
                 :should-auto-focus="shouldAutoFocus"
                 :is-input-num="isInputNum"
+                :placeholder="['-', '-', '-', '-']"
             />
         </div>
 

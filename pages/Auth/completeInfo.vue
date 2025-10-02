@@ -164,7 +164,7 @@
 
                             <!-- Location Input -->
                             <div class="position-relative single-input-upload mb-4">
-                                <div class="main_input special-input without-edit" :class="{'handle-border-error': showValidation && !address}" @click="visible = true">
+                                <div class="main_input special-input without-edit pointer" :class="{'handle-border-error': showValidation && !address}" @click="visible = true">
                                     <div class="d-flex align-items-center justify-content-start gap-2 flex-grow-1 gray">
                                         <i class="fa-solid fa-location-dot fz-20 ml-1"></i>
                                         <span v-if="!address">{{ $t("Auth.location") }}</span>
@@ -266,6 +266,8 @@
                     {{ $t('Auth.have_account') }}
                     <nuxt-link to="/Auth/login" >{{ $t('Auth.login') }}</nuxt-link>
                 </div>
+
+                <NuxtLink to="/Auth/terms"> {{ $t('Auth.terms_and_conditions') }} </NuxtLink>
             </form>
             
         </div>
@@ -283,6 +285,13 @@
 
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n({ useScope: 'global' });
+
+definePageMeta({
+    name: "Auth.complete_info",
+    layout: "auth",
+    showBackLink: true,
+    customBackHandler: true, // This tells the layout to use custom handler
+});
 
 // refs
 const { lat, lng, selectedAddress, token, user, device_id } = storeToRefs(
@@ -637,12 +646,6 @@ onUnmounted(() => {
     window.removeEventListener('customBackClick', handleBackButton);
 });
 
-definePageMeta({
-    name: "Home.complete_info",
-    layout: "auth",
-    showBackLink: true,
-    customBackHandler: true, // This tells the layout to use custom handler
-});
 </script>
 
 <style lang="scss" scoped>

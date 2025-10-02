@@ -1072,6 +1072,9 @@ input.p-inputtext.p-component {
 .desc {
   font-size: 14px;
   color: rgba(137, 137, 137, 1);
+  &.lg {
+    font-size: 16px;
+  }
   &.sm {
     font-size: 12px;
   }
@@ -1270,8 +1273,9 @@ input.p-inputtext.p-component {
       width: 20px;
       height: 20px;
       border-radius: 3px;
-      border-color: #8C8C8C;
+      border-color: #fff;
       position: relative;
+      overflow: hidden;
       .icon {
         position: absolute;
         top: 50%;
@@ -1286,9 +1290,9 @@ input.p-inputtext.p-component {
       }
     }
     input:checked + .mark {
-      border-color: var(--main);
+      // border-color: var(--main);
       &::before {
-          background-color: var(--main);
+          // background-color: var(--main);
       }
       .icon {
         display: block;
@@ -1342,12 +1346,12 @@ input.p-inputtext.p-component {
         }
       }
   }
-  input:checked + .mark {
-      border-color: #543D8F;
-      &::before {
-          background-color: #543D8F;
-      }
-  }
+  // input:checked + .mark {
+  //     border-color: #543D8F;
+  //     &::before {
+  //         background-color: #543D8F;
+  //     }
+  // }
   .new-mark:checked + .mark {
     background-color: #000;
     &::before {
@@ -1482,6 +1486,12 @@ input.p-inputtext.p-component {
   width: 500px;
   max-width: 100%;
   margin: 0 20px;
+  .p-dialog-content, .p-dialog-header {
+    background-color: #242424;
+    h1, p {
+      color: #fff;
+    }
+  }
   &.without-close {
     .p-dialog-header-icons {
       display: none;
@@ -2036,8 +2046,8 @@ input.p-inputtext.p-component {
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  // justify-content: center;
+  // align-items: center;
   flex-basis: 50%;
 }
 // loop margin right and left

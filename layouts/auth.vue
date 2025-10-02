@@ -5,19 +5,17 @@
         <div class="auth-layout">
           <div class="inner-Auth">
             <div class="header-Auth">
-              <button v-if="showBackLink && hasCustomHandler" @click="handleCustomBack" class="back-link back-button">
+              <button v-if="showBackLink" @click="handleCustomBack" class="back-link back-button">
                 <i class="fa-solid fa-chevron-right fz-15 ml-1"></i>
                 {{ $t('Auth.back') }}
               </button>
-              <NuxtLink v-else-if="showBackLink" :to="backLinkUrl" class="back-link">
-                <i class="fa-solid fa-chevron-right fz-15 ml-1"></i>
-                {{ $t('Auth.back') }}
-              </NuxtLink>
               <div class="AuthLang">
                 <GlobalLang />
               </div>
             </div>
-            <slot />
+            <div class="auth-content-layout">
+              <slot />
+            </div>
           </div>
           <CommonWaveShape />
         </div>
@@ -38,7 +36,6 @@ const route = useRoute();
 
 // Get back link configuration from page meta
 const showBackLink = computed(() => route.meta.showBackLink || false);
-const backLinkUrl = computed(() => route.meta.backLinkUrl || '/Auth/login');
 const hasCustomHandler = computed(() => route.meta.customBackHandler || false);
 
 // Get reference to the page component
@@ -46,11 +43,20 @@ const pageRef = ref(null);
 
 // Handle custom back button click
 const handleCustomBack = () => {
-  // Emit a global event that the page can listen to
-  if (process.client) {
-    window.dispatchEvent(new CustomEvent('customBackClick'));
+  // Check if page has custom handler
+  if (hasCustomHandler.value) {
+    // Emit a global event that the page can listen to
+    if (process.client) {
+      window.dispatchEvent(new CustomEvent('customBackClick'));
+    }
+  } else {
+    // For regular pages, just go back normally
+    if (process.client) {
+      window.history.back();
+    }
   }
 };
+
 watchEffect(() => {
   useHead({
     title: `${t(route.name)}`,
@@ -59,6 +65,14 @@ watchEffect(() => {
 </script>
 
 <style lang="scss">
+.auth-content-layout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  flex-grow: 1;
+  padding: 0 15px;
+}
 .back-link {
   color: #fff !important;
 }
@@ -75,7 +89,7 @@ watchEffect(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: auto;
+  // margin-bottom: auto;
   padding: 25px 15px;
   width: 100%;
 }

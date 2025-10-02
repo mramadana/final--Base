@@ -115,7 +115,7 @@
         "next" : "التالي",
         "previous" : "السابق",
         "complete" : "إنهاء",
-        "complete_info" : "إكمال البيانات",
+        "complete_info" : "إستكمال البيانات",
         "connect_us" : "تواصل معنا",
         "with_driver" : "بسائق",
         "without_driver" : "بدون سائق",
@@ -158,7 +158,26 @@
         "iban" : "رقم الآيبان",
         "project_data" : "بيانات المشروع",
         "bank_data" : "بيانات الحساب البنكي",
-        "have_account" : "لديك حساب ؟"
+        "have_account" : "لديك حساب ؟",
+        "terms_conditions" : "موافقتك على هذه الشروط تعني التزامك بها بالكامل.",
+        "create_terms_account" : "انشاء الحساب",
+        "complete_payment" : "إتمام عملية الدفع",
+        "annual_subscription_payment" : "إتمام دفع الاشتراك السنوي",
+        "payment_description" : "للاستفادة من خدمات التطبيق واستقبال طلبات العملاء، يرجى سداد رسوم الاشتراك السنوي الخاصة بدولتك",
+        "subscription_value_country" : "قيمة الاشتراك الخاص بدولتك",
+        "sar" : "ريس",
+        "payment_method" : "طريقة الدفع",
+        "electronic_payment" : "الدفع الإلكتروني",
+        "complete_payment_process" : "إتمام عملية الدفع",
+        "payment_approval_request" : "تم الموافقة على طلبك يرجى إتمام عملية الدفع لبدء استخدام خدماتنا",
+        "payment_approval_subtitle" : "تم الموافقة على طلبك يرجى إتمام عملية الدفع لبدء استخدام خدماتنا",
+        "payment_card_subtitle" : "للاستفادة من خدمات التطبيق واستقبال طلبات العملاء، يرجى سداد رسوم الاشتراك السنوي الخاصة بدولتك",
+        "activation_note" : "Activate Windows",
+        "go_to_settings" : "Go to Settings to activate Windows",
+        "payment_success" : "تم الدفع بنجاح",
+        "payment_success_message" : "تم إتمام عملية الدفع بنجاح",
+        "payment_completed_successfully" : "تم إتمام الدفع بنجاح",
+        "payment_error" : "حدث خطأ في عملية الدفع"
     },
     
     "Global": {
@@ -189,7 +208,8 @@
         "welcome" : "مرحبًا بكِ يا",
         "provider" : "مقدم خدمة",
         "imgs": "لا يوجد صور حاليا",
-        "no_products" : "لا توجد طلبات حاليا"
+        "no_products" : "لا توجد طلبات حاليا",
+        "complete_info" : "استكمال البيانات"
     },
 
     "Sidebar": {

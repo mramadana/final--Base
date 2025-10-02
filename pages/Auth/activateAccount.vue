@@ -2,7 +2,7 @@
     <div class="container container_layout">
         <div class="custom-width with-auth p-0 mt-4">
             <img src="@/assets/images/Logo.svg" alt="login-image" class="logo-image d-block mx-auto mb-4" />
-            <h1 class="main-title bold lg mb-4">{{ $t("Auth.activation_code") }}</h1>
+            <h1 class="main-title bold lg mb-4">{{ $t("Auth.activation_code_auth") }}</h1>
             <p class="desc mb-4 auth-desc">{{ $t("Auth.verification_info") }}</p>
             <form @submit.prevent="verificationCode">
                 <div class="row">
@@ -33,10 +33,9 @@ import { useI18n } from "vue-i18n";
 const { t } = useI18n({ useScope: "global" });
 
 definePageMeta({
-    name: "Home.activation_code",
+    name: "Auth.activation_code_auth",
     layout: "auth",
     showBackLink: true,
-    backLinkUrl: "/Auth/register",
 });
 
 // success response
