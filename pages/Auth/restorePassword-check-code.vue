@@ -1,83 +1,53 @@
 <template>
-    <div class="container">
-        <div class="custom-width with-auth">
-            <h1 class="main-title bold lg mb-5">{{ $t("Auth.activation_code") }}</h1>
+    <div class="container container_layout">
+        <div class="custom-width with-auth p-0 mt-4">
+            <img src="@/assets/images/Logo.svg" alt="login-image" class="logo-image d-block mx-auto mb-4" />
+            <h1 class="main-title bold lg mb-4">{{ $t("Auth.activation_code_auth") }}</h1>
+            <p class="desc mb-4 auth-desc">{{ $t("Auth.verification_info") }}</p>
             <form @submit.prevent="verificationCode">
                 <div class="row">
                     <div class="col-12 col-md-8 mr-auto">
-                        <div class="text-center mb-5">
-                            <p class="main-title">{{ $t("Auth.please_enter_activation_code") }}</p>
-                        </div>
 
-                        <div class="layout-activate d-flex" dir="ltr">
-                            <v-otp-input
-                            ref="otpInput"
-                            v-model:value="bindModal"
-                            input-classes="otp-input"
-                            separator=" "
-                            :num-inputs="6"
-                            :should-auto-focus="true"
-                            :is-input-num="true"
-                            />
-                        </div>
+                        <FormOtpVerification 
+                            v-model="bindModal"
+                            :num-inputs="4"
+                            :initial-countdown="60"
+                            @resend-code="resendCode"
+                            ref="otpComponent"
+                        />
 
                         <button type="submit" class="custom-btn w-100 mr-auto" :disabled="loading">
-                           {{ $t('Auth.confirmation') }}
-                           <span class="spinner-border spinner-border-sm" v-if="loading" role="status" aria-hidden="true"></span>
+                            {{ $t('Titles.verification_code') }}
+                            <span class="spinner-border spinner-border-sm" v-if="loading" role="status" aria-hidden="true"></span>
                         </button>
-
-                        <div class="new-sign mt-4">
-                            {{ $t('Auth.havent_received_code') }}
-                            <button type="button" @click="resendCode" :disabled="countStatus" :class="{'disabledClass' : countStatus}">{{ $t('Auth.resend_code') }}</button>
-                        </div>
-
-                        <div class="text-center mt-3 main-cl" v-if="countStatus">
-                           <span>{{ countDown }} </span> : <span>00</span> 
-                        </div>
-
 
                     </div>
                 </div>
             </form>
         </div>
+        <!-- Success Modal -->
+        <Dialog v-model:visible="showSuccessModal" modal class="custum_dialog_width without-close" :draggable="false">
+            <div class="text-center">
+                <img src="@/assets/images/Success.gif" alt="check-img" class="check-img lg" loading="lazy" />
+                <h1 class="main-title bold mb-3 hint_success">
+                    {{ $t("Auth.password_reset_success") }}
+                </h1>
+                <p class="desc lg">{{ $t("Auth.password_reset_success_desc") }}</p>
+            </div>
+        </Dialog>
     </div>
 </template>
 
 <script setup>
 
+import { useI18n } from "vue-i18n";
+const { t } = useI18n({ useScope: "global" });
 
 definePageMeta({
-  name: "Auth.activation_code",
-  layout: 'auth'
+  name: "Auth.activation_code_profile",
+  layout: "auth",
+  showBackLink: true,
 });
-
-
-const countStatus = ref(false);
-const countDown = ref(1);
-
-const countDownTimer = () => {
-    countStatus.value = true;
-    if (countDown.value > 0) {
-        setTimeout(() => {
-            countDown.value -= 1;
-            countDownTimer();
-        }, 1000);
-    } else {
-        // Hide the countdown when countDown reaches 0
-        countStatus.value = false; 
-        countDown.value = 60;
-    }
-};
-
-
-/******************* Import *******************/
-
-
-import { useI18n } from 'vue-i18n';
-const { t } = useI18n({ useScope: 'global' });
-
-// OTP
-import VOtpInput from "vue3-otp-input";
 
 // success response
 const { response } = responseApi();
@@ -89,30 +59,32 @@ const { successToast, errorToast } = toastMsg();
 const axios = useApi();
 
 // pinia store
+import { storeToRefs } from 'pinia';
 import { useAuthStore } from '~/stores/auth';
-
-/******************* Data *******************/
 
 // Store
 const store = useAuthStore();
+const { user } = storeToRefs(store);
 
-const {user} = storeToRefs(store);
-
+// Variables
 const loading = ref(false);
-
 const bindModal = ref("");
-
+const otpComponent = ref(null);
+const showSuccessModal = ref(false);
+// Verification function
 const verificationCode = async () => {
+  if (!bindModal.value) {
+    errorToast(t("validation.verification_code"));
+    return;
+  }
   loading.value = true;
   const fd = new FormData();
+
   fd.append('code', bindModal.value);
   fd.append('phone', user.value.phone);
   fd.append('country_code', user.value.country_code);
 
-  if (!bindModal.value) {
-    errorToast(t(`validation.code`));
-    loading.value = false;
-  } else {
+  try {
     const { data, error } = await submitApiForm("forget-password-check-code", fd);
 
     if (error) {
@@ -123,38 +95,59 @@ const verificationCode = async () => {
     }
 
     if (data.key === "success") {
-      navigateTo('/Auth/confirmPassword');
-      localStorage.setItem('newCode', bindModal.value);
+      successToast(data.msg);
+      showSuccessModal.value = true;
+      setTimeout(() => {
+        navigateTo('/Auth/login');
+      }, 3000);
     } else {
       errorToast(data.msg);
     }
+  } catch (error) {
+    console.error('Verification error:', error);
+    errorToast(t('Auth.error_occurred'));
+  } finally {
     loading.value = false;
   }
-};
+}
 
-//  resendCode Function
+// Resend code function
 const resendCode = async () => {
-  const { data, error } = await fetchApiData(`forget-password-resend-code?country_code=${user.value.country_code}&phone=${user.value.phone}`);
+  try {
+    const { data, error } = await fetchApiData(`forget-password-resend-code?country_code=${user.value.country_code}&phone=${user.value.phone}`);
 
-  if (error) {
-    console.error("Resend Code error:", error);
-    errorToast(error.message || "An error occurred");
-    return;
+    if (error) {
+      console.error("Resend Code error:", error);
+      errorToast(error.message || "An error occurred");
+      return;
+    }
+
+    if (data.key === "success") {
+      successToast(data.msg);
+    } else {
+      errorToast(data.msg);
+    }
+  } catch (err) {
+    console.log(err);
+    errorToast('حدث خطأ أثناء إعادة الإرسال');
   }
+}
 
-  if (data.key === "success") {
-    successToast(data.msg);
-    countStatus.value = true;
-    countDownTimer();
-  } else {
-    errorToast(data.msg);
-  }
-};
-
+// Start countdown on mount
 onMounted(() => {
-    countDownTimer();
+  if (otpComponent.value) {
+    otpComponent.value.startCountdown();
+  }
 });
 
 </script>
+
+<style lang="scss">
+.auth-desc {
+  width: 50%;
+  margin: auto;
+  max-width: 100%;
+}
+</style>
 
 

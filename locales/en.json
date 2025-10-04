@@ -102,7 +102,10 @@
         "from" : "From",
         "to" : "To",
         "select_year" : "Select year",
-        "hint_success" : "Data is being reviewed by management.",
+        "hint_success" : "Your membership request has been sent successfully!",
+        "hint_success_desc" : "Your request data is being reviewed by the administration and you will be notified immediately upon acceptance of the account data",
+        "password_reset_success" : "Password reset successfully",
+        "password_reset_success_desc" : "Congratulations, your password has been reset successfully",
         "version_experimental" : "Experimental version",
         "use_package_experimental" : "You can use the package for 3 days experimentally"
     },

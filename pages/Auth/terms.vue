@@ -42,10 +42,6 @@
             </button>
         </div>
 
-        <nuxt-link to="/Auth/completePayment" class="custom-btn w-100">
-            {{ $t("Auth.create_terms_account") }}
-        </nuxt-link>
-
         <!-- success modal -->
         <Dialog v-model:visible="accept_create_acount" modal class="custum_dialog_width without-close" :draggable="false">
             <div class="text-center">
@@ -53,7 +49,7 @@
                 <h1 class="main-title bold mb-3 hint_success">
                     {{ $t("Auth.hint_success") }}
                 </h1>
-                <p class="desc lg">{{ $t("Auth.create_terms_account") }}</p>
+                <p class="desc lg">{{ $t("Auth.hint_success_desc") }}</p>
             </div>
         </Dialog>
 

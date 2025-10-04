@@ -105,6 +105,14 @@ watchEffect(() => {
     color: #fff !important;
   }
 
+  .disc {
+    color: #F8F8F8B2 !important;
+  }
+
+  .spinner-border-sm {
+    color: #262626 !important;
+  }
+
   .label {
     color: #9f9f9f !important;
   }
