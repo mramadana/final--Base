@@ -2,7 +2,7 @@
     <section class="info-cards-section">
         <div class="row g-3">
             <!-- Card 1: أحدث التنبيهات -->
-            <div class="col-12 col-lg-4">
+            <div class="col-12 col-lg-6">
                 <div class="info-card">
                     <div class="card-header-section">
                         <h3 class="card-title">أحدث التنبيهات</h3>
@@ -20,13 +20,13 @@
                                 </div>
                             </div>
                             <button class="delete-btn" @click="deleteNotification(index)">
-                                <i class="fas fa-trash-alt"></i>
+                                <img src="@/assets/images/home-img/delet-noft.svg" alt="delete-noft">
                             </button>
                         </div>
                     </div>
 
-                    <div v-else>
-                        no notifications
+                    <div class="main-title flex-grow-1 d-flex align-items-center justify-content-center" v-else>
+                        لا يوجد تنبيهات الان
                     </div>
                     
                     <NuxtLink to="/notifications" class="view-all-link">
@@ -36,7 +36,7 @@
             </div>
 
             <!-- Card 2: روابط سريعة -->
-            <div class="col-12 col-lg-4">
+            <div class="col-12 col-lg-3">
                 <div class="info-card quick-links-card">
                     <div class="card-header-section">
                         <h3 class="card-title">روابط سريعة</h3>
@@ -48,10 +48,10 @@
                             :to="quickLinks[0].url"
                             class="quick-link-main"
                         >
+                        <div class="main-link-icon ml-1">
+                            <img src="@/assets/images/sidebar/tables.svg" alt="quickLinks[0].text">
+                        </div>
                             <span class="main-link-text">{{ quickLinks[0].text }}</span>
-                            <div class="main-link-icon">
-                                <i :class="quickLinks[0].icon"></i>
-                            </div>
                         </NuxtLink>
                         
                         <hr class="links-divider" />
@@ -65,7 +65,7 @@
                                 class="quick-link-item"
                             >
                                 <div class="link-icon">
-                                    <i :class="link.icon"></i>
+                                    <img :src="link.image" :alt="link.text">
                                 </div>
                                 <span class="link-text">{{ link.text }}</span>
                             </NuxtLink>
@@ -75,17 +75,20 @@
             </div>
 
             <!-- Card 3: حالة الحساب -->
-            <div class="col-12 col-lg-4">
+            <div class="col-12 col-lg-3">
                 <div class="info-card account-card">
                     <div class="card-header-section">
                         <h3 class="card-title">حالة الحساب</h3>
-                        <span class="status-badge"><i class="fas fa-circle"></i> مفعل</span>
+                        <span class="status-badge inactive">
+                            <img src="@/assets/images/home-img/danger.svg" alt="inactive">
+                            غير مفعل
+                        </span>
                     </div>
                     
                     <div class="account-content">
                         <p class="account-message">
-                            يرجى اعادة الاشتراك لتفادي<br>
-                            استخدام الحساب بشكل كامل
+                            يرجى اعادة الاشتراك لاعادة<br>
+                            استخدام الحساب مرة اخرى
                         </p>
                         
                         <div class="subscription-date">
@@ -117,17 +120,16 @@ const notifications = ref([
 const quickLinks = ref([
     {
         text: 'إضافة طاولة جديدة',
-        icon: 'fas fa-plus',
         url: '/tables/add'
     },
     {
         text: 'الحجوزات',
-        icon: 'fas fa-calendar-check',
+        image: '/_nuxt/assets/images/sidebar/reservations.svg',
         url: '/reservations'
     },
     {
         text: 'المنيو',
-        icon: 'fas fa-utensils',
+        image: '/_nuxt/assets/images/sidebar/menu-board.svg',
         url: '/menu'
     }
 ]);
@@ -166,8 +168,7 @@ const deleteNotification = (index) => {
     }
     
     .status-badge {
-        background-color: #1919194D;
-        color: #4CAF50;
+        color: #fff;
         padding: 4px 12px;
         border-radius: 6px;
         font-size: 13px;
@@ -185,7 +186,6 @@ const deleteNotification = (index) => {
     align-items: flex-start;
     justify-content: space-between;
     padding: 12px;
-    background-color: #1a1a1a;
     border-radius: 8px;
     margin-bottom: 10px;
     
@@ -240,10 +240,13 @@ const deleteNotification = (index) => {
     cursor: pointer;
     padding: 5px;
     transition: all 0.3s ease;
-    
-    &:hover {
-        color: #ff4081;
-    }
+    width: 35px;
+    height: 35px;
+    background-color: var(--main-bg);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     
     i {
         font-size: 16px;
@@ -256,14 +259,10 @@ const deleteNotification = (index) => {
     color: #b0b0b0;
     font-size: 14px;
     text-decoration: none;
-    padding: 10px;
+    padding-top: 10px;
     border-top: 1px solid #3a3a3a;
     margin-top: auto;
     transition: all 0.3s ease;
-    
-    &:hover {
-        color: #fff;
-    }
 }
 
 // Quick Links Card
@@ -278,16 +277,12 @@ const deleteNotification = (index) => {
 .quick-link-main {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     padding: 10px 0;
     background-color: transparent;
     text-decoration: none;
     transition: all 0.3s ease;
     margin-bottom: 15px;
-    
-    &:hover {
-        opacity: 0.8;
-    }
     
     .main-link-text {
         color: #fff;
@@ -296,24 +291,24 @@ const deleteNotification = (index) => {
     }
     
     .main-link-icon {
-        width: 50px;
-        height: 50px;
+        width: 40px;
+        height: 40px;
         background-color: #1919194D;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        
-        i {
-            color: #fff;
-            font-size: 22px;
+        padding: 7px;
+        img {
+            width: 100%;
+            height: 100%;
         }
     }
 }
 
 .links-divider {
     border: 0;
-    border-top: 1px solid #3a3a3a;
+    border-top: 1.5px solid gray;
     margin: 0 0 15px 0;
 }
 
@@ -333,9 +328,8 @@ const deleteNotification = (index) => {
     text-decoration: none;
     transition: all 0.3s ease;
     gap: 10px;
-    
-    &:hover {
-        opacity: 0.8;
+    &:not(:last-child) {
+        border-inline-end: 1px solid #EEEEEE0D;
     }
     
     .link-icon {
@@ -346,10 +340,17 @@ const deleteNotification = (index) => {
         display: flex;
         align-items: center;
         justify-content: center;
+        padding: 10px;
         
         i {
             color: #fff;
             font-size: 22px;
+        }
+        
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
     }
     
@@ -368,8 +369,10 @@ const deleteNotification = (index) => {
         align-items: center;
         gap: 5px;
         
-        i {
-            font-size: 8px;
+        
+        img {
+            width: 16px;
+            height: 16px;
         }
     }
 }
@@ -386,18 +389,15 @@ const deleteNotification = (index) => {
 }
 
 .account-message {
-    color: #b0b0b0;
+    color: #909090;
     font-size: 14px;
-    line-height: 1.6;
+    line-height: 1.8;
     margin: 0;
 }
 
 .subscription-date {
     width: 100%;
     text-align: center;
-    padding: 15px;
-    background-color: #1a1a1a;
-    border-radius: 8px;
     
     .date-text {
         color: #fff;
@@ -417,11 +417,6 @@ const deleteNotification = (index) => {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    
-    &:hover {
-        background-color: #f0f0f0;
-        transform: translateY(-2px);
-    }
 }
 
 @media (max-width: 992px) {

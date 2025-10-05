@@ -8,11 +8,12 @@
         <SkeltonStaticCard v-else/>
 
         <HomeCardInfo/>
-
-        <div class="mb-5">
-            <h1 class="main-title bold md mb-5">{{ $t("Home.new_request_statistics") }}</h1>
-            <div class="layout-form sm-radius mt-5">
+        <div class="row">
+            <div class="col-12 col-lg-4">
                 <HomeChart />
+            </div>
+            <div class="col-12 col-lg-8">
+                <OrdersCardReservation :orders="orders" />
             </div>
         </div>
 
