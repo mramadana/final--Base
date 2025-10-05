@@ -102,6 +102,13 @@
         res.status == "success" ? successToast(res.msg) : errorToast(res.msg);
         navigateTo("/Auth/register");
     }
+
+    // تعيين عنوان الصفحة مع أيقونة وعنوان فرعي
+    const globalStore = useGlobalStore();
+    globalStore.title = 'الإعدادات';
+    globalStore.titleIcon = 'fa-solid fa-gear';
+    globalStore.titleLink = null;
+    globalStore.subtitle = 'إدارة حسابك';
 </script>
 
 <!-- <script>

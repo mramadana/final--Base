@@ -9,7 +9,10 @@ export const useGlobalStore = defineStore("global", {
     countries : [],
     isCountriesLoaded: false,
     isCountriesLoading: false,
-    title: ''
+    title: '',
+    titleIcon: null,
+    titleLink: null,
+    subtitle: null
   }),
   actions: {
 

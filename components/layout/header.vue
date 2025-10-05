@@ -3,36 +3,48 @@
         <header class="header" :class="[headerClass, {'headerAdded': isScrolled}]">
             <div class="inner-header">
                 <div class="right-side d-flex align-items-center gap-4 flex-wrap">
-                    <div class="navbar-btn"  @click="toggleActive">
-                        <i class="fas fa-bars"></i>
+
+                    <div class="settings-link">
+                        <i class="fa-solid fa-gear"></i>
                     </div>
-                    <h3 class="main-title bold md mb-0">
-                        <div v-if="globalStore?.title">{{ globalStore.title }}</div>
-                        <template v-else>{{ $t("Global.welcome") }} {{ user?.name }} 😊</template>
-                    </h3>
+
+                    <div v-if="globalStore?.title">                        
+                        <div class="d-flex align-items-center gap-2">
+
+                            <NuxtLink v-if="globalStore?.titleLink" :to="globalStore.titleLink" class="main-title bold md mb-0" style="color: #fff; text-decoration: none;">
+                                {{ globalStore.title }}
+                            </NuxtLink>
+
+                            <h3 v-else class="main-title bold md mb-0">{{ globalStore.title }}</h3>
+
+                            <i v-if="globalStore?.titleIcon" class="mr-1" :class="globalStore.titleIcon" style="color: #fff;"></i>
+
+                            
+                            <div v-if="globalStore?.subtitle" style="font-size: 12px; color: #ccc; margin-top: 2px;">
+                                {{ globalStore.subtitle }}
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
                 <div class="d-flex align-items-center">
-                    <div class="with_br">
-                        <NuxtLink v-if="isLoggedIn" to="/Notifications" class="notification">
-                            <div class="notif-icon">
-                                <i class="fas fa-bell"></i>
-                                <div class="nof-cont" v-if="notifCount" :data-number="notifCount"></div>
-                            </div>
-                        </NuxtLink>
-                    </div>
-                    <nuxt-link to="/profile" class="with_br d-flex align-items-center gap-2">
-                        <div class="profile-hint resp-icon ">
-                            <img :src="user?.image" class="user-img" alt="user-image" loading="lazy" v-if="user?.image">
-                        </div>
-                        <div class="hints">
-                            <p class="title" v-if="user?.name">{{ user.name }} </p>
-                            <!-- <p class="desc">{{ $t('Home.general_director') }}</p> -->
-                            <p class="desc">{{ $t('Global.provider') }}</p>
-                        </div>
-                    </nuxt-link>
 
-                    <GlobalLang :color-lang="true" />
+                    <NuxtLink  to="/Notifications" class="notification ml-5">
+                        <div class="notif-icon">
+                            <!-- <i class="fas fa-bell"></i> -->
+                             <img src="@/assets/images/notification-img.svg" alt="notification-img">
+                            <div class="nof-cont" v-if="notifCount" :data-number="notifCount"></div>
+                        </div>
+                    </NuxtLink>
+
+                    <div class="AuthLang">
+                        <GlobalLang :color-lang="true" />
+
+                    </div>
+
+                    <div class="navbar-btn"  @click="toggleActive">
+                        <i class="fas fa-bars"></i>
+                    </div>
 
                 </div>
             </div>
@@ -155,94 +167,19 @@
 
 </script>
 
-<script>
-
-export default {
-    data() {
-        return {
-            htmlLang: "",
-            navBtnActive: false,
-            navLinksActive: false,
-            navOverlayShow: false,
-            // isActive: false,
-        };
-    },
-
-    methods: {
-        // logout() {
-        //     localStorage.clear();
-        //     this.logoutDialog = false;
-        //     this.$router.push("/Auth/login");
-        // },
-
-
-        chageDir(dir) {
-            let element = document.querySelector(".html_direction");
-            element.setAttribute("lang", dir);
-            if (dir === "ar") {
-                element.setAttribute("dir", "rtl");
-                this.htmlLang = dir;
-            }
-            if (dir === "en") {
-                element.setAttribute("dir", "ltr");
-                this.htmlLang = dir;
-            }
-        },
-        switchLang(newLang) {
-            const lang = useCookie('lang')
-            if (newLang !== localStorage.getItem("locale")) {
-                lang.value = newLang
-                localStorage.setItem("locale", newLang);
-                location.reload();
-            }
-        },
-
-        handleClick() {
-            this.navBtnActive = true;
-            this.navLinksActive = true;
-            this.navOverlayShow = true;
-        },
-
-        handleOverlayClick() {
-            this.navBtnActive = false;
-            this.navLinksActive = false;
-            this.navOverlayShow = false;
-        },
-    },
-
-    watch: {
-    // Watch for changes in the route
-    
-    $route(to, from) {
-      // Handle the event here
-      this.handleOverlayClick();
-    },
-  },
-
-    async mounted() {
-        let sessionKey = localStorage.getItem("locale");
-
-        window.sessionKey = localStorage.getItem("locale");
-        if (sessionKey) {
-            this.chageDir(localStorage.getItem("locale"));
-        }
-    },
-
-    computed: {
-        headerClass() {
-            return {
-                "auth-padding": this.shouldAddMarginBottom,
-            };
-        },
-        shouldAddMarginBottom() {
-            // Check if the current route is not the home page
-            return this.$route.path.includes("Auth") === true;
-        },
-    },
-};
-</script>
 
 <style lang="scss">
+.settings-link {
+    width: 35px;
+    height: 35px;
+    background: #3a3a3a;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    cursor: pointer;
+}
 .add-margin {
     margin-bottom: 40px;
 }
@@ -253,8 +190,12 @@ export default {
 }
 .header {
     transition: all 0.4s ease-in-out;
+    border: 1px solid #191919;
     &.headerAdded {
         transform: translateY(10px);
+        border-color: #fff;
+        background-color: #191919;
+        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
     }
 }
 </style>

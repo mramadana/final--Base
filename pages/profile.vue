@@ -203,4 +203,11 @@ const countryDropdownRef = ref(null);
     onMounted(() => {
          refresh();
     })
+
+    // تعيين عنوان الصفحة مع أيقونة كرابط
+    const globalStore = useGlobalStore();
+    globalStore.title = 'البروفايل';
+    globalStore.titleIcon = 'fa-solid fa-user';
+    globalStore.titleLink = '/profile';
+    globalStore.subtitle = null;
 </script>

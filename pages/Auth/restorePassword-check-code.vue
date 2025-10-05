@@ -25,6 +25,7 @@
                 </div>
             </form>
         </div>
+        
         <!-- Success Modal -->
         <Dialog v-model:visible="showSuccessModal" modal class="custum_dialog_width without-close" :draggable="false">
             <div class="text-center">
@@ -35,6 +36,7 @@
                 <p class="desc lg">{{ $t("Auth.password_reset_success_desc") }}</p>
             </div>
         </Dialog>
+
     </div>
 </template>
 

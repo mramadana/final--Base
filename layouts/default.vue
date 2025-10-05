@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="pages_layout">
 
         <LayoutHeader @toggle-active="toggleActive"/>
         

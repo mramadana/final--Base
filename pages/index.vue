@@ -1,19 +1,14 @@
 <template>
     <div>
 
-        <div class="sub-screption layout-form sm-radius">
-
-            <div class="text d-flex align-items-center gap-3">
-                <i class="fa-solid fa-stopwatch icon"></i>
-                <h3 class="main-title bold mb-0">{{ $t("order.complete_order") }}</h3>
-            </div>
-            <NuxtLink to="" class="custom-btn sm">{{ $t("order.subscription") }}</NuxtLink>
-        </div>
-
-        <!-- start to home Slider  -->
-        <HomeSlider class="mb-5" :slider="sliderHome" :loading="loading" :slider_title="true" />
-
         <!-- start to Home chart  -->
+
+        <HomeStaticCard v-if="!loading" :items="items"/>
+
+        <SkeltonStaticCard v-else/>
+
+        <HomeCardInfo/>
+
         <div class="mb-5">
             <h1 class="main-title bold md mb-5">{{ $t("Home.new_request_statistics") }}</h1>
             <div class="layout-form sm-radius mt-5">
@@ -23,7 +18,7 @@
 
         <div class="index-page">
             <h1 class="main-title bold md mb-5">{{ $t("order.new_orders") }}</h1>
-            <OrdersCardOrder :orders="orders" :additionalClasses="['background-color-card']"/>
+            <OrdersCardOrder :orders="orders" :additionalClasses="['background-color-card']" />
         </div>
 
     </div>
@@ -33,8 +28,7 @@
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n({ useScope: 'global' });
 const globalStore = useGlobalStore();
-const { user } = storeToRefs(useAuthStore());
-const pageTilte = ref(t("Global.welcome") + " " + user?.value?.name + " 😊");
+const pageTilte = ref(t("Titles.home"));
 
 definePageMeta({
     name: "Titles.home",
@@ -61,6 +55,48 @@ const sliderHome = ref([
     }
 ]);
 const loading = ref(false);
+const items = ref([
+    {
+        title: 'الحجوزات الحالية',
+        number: '١٢ حجز ضي لان',
+        icon: '/_nuxt/assets/images/home-img/current-reservations.svg',
+        link: '/reservations/current',
+        buttonText: 'عرض جميع الحجوزات',
+        dateText: 'اخر تحديث اليوم'
+    },
+    {
+        title: 'الحجوزات الواردة',
+        number: '٧ حجز واردة',
+        icon: '/_nuxt/assets/images/home-img/incoming-reservations.svg',
+        link: '/reservations/incoming',
+        buttonText: 'عرض جميع الواردة',
+        dateText: 'اخر تحديث اليوم'
+    },
+    {
+        title: 'الحجوزات المكتملة',
+        number: '٣٢ حجز مكتمل',
+        icon: '/_nuxt/assets/images/home-img/completed-reservations.svg',
+        link: '/reservations/completed',
+        buttonText: 'عرض الحجوزات المكتملة',
+        dateText: 'اخر تحديث اليوم'
+    },
+    {
+        title: 'الحجوزات الملغية',
+        number: '٢ حجز ملغي ضي لان',
+        icon: '/_nuxt/assets/images/home-img/cancelled-reservations.svg',
+        link: '/reservations/cancelled',
+        buttonText: 'عرض الحجوزات الملغية',
+        dateText: 'اخر تحديث اليوم'
+    },
+    {
+        title: 'طلبات قائمة الانتظار',
+        number: '٣ صفر في قائمة الانتظار',
+        icon: '/_nuxt/assets/images/sidebar/timer.svg',
+        link: '/waiting-list',
+        buttonText: 'عرض الحجوزات الملغية',
+        dateText: 'اخر تحديث اليوم'
+    }
+]);
 const orders = ref([
     {
         id: 1,
@@ -105,25 +141,11 @@ const orders = ref([
 ]);
 
 globalStore.title = pageTilte.value;
+globalStore.titleIcon = null;
+globalStore.titleLink = null;
+globalStore.subtitle = null;
 </script>
 
-<style scoped lang="scss">
-    .sub-screption {
-        background-color: rgba(195, 22, 22, 30%);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 15px;
-        margin-bottom: 30px;
-        @media (max-width: 550px) {
-            flex-direction: column;
-        }
-        .icon {
-            color: #C31616;
-            font-size: 25px;
-        }
-    }
-</style>
 
 <style lang="scss" scoped>
 .index-page {
