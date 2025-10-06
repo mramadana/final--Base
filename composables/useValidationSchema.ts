@@ -119,7 +119,7 @@ export const useValidationSchema = () => {
         .string()
         .trim()
         .required(t('validation.required_with_label', { field: t('Auth.account_number') }))
-        .min(8, t('Auth.account_number') + " " + t('validation.min', { field: label, min: 8 }))
+        .min(8, t('Auth.account_number') + " " + t('validation.min_num', { field: label, min: 8 }))
         .matches(/^[0-9]+$/, t('validation.account_number_only_digits'))
         .label(label);
 

@@ -11,12 +11,12 @@ export default defineNuxtConfig({
       mode: 'out-in',
     },
     head: {
-      title: "جعفر-علوان",
+      title: "Revent",
       charset: "utf-8",
       viewport: "width=device-width, initial-scale=1",
       htmlAttrs: { lang: "ar", class: "html_direction" },
       meta: [
-        { name: "description", content: "موقع اميال لتاجير السيارات" },
+        { name: "description", content: "Revent" },
       ],
       link: [
         { rel: "icon", type: "image/x-icon", href: "/logo.svg" },

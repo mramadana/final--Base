@@ -171,7 +171,7 @@ margin: 0;
 .p-toast {
   max-width: calc(100% - 20px) !important;
   @include dir-left(10px !important);
-  z-index: 2005 !important;
+  z-index: 20005 !important;
   .p-toast-message {
     margin-bottom: 8px;
     border: 6px solid #1ea97c;
@@ -226,6 +226,11 @@ margin: 0;
       color: #ff5757;
     }
   }
+}
+
+.p-toast .p-toast-message .p-toast-icon-close:focus-visible {
+  background-color: transparent;
+  box-shadow: none !important;
 }
 
 .spinner-border-sm {

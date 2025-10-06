@@ -8,6 +8,12 @@ export default defineNuxtRouteMiddleware((to, from) => {
     }
   }
 
+  if (to.path === '/settings') {
+  
+    return '/settings/profile';
+    
+  };
+
     // Toast
     const { errorToast } = toastMsg();
   

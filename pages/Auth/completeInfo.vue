@@ -125,6 +125,7 @@
 
                 <!-- Step 2: Additional Info -->
                 <div v-show="currentStep === 2" class="step-content">
+                    
                     <div class="row">
 
                         <div class="col-12 col-md-8 mr-auto">

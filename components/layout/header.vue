@@ -4,9 +4,9 @@
             <div class="inner-header">
                 <div class="right-side d-flex align-items-center gap-4 flex-wrap">
 
-                    <div class="settings-link">
+                    <NuxtLink to="/settings" class="settings-link">
                         <i class="fa-solid fa-gear"></i>
-                    </div>
+                    </NuxtLink>
 
                     <div v-if="globalStore?.title">                        
                         <div class="d-flex align-items-center gap-2">

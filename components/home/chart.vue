@@ -23,7 +23,7 @@
                 </label>
             </div>
         </div>
-        <VChart ref="chart" class="custom-chart" :option="option" style="height: 250px; width: 100%; display: block" />
+        <VChart ref="chart" class="custom-chart" :option="option" style="height: 240px; width: 100%; display: block" />
     </div>
 </template>
 

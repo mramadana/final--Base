@@ -13,7 +13,7 @@
             />
         </div>
 
-        <div class="d-flex align-items-center justify-content-between mt-4 mb-4">
+        <div class="resend-section d-flex align-items-center justify-content-between mt-4 mb-4">
             <div class="new-sign d-flex align-items-center">
                 <i class="fa-solid fa-clock fz-16 ml-1"></i>
                 <button 
@@ -26,7 +26,7 @@
                 </button>
             </div>
 
-            <div class="text-center" v-if="countStatus">
+            <div class="text-center col-wh" v-if="countStatus">
                 <span>{{ countDown }} :</span>  <span>00</span> 
             </div>
         </div>
@@ -140,5 +140,11 @@ onMounted(() => {
 
 .layout-activate {
     justify-content: center;
+}
+
+.resend-section {
+    max-width: 350px;
+    margin: 0 auto;
+    width: 100%;
 }
 </style>

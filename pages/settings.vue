@@ -2,68 +2,55 @@
     <div>
 
         <div class="container">
-            <div class="layout-form custom-width lg">
-                <h1 class="main-title bold lg mb-5">{{ $t("Home.settings") }}</h1>
-                <div class="row justify-content-center card-setting">
-                    <div class="col-12 col-md-11">
+            
+            <h1 class="main-title bold lg">{{ $t("Home.settings") }}</h1>
+            <p class="main-disc">{{ $t('Home.welcome') }} {{ user?.name }} ، {{ $t('Home.welcome_back') }}</p>
+            
+            <div class="section-btns justify-content-start mb-4">
     
-                        <router-link class="layout-form sm" to="/editProfile">
-                            {{ $t("Global.edit_profile") }}
-                            <i class="fas fa-chevron-left"></i>
-                        </router-link>
-    
-                        <router-link class="layout-form sm" to="/changeMobileNumber">
-                            {{ $t("Global.change_mobile_number") }}
-                            <i class="fas fa-chevron-left"></i>
-                        </router-link>
-    
-                        <router-link class="layout-form sm" to="/changeEmail">
-                            {{ $t("Global.change_email") }}
-                            <i class="fas fa-chevron-left"></i>
-                        </router-link>
-    
-                        <router-link class="layout-form sm" to="/changePassword">
-                            {{ $t("Global.change_password") }}
-                            <i class="fas fa-chevron-left"></i>
-                        </router-link>
-    
-                        <router-link class="layout-form sm" to="/notificationSettings">
-                            {{ $t("Global.notification_settings") }}
-                            <i class="fas fa-chevron-left"></i>
-                        </router-link>
-    
-                        <button @click="deleteAcount = true" class="layout-form sm del-color w-100">
-                            {{ $t("Global.delete_account") }}
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                    </div>
-                </div>
+                <router-link class="custom-btn order-btn sm" to="/settings/editProfile">
+                    {{ $t("settings.edit_account") }}
+                </router-link>
+
+                <router-link class="custom-btn order-btn sm" to="/settings/changePassword">
+                    {{ $t("settings.change_password") }}
+                </router-link>
+
+                <router-link class="custom-btn order-btn sm" to="/settings/changeMobileNumber">
+                    {{ $t("settings.change_mobile") }}
+                </router-link>
+
+                <router-link class="custom-btn order-btn sm" to="/settings/changeEmail">
+                    {{ $t("settings.change_email") }}
+                </router-link>
+
+                <router-link class="custom-btn order-btn sm" to="/settings/profile">
+                    {{ $t("settings.view_profile") }}
+                </router-link>
+
+                <button class="custom-btn order-btn sm" @click="deleteAcount = true">
+                    {{ $t("settings.delete_account") }}
+                </button>
+
+            </div>
+
+            <!-- nested routes -->
+            <div class="custom-width layout-form text-start w-100">
+                <NuxtPage />
             </div>
         </div>
 
-        
         <!-- logout Dialog -->
         <Dialog v-model:visible="deleteAcount" modal class="custum_dialog_width" :draggable="false">
             <div class="text-center">
-                <img src="@/assets/images/noun_warning.png" loading="lazy" alt="check-img" class="check-img">
-                <h1 class="main-title bold mb-4">{{ $t('Global.sure_delete_account') }}</h1>
-                <h1 class="main-title normal mb-4">{{ $t('Global.delete_account_info') }}</h1>
+                <h1 class="main-title bold mb-4">{{ $t('settings.sure_delete_account')}}</h1>
+                <!-- <img src="@/assets/images/noun_warning.svg" loading="lazy" alt="check-img" class="lgg"> -->
                 <div class="section-btns mt-5">
-                    <button type="button" class="custom-btn sm d-inline-flex" @click="deleteAcount = false">{{ $t('Home.retreat') }}</button>
                     <button type="button" class="custom-btn logout sm d-inline-flex" @click="deletedAcount">{{ $t('Global.delete') }}</button>
+                    <button type="button" class="custom-btn sm d-inline-flex" @click="deleteAcount = false">{{ $t('Auth.retreat') }}</button>
                 </div>
             </div>
         </Dialog>
-
-        <!-- delete successfully dialog -->
-
-        <!-- <Dialog v-model:visible="delete_Successfully" modal class="custum_dialog_width without-close" :draggable="false">
-            <div class="text-center">
-                <img src="@/assets/images/check.png" loading="lazy" alt="check-img" class="check-img">
-                <h1 class="main-title bold mb-4">{{ $t('Global.account_deleted') }}</h1>
-                <NuxtLink class="custom-btn sm d-inline-flex" to="/Auth/register">{{ $t('Auth.create_account') }}</NuxtLink>
-            </div>
-        </Dialog> -->
 
     </div>
 </template>
@@ -71,7 +58,7 @@
 <script setup>
     definePageMeta({
         name: "Home.settings",
-        middleware: "auth",
+        middleware: 'auth',
     });
 
 
@@ -88,6 +75,8 @@
 
     const { deleteAccountHandler } = store;
 
+    const { user } = storeToRefs(store);
+
     const delete_Successfully = ref(false)
 
     const deleteAcount = ref(false)
@@ -101,36 +90,30 @@
         const res = await deleteAccountHandler();
         res.status == "success" ? successToast(res.msg) : errorToast(res.msg);
         navigateTo("/Auth/register");
-    }
 
-    // تعيين عنوان الصفحة مع أيقونة وعنوان فرعي
-    const globalStore = useGlobalStore();
-    globalStore.title = 'الإعدادات';
-    globalStore.titleIcon = 'fa-solid fa-gear';
-    globalStore.titleLink = null;
-    globalStore.subtitle = 'إدارة حسابك';
+        // تعيين عنوان الصفحة مع أيقونة وعنوان فرعي
+        const globalStore = useGlobalStore();
+        globalStore.title = 'الإعدادات';
+        globalStore.titleIcon = 'fa-solid fa-gear';
+        globalStore.titleLink = null;
+        globalStore.subtitle = 'إدارة حسابك';
+    }
 </script>
 
-<!-- <script>
-    definePageMeta({
-        name: "Home.settings",
-        middleware: "auth",
-    })
-
-    export default {
-        data() {
-            return {
-                deleteAcount: false,
-                delete_Successfully: false,
-            };
-        },
-
-        methods: {
-            deletedAcount() {
-                localStorage.clear();
-                this.delete_Successfully = true
-                this.deleteAcount = false
+<style lang="scss" scoped>
+    .order-btn {
+        border-color: #fff;
+        background-color: transparent;
+        color: #fff;
+        font-weight: bold;
+        border: 2px solid #fff !important;
+        &.router-link-active, &:hover {
+            background-color: #3a3a3a !important;
+            border-color: #fff !important;
+            color: #fff !important;
+            &::before {
+                background-color: #3a3a3a !important;
             }
         }
     }
-</script> -->
+</style>

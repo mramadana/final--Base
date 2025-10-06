@@ -9,7 +9,7 @@
                     <div class="row">
                         <div class="col-12 col-md-8 mr-auto">
                             <div class="text-center mb-5">
-                                <img src="@/assets/images/restore-image.svg" loading="lazy" alt="restore-image" class="restore-image mb-4">
+                                <!-- <img src="@/assets/images/restore-image.svg" loading="lazy" alt="restore-image" class="restore-image mb-4"> -->
                                 <p class="main-title">{{ $t("Auth.please_enter_activation_code") }}</p>
                             </div>
     

@@ -44,7 +44,9 @@
         "enter_details": "يجب ادخال تفاصيل الطلب اولا",
         "required": "هذا الحقل مطلوب",
         "min": "يجب ان يكون {min} حرف على الاقل",
+        "min_num": "يجب ان يكون {min} رقم على الاقل",
         "max": "يجب ان يكون {max} حرف على الاكثر",
+        "max_num": "يجب ان يكون {max} رقم على الاكثر",
         "minNum": " يجب ان يكون رقم الجوال {min} ارقام على الاقل",
         "maxNum": "يجب ان يكون رقم الجوال {max} ارقام على الاكثر",
         "phone_only_digits": "يجب ان يحتوي رقم الجوال على ارقام فقط",
@@ -189,7 +191,7 @@
     "Global": {
         "back" : "رجوع",
         "attach_photo" : "إرفاق صورة",
-        "Saving_changes" : "حفظ التغييرات",
+        "Saving_changes" : "حفظ التعديل",
         "enter_current_password_new_mobile" : "برجاء ادخال كلمة المرور الحالية و رقم الجوال الجديد",
         "new_mobile" : "رقم الجوال الجديد",
         "mobile_changed_successfully" : "تم تغيير رقم الجوال بنجاح",
@@ -245,10 +247,24 @@
         "out": "خروج"
     },
 
-    "profile" : {
-        "profile_img" : "الصورة الشخصية",
-        "store_name" : "اسم المتجر",
-        "type_delivery" : "نوع التوصيل"
+    "reservations": {
+        "today_reservations": "جدول حجوزات اليوم",
+        "all_reservations": "عرض جميع الحجوزات"
+    },
+
+    "settings": {
+        "edit_account": "تعديل بيانات الحساب",
+        "change_password": "تغيير كلمة المرور",
+        "change_mobile": "تغيير رقم الجوال",
+        "change_email": "بيانات مقدم الخدمة",
+        "view_profile": "المعايير",
+        "delete_account": "حذف حسابي",
+        "sure_delete_account": "هل أنت متأكد من حذف الحساب؟",
+        "current_password": "كلمة المرور الحالية"
+    },
+
+    "noData" : {
+        "no_reservations" : "لا توجد حجوزات حاليا"
     }
 
 }
