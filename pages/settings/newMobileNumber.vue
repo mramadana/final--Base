@@ -4,16 +4,25 @@
             <div class="row">
                 <div class="col-12 col-md-8">
 
-                    <!-- Password -->
-                    <FormInput 
-                        v-model:modelValue="password" 
-                        name="password" 
-                        type="password" 
-                        :label="$t('Auth.password')"
-                        :placeholder="$t('Auth.please_enter_password')" 
-                        :validation-schema="validations.password"
-                        :showErrors="showValidation" 
-                    />
+                    <div class="form-group">
+                        <label class="label">
+                            {{ $t("Global.new_mobile") }}
+                        </label>
+                        <div class="with_cun_select" 
+                             :class="{ 'is-invalid': phoneInputRef?.shouldShowError }">
+                            <FormInput ref="phoneInputRef" v-model:modelValue="phone" name="phone" type="number"
+                                :placeholder="$t('Global.new_mobile')" :validation-schema="validations.phone"
+                                :showErrors="showValidation" :moveErrorToParent="true" :hasIcon="true" icon="/_nuxt/assets/images/auth-img/mobile.svg"
+                                :with_icon="true" />
+                            <GlobalCountryDropdown v-model="selectedCountry"
+                                :placeholder="$t('Global.select_country')" />
+                        </div>
+                        <!-- Display validation error message for phone -->
+                        <p v-if="phoneInputRef?.shouldShowError" class="error-message text-danger mt-1" 
+                           :class="phoneInputRef?.localeDir">
+                            {{ phoneInputRef?.errorMessage }}
+                        </p>
+                    </div>
 
                     <!-- Submit button -->
                     <button type="submit" class="custom-btn md" :disabled="loading">
@@ -31,7 +40,7 @@
 import { useI18n } from 'vue-i18n';
 
 definePageMeta({
-    name: "settings.change_mobile",
+    // name: "settings.change_mobile",
     middleware: 'auth'
 });
 
@@ -50,11 +59,13 @@ const { successToast, errorToast } = toastMsg();
 const axios = useApi();
 
 // Form Data
-const password = ref('');
+const phone = ref('');
+const selectedCountry = ref(null);
+const phoneInputRef = ref(null);
 
 // Form data (reactive object for validation)
 const formData = computed(() => ({
-    password: password.value
+    phone: phone.value
 }));
 
 const loading = ref(false);
@@ -66,11 +77,11 @@ const { isFormValid, scrollToFirstError } = useFormValidation();
 
 // Validation schemas
 const {
-    password: passwordValidation
+    phoneNumber
 } = useValidationSchema();
 
 const validations = {
-    password: passwordValidation("settings.current_password")
+    phone: phoneNumber('Auth.mobile_number')
 };
 
 const config = {
@@ -88,7 +99,7 @@ const changePhone = async () => {
         console.log("Validation Failed");
     } else {
         console.log("Validation Passed");
-        navigateTo('/settings/mobileActivateCode');
+        navigateTo('/settings/changeMobileActivateCode');
         // loading.value = true;
 
         // const fd = new FormData(changePhoneForm.value);
@@ -111,3 +122,18 @@ const changePhone = async () => {
     }
 };
 </script>
+
+<style scoped>
+.with_cun_select.is-invalid {
+    border: 1px solid #e74c3c !important;
+    box-shadow: 0 0 5px rgba(231, 76, 60, 0.3) !important;
+    border-radius: 8px;
+}
+
+.error-message {
+    font-size: 12px;
+    color: #e74c3c;
+    font-weight: 500;
+    margin-top: 5px;
+}
+</style>

@@ -6,8 +6,8 @@
       optionLabel="name"
       class="w-100"
       filter
-      :emptyMessage="$t('Home.no_available_options')"
-      :emptyFilterMessage="$t('Home.emptyFilterMessage')"
+      :emptyMessage="$t('settings.no_available_options')"
+      :emptyFilterMessage="$t('settings.emptyFilterMessage')"
       @change="handleChange"
     >
       <template #value="slotProps">

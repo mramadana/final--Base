@@ -10,7 +10,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
 
   if (to.path === '/settings') {
   
-    return '/settings/profile';
+    return '/settings/editProfile';
     
   };
 

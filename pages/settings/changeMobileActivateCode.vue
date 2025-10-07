@@ -1,11 +1,8 @@
 <template>
-    <div class="text-center">
-
-        <p class="desc mb-4 auth-desc">{{ $t("settings.confirm_code") }}</p>
-
+    <div>
         <form @submit.prevent="verificationCode">
             <div class="row">
-                <div class="col-12 col-md-8 mx-auto">
+                <div class="col-12 col-md-6">
 
                     <FormOtpVerification 
                         v-model="bindModal"
@@ -15,15 +12,10 @@
                         ref="otpComponent"
                     />
 
-                    <div class="d-flex justify-content-center">
-
-                        <button type="submit" class="custom-btn md mt-4" :disabled="loading">
-                            {{ $t('Auth.confirmation') }}
-                            <span class="spinner-border spinner-border-sm" v-if="loading" role="status" aria-hidden="true"></span>
-                        </button>
-
-                    </div>
-
+                    <button type="submit" class="custom-btn md" :disabled="loading">
+                        {{ $t('Auth.confirmation') }}
+                        <span class="spinner-border spinner-border-sm" v-if="loading" role="status" aria-hidden="true"></span>
+                    </button>
 
                 </div>
             </div>
@@ -31,8 +23,8 @@
 
         <Dialog v-model:visible="successfullySent" modal class="custum_dialog_width without-close" :draggable="false">
             <div class="text-center">
-                <img src="@/assets/images/check.png" loading="lazy" alt="check-img" class="check-img">
-                <h3 class="main-title bold mb-4">{{ $t('Global.mobile_changed_successfully') }}</h3>
+                <img src="@/assets/images/Success.gif" alt="check-img" class="check-img lg" loading="lazy" />
+                <h3 class="main-title bold mb-0">{{ $t('Global.mobile_changed_successfully') }}</h3>
             </div>
         </Dialog>
     </div>
@@ -44,7 +36,7 @@ import { useI18n } from "vue-i18n";
 const { t } = useI18n({ useScope: "global" });
 
 definePageMeta({
-    name: "settings.activation_code",
+    // name: "settings.activation_code",
     middleware: 'auth'
 });
 
@@ -59,6 +51,7 @@ const axios = useApi();
 
 // Store
 const store = useAuthStore();
+
 const { token, user, newPhone } = storeToRefs(store);
 
 // Variables
@@ -78,7 +71,9 @@ const verificationCode = async () => {
         errorToast(t("validation.verification_code"));
         return;
     }
-    navigateTo('/settings/newMobileNumber');
+
+    successfullySent.value = true
+
     // loading.value = true;
     // const fd = new FormData();
     

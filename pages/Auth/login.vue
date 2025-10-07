@@ -9,27 +9,22 @@
 
                     <div class="form-group">
                         <label class="label">
-                            {{ $t('Auth.mobile_number') }}
+                            {{ $t("Auth.mobile_number") }}
                         </label>
-                        <div class="with_cun_select" :class="{ 'has-error': showValidation && phoneHasError }">
-                            <FormInput 
-                                v-model:modelValue="phone"
-                                name="phone"
-                                type="number"
-                                :placeholder="$t('Auth.mobile_number')"
-                                :validation-schema="validations.phone"
-                                :showErrors="false"
-                                :hasIcon="true"
-                                icon="/_nuxt/assets/images/auth-img/mobile.svg"
-                                :with_icon="true"
-                            />
-                            <GlobalCountryDropdown
-                              v-model="selectedCountry"
-                              :placeholder="$t('Auth.select_country')"
-                            />
+                        <div class="with_cun_select" 
+                             :class="{ 'is-invalid': phoneInputRef?.shouldShowError }">
+                            <FormInput ref="phoneInputRef" v-model:modelValue="phone" name="phone" type="number"
+                                :placeholder="$t('Auth.enter_mobile_number')" :validation-schema="validations.phone"
+                                :showErrors="showValidation" :moveErrorToParent="true" :hasIcon="true" icon="/_nuxt/assets/images/auth-img/mobile.svg"
+                                :with_icon="true" />
+                            <GlobalCountryDropdown v-model="selectedCountry"
+                                :placeholder="$t('Auth.select_country')" />
                         </div>
                         <!-- Display validation error message for phone -->
-                        <p v-if="showValidation && phoneHasError" class="error-message text-danger mt-1">{{ phoneErrorMessage }}</p>
+                        <p v-if="phoneInputRef?.shouldShowError" class="error-message text-danger mt-1" 
+                           :class="phoneInputRef?.localeDir">
+                            {{ phoneInputRef?.errorMessage }}
+                        </p>
                     </div>
 
                     <FormInput 
@@ -105,32 +100,15 @@
     const password = ref('');
     const passwordVisible = ref(false);
     
+    // FormInput ref for phone
+    const phoneInputRef = ref(null);
+    
     // Form data (reactive object for validation)
     const formData = computed(() => ({
         phone: phone.value,
         password: password.value
     }));
 
-    // Phone validation computed properties
-    const phoneHasError = computed(() => {
-        if (!validations.phone) return false;
-        try {
-            validations.phone.validateSync(phone.value);
-            return false;
-        } catch (error) {
-            return true;
-        }
-    });
-
-    const phoneErrorMessage = computed(() => {
-        if (!phoneHasError.value) return '';
-        try {
-            validations.phone.validateSync(phone.value);
-            return '';
-        } catch (error) {
-            return error.message;
-        }
-    });
 
     // use the composable for the validation - exactly like your example
     const { isFormValid, scrollToFirstError } = useFormValidation();
@@ -187,9 +165,10 @@
 </script>
 
 <style scoped>
-.with_cun_select.has-error {
+.with_cun_select.is-invalid {
     border: 1px solid #e74c3c !important;
     box-shadow: 0 0 5px rgba(231, 76, 60, 0.3) !important;
+    border-radius: 8px;
 }
 
 .error-message {

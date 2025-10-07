@@ -25,13 +25,14 @@
             :name="name" 
             :placeholder="placeholder" 
             class="main_input"
-            :class="{ 'is-invalid': showErrors && hasError }"
+            :class="{ 'is-invalid': shouldShowError && !moveErrorToParent }"
+            @input="onInput"
           />
           <img v-if="icon" :src="icon" alt="icon" class="input-icon" :class="localeDir" />
         </div>
   
         <!-- Display validation error message -->
-        <p v-if="showErrors && hasError" class="error-message text-danger" :class="localeDir">{{ errorMessage }}</p>
+        <p v-if="shouldShowError && !moveErrorToParent" class="error-message text-danger" :class="localeDir">{{ errorMessage }}</p>
       </template>
       
     </div>
@@ -93,6 +94,10 @@ const props = defineProps({
   with_icon: {
     type: Boolean,
     default: false
+  },
+  moveErrorToParent: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -103,6 +108,19 @@ const localeDir = computed(() => {
 })
 
 const modelValue = defineModel('modelValue')
+
+// Track if user started typing
+const touched = ref(false)
+
+// Handle input event
+const onInput = () => {
+  touched.value = true
+}
+
+// Show error if touched OR showErrors prop is true
+const shouldShowError = computed(() => {
+  return (touched.value || props.showErrors) && hasError.value
+})
 
 // Manual validation
 const hasError = computed(() => {
@@ -164,9 +182,17 @@ const errorMessage = computed(() => {
   
   return t('validation.required_with_label', { field: fieldName });
 });
+
+// Expose validation state to parent when moveErrorToParent is true
+defineExpose({
+  hasError,
+  shouldShowError,
+  errorMessage,
+  localeDir
+});
 </script>
 
-<style scoped>
+<style scoped>  
 .error-message {
   font-size: 12px;
   color: #e74c3c;

@@ -256,11 +256,16 @@
         "edit_account": "تعديل بيانات الحساب",
         "change_password": "تغيير كلمة المرور",
         "change_mobile": "تغيير رقم الجوال",
-        "change_email": "بيانات مقدم الخدمة",
-        "view_profile": "المعايير",
+        "provider_info": "بيانات مقدم الخدمة",
+        "calibration": "المعايير",
         "delete_account": "حذف حسابي",
-        "sure_delete_account": "هل أنت متأكد من حذف الحساب؟",
-        "current_password": "كلمة المرور الحالية"
+        "sure_delete_account": "هل أنت متأكد أنك تريد حذف الحساب؟",
+        "current_password": "كلمة المرور الحالية",
+        "no_available_options": "لا توجد خيارات متاحة",
+        "emptyFilterMessage": "لا توجد نتائج متاحة",
+        "confirm_delete_acc" : "تأكيد حذف الحساب",
+        "edit_your_account" : "يمكنك تعديل بيانات الحساب بالكامل من هنا",
+        "confirm_code" : "الرجاء ادخال رمز التفعيل المرسل عبر رقم الجوال"
     },
 
     "noData" : {

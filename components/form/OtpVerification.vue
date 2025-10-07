@@ -143,7 +143,7 @@ onMounted(() => {
 }
 
 .resend-section {
-    max-width: 350px;
+    max-width: 300px;
     margin: 0 auto;
     width: 100%;
 }

@@ -74,10 +74,11 @@
 
                             <!-- Logo Upload -->
                             <div class="position-relative single-input-upload mb-4">
+                                
                                 <div class="main_input special-input without-edit">
                                     <div
                                         class="d-flex align-items-center justify-content-center gap-2 flex-grow-1 gray">
-                                        <i class="fa-solid fa-camera fz-20 ml-1"></i>
+                                        <i class="fa-solid fa-camera fz- ml-1"></i>
                                         <span>{{ $t("Auth.add_logo") }}</span>
                                     </div>
                                 </div>
@@ -165,6 +166,7 @@
 
                             <!-- Location Input -->
                             <div class="position-relative single-input-upload mb-4">
+                                <label class="label">{{ $t("Auth.location") }}</label>
                                 <div class="main_input special-input without-edit pointer" :class="{'handle-border-error': showValidation && !address}" @click="visible = true">
                                     <div class="d-flex align-items-center justify-content-start gap-2 flex-grow-1 gray">
                                         <i class="fa-solid fa-location-dot fz-20 ml-1"></i>
@@ -378,19 +380,22 @@ const axios = useApi();
 // Validation schemas
 const {
     customerName,
+    projectDescription_ar,
+    projectDescription_en,
     required,
     commerciaRumber,
     bankName,
     accountNumber,
     accountHolderName,
     iban
+    
 } = useValidationSchema();
 
 const validations = {
     projectNameAr: customerName('Auth.project_name_ar'),
     projectNameEn: customerName('Auth.project_name_en'),
-    projectDescAr: required('Auth.project_desc_ar'),
-    projectDescEn: required('Auth.project_desc_en')
+    projectDescAr: projectDescription_ar('Auth.project_desc_ar'),
+    projectDescEn: projectDescription_en('Auth.project_desc_en')
 };
 
 const validationsStep2 = {
@@ -439,7 +444,6 @@ const { isFormValid, scrollToFirstError } = useFormValidation();
 // simple function to update the images
 const updateUploadedImages = (images) => {
     uploadedImage.value = images;
-    console.log(uploadedImage.value[0], "0000000000")
 };
 
 // simple function to update the profile image
