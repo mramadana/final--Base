@@ -190,7 +190,7 @@ export const useValidationSchema = () => {
         .string()
         .trim()
         .required(t('validation.required_with_label', { field: t(labelKey) }))
-        .min(6, t('validation.min', { field: t(labelKey), min: 6 }))
+        .min(6, t('Auth.password') + " " + t('validation.min', { field: t(labelKey), min: 6 }))
         .label(t(labelKey));
 
     // Job Title Schema  
