@@ -75,7 +75,7 @@
 import { useI18n } from "vue-i18n";
 
 definePageMeta({
-    name: "settings.edit_provider",
+    name: "settings.provider_info",
     middleware: 'auth'
 });
 

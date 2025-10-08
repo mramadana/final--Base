@@ -225,9 +225,8 @@
         "my_orders": "طلباتي",
         "new_orders": "طلبات جديدة",
         "pending_orders": "طلبات قيد الدفع",
-        "my_wallet": "حجوزاتي",
+        "my_reservation": "حجوزاتي",
         "menu_list": "قائمة المنيو",
-        "new_requests": "طلبات جديدة",
         "pending_payment": "طلبات قيد الدفع",
         "waiting_list": "قائمة الانتظار",
         "reservations": "تم الحجز",
@@ -245,6 +244,27 @@
         "logout": "تسجيل الخروج",
         "sure_logout": "هل تريد تسجيل الخروج ؟",
         "out": "خروج"
+    },
+
+    "sideMenu": {
+        "my_tables": "طاوالتي",
+        "add_new_table": "اضافة طاولة جديدة",
+        "my_reservations": "الحجوزاتي",
+        "completed_reservations": "الحجوزات المكتملة",
+        "cancelled_reservations": "الحجوزات الملغية",
+        "my_menus": "منيوهاتي",
+        "add_meal": "اضافة وجبة",
+        "new_orders": "طلبات جديدة",
+        "pending_payment_orders": "طلبات قيد الدفع",
+        "waiting_list": "قائمة الانتظار",
+        "active_reservations": "حجوزات نشطة",
+        "scheduled_reservations": "حجوزات مجدولة",
+        "due_amount": "المستحق",
+        "current_settlement": "تسوية حالية",
+        "finished_settlement": "تسوية منتهية",
+        "financial_reports_profits": "التقارير المالية والارباح",
+        "view_users": "عرض المستخدمين",
+        "add_user": "اضافة مستخدم"
     },
 
     "reservations": {
@@ -265,7 +285,10 @@
         "emptyFilterMessage": "لا توجد نتائج متاحة",
         "confirm_delete_acc" : "تأكيد حذف الحساب",
         "edit_your_account" : "يمكنك تعديل بيانات الحساب بالكامل من هنا",
-        "confirm_code" : "الرجاء ادخال رمز التفعيل المرسل عبر رقم الجوال"
+        "confirm_code" : "الرجاء ادخال رمز التفعيل المرسل عبر رقم الجوال",
+        "save_changes" : "حفظ التغير",
+        "calibration_standards" : "المعاير الخاصه بالمكان",
+        "saved_successfully" : "تم حفظ التغير بنجاح"
     },
 
     "noData" : {

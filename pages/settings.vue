@@ -108,6 +108,11 @@ const deletedAcount = async () => {
 </script>
 
 <style lang="scss" scoped>
+.section-btns {
+    @media(max-width: 550px) {
+        justify-content: center !important;
+    }
+}
 .order-btn {
     border-color: #fff;
     background-color: transparent;
@@ -117,12 +122,12 @@ const deletedAcount = async () => {
 
     &.router-link-active,
     &:hover {
-        background-color: #3a3a3a !important;
+        background-color: #7e7c7c !important;
         border-color: #fff !important;
         color: #fff !important;
 
         &::before {
-            background-color: #3a3a3a !important;
+            background-color: #7e7c7c !important;
         }
     }
 }

@@ -2,8 +2,8 @@
 
 :root {
     --main: rgba(226, 24, 118, 1);
-    --main-bg: #3a3a3a;
-    --main-2: #313482;
+    --main-bg: rgba(255, 255, 255, 0.05);
+    --main-2: rgba(255, 255, 255, 0.06);
     --main-3: #f9f7f6;
     --purple: purple;
     --green-color: #95c11f;
@@ -133,6 +133,10 @@
         max-height: 200px;
       }
     }
+}
+
+.sub-color {
+  background-color: var(--main-2);
 }
 
 
@@ -569,8 +573,8 @@
 }
 
 .dropdown_card {
+  height: 45px;
   box-shadow: 0px 0px 2px #D9D9D9;
-  border: 1px solid #dddddd;
   border-radius: 10px;
   overflow: hidden;
   .p-dropdown-label, .p-multiselect-label {
@@ -923,8 +927,8 @@ input.p-inputtext.p-component {
 }
 
 .layout-form {
-  background-color: #242424;
-  box-shadow: 0px 3px 30px #0000001A;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0px 3px 30px rgba(248, 248, 248, 4%);
   border-radius: 20px;
   margin-bottom: 50px;
   padding: 45px 25px;
@@ -1518,6 +1522,9 @@ input.p-inputtext.p-component {
 }
 
 .paginate-parent {
+  .p-paginator {
+    background: rgba(176, 176, 176, 0.1);
+  }
   .p-paginator-element {
     border-radius: 50%;
     min-width: 35px !important;
@@ -1525,7 +1532,7 @@ input.p-inputtext.p-component {
     height: 35px;
   }
     button.p-paginator-page.p-paginator-element.p-link.p-highlight {
-      background: var(--main);
+      background: #15181b;
       color: var(--wh);
   }
   .p-paginator.p-component {
@@ -2129,16 +2136,4 @@ input.p-inputtext.p-component {
 }
 .special-input {
   border: 1.5px dashed #C7C7C7;
-}
-
-.section-btns {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 15px 0;
-  gap: 20px;
-  flex-wrap: wrap;
-  .custom-btn {
-    margin-bottom: 0 !important;
-  }
 }

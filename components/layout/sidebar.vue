@@ -23,7 +23,7 @@
                       <div 
                           class="link parent-link" 
                           @click="toggleCollapse(index)"
-                          :class="{ 'active': openMenus[index] }"
+                          :class="{ 'active': openMenus[index] || hasActiveChild(item.children) }"
                       >
                           <div class="hint-img">
                               <img :src="item.icon" :alt="item.label">
@@ -125,37 +125,32 @@ const menuItems = ref([
         label: 'Sidebar.orders',
         icon: '/_nuxt/assets/images/sidebar/tables.svg',
         children: [
-            { label: 'Sidebar.my_orders', to: '/myorders', icon: '@/assets/images/sidebar/box.svg' },
-            { label: 'Sidebar.new_orders', to: '/orders/new', icon: '@/assets/images/sidebar/box.svg' },
-            { label: 'Sidebar.pending_orders', to: '/orders/pending', icon: '@/assets/images/sidebar/coin.svg' }
+            { label: 'sideMenu.my_tables', to: '/myorders', icon: '/_nuxt/assets/images/sidebar/table-img.png' },
+            { label: 'sideMenu.add_new_table', to: '/orders/new', icon: '/_nuxt/assets/images/sidebar/add.png' },
         ]
     },
     {
-        label: 'Sidebar.my_wallet',
+        label: 'Sidebar.my_reservation',
         icon: '/_nuxt/assets/images/sidebar/reservations.svg',
         children: [
-            { label: 'Sidebar.my_orders', to: '/myorders', icon: '@/assets/images/sidebar/box.svg' },
-            { label: 'Sidebar.new_orders', to: '/orders/new', icon: '@/assets/images/sidebar/box.svg' },
-            { label: 'Sidebar.pending_orders', to: '/orders/pending', icon: '@/assets/images/sidebar/coin.svg' }
+            { label: 'sideMenu.my_reservations', to: '/Reservations', icon: '/_nuxt/assets/images/sidebar/my-reservation-img.svg' },
+            { label: 'sideMenu.completed_reservations', to: '/orders/new', icon: '/_nuxt/assets/images/sidebar/completed-reservations.png' },
+            { label: 'sideMenu.cancelled_reservations', to: '/orders/pending', icon: '/_nuxt/assets/images/sidebar/cancle-reservation.png' }
         ]
     },
     {
         label: 'Sidebar.menu_list',
         icon: '/_nuxt/assets/images/sidebar/menu-board.svg',
         children: [
-            { label: 'Sidebar.my_orders', to: '/myorders', icon: '@/assets/images/sidebar/box.svg' },
-            { label: 'Sidebar.new_orders', to: '/orders/new', icon: '@/assets/images/sidebar/box.svg' },
-            { label: 'Sidebar.pending_orders', to: '/orders/pending', icon: '@/assets/images/sidebar/coin.svg' }
+            { label: 'sideMenu.my_menus', to: '/myorders', icon: '/_nuxt/assets/images/sidebar/folder-open.png' },
+            { label: 'sideMenu.add_meal', to: '/orders/new', icon: '/_nuxt/assets/images/sidebar/folder-add.png' }
         ]
     },
+
     {
-        label: 'Sidebar.new_requests',
+        label: 'Sidebar.new_orders',
         icon: '/_nuxt/assets/images/sidebar/new-order.svg',
-        children: [
-            { label: 'Sidebar.my_orders', to: '/myorders', icon: '@/assets/images/sidebar/box.svg' },
-            { label: 'Sidebar.new_orders', to: '/orders/new', icon: '@/assets/images/sidebar/box.svg' },
-            { label: 'Sidebar.pending_orders', to: '/orders/pending', icon: '@/assets/images/sidebar/coin.svg' }
-        ]
+        to: '/payment/pending',
     },
     {
         label: 'Sidebar.pending_payment',
@@ -171,18 +166,18 @@ const menuItems = ref([
         label: 'Sidebar.reservations',
         icon: '/_nuxt/assets/images/sidebar/calendar-tick.svg',
         children: [
-            { label: 'Sidebar.today_reservations', to: '/reservations/today', icon: '@/assets/images/sidebar/category-2.svg' },
-            { label: 'Sidebar.upcoming_reservations', to: '/reservations/upcoming', icon: '@/assets/images/sidebar/category-2.svg' },
-            { label: 'Sidebar.past_reservations', to: '/reservations/past', icon: '@/assets/images/sidebar/category-2.svg' }
+            { label: 'sideMenu.active_reservations', to: '/reservations/today', icon: '/_nuxt/assets/images/sidebar/active-reservations.png' },
+            { label: 'sideMenu.scheduled_reservations', to: '/reservations/upcoming', icon: '/_nuxt/assets/images/sidebar/scheduled-reservations.png' }
         ]
     },
     {
         label: 'Sidebar.financial_transactions',
         icon: '/_nuxt/assets/images/sidebar/coin.svg',
         children: [
-            { label: 'Sidebar.my_orders', to: '/myorders', icon: '@/assets/images/sidebar/box.svg' },
-            { label: 'Sidebar.new_orders', to: '/orders/new', icon: '@/assets/images/sidebar/box.svg' },
-            { label: 'Sidebar.pending_orders', to: '/orders/pending', icon: '@/assets/images/sidebar/coin.svg' }
+            { label: 'sideMenu.due_amount', to: '/myorders', icon: '/_nuxt/assets/images/sidebar/money-change.png' },
+            { label: 'sideMenu.current_settlement', to: '/orders/new', icon: '/_nuxt/assets/images/sidebar/money-time-new.png' },
+            { label: 'sideMenu.finished_settlement', to: '/orders/new', icon: '/_nuxt/assets/images/sidebar/money-remove.png' },
+            { label: 'sideMenu.financial_reports_profits', to: '/orders/new', icon: '/_nuxt/assets/images/sidebar/money-disscount.png' },
         ]
     },
     {
@@ -194,9 +189,8 @@ const menuItems = ref([
         label: 'Sidebar.users',
         icon: '/_nuxt/assets/images/sidebar/people.svg',
         children: [
-            { label: 'Sidebar.all_users', to: '/users', icon: '@/assets/images/sidebar/profile.svg' },
-            { label: 'Sidebar.active_users', to: '/users/active', icon: '@/assets/images/sidebar/profile.svg' },
-            { label: 'Sidebar.blocked_users', to: '/users/blocked', icon: '@/assets/images/sidebar/profile.svg' }
+            { label: 'sideMenu.view_users', to: '/users', icon: '/_nuxt/assets/images/sidebar/user-tag.png' },
+            { label: 'sideMenu.add_user', to: '/users/active', icon: '/_nuxt/assets/images/sidebar/user-add.png' },
         ]
     },
     {
@@ -211,16 +205,48 @@ const menuItems = ref([
     }
 ]);
 
-// Toggle collapse
+// Toggle collapse - close all others and toggle the clicked one
 const toggleCollapse = (index) => {
-    openMenus.value[index] = !openMenus.value[index];
+    // If the clicked menu is already open, just close it
+    if (openMenus.value[index]) {
+        openMenus.value[index] = false;
+        return;
+    }
+    
+    // Otherwise, close all menus first
+    Object.keys(openMenus.value).forEach(key => {
+        openMenus.value[key] = false;
+    });
+    // Then open the clicked menu
+    openMenus.value[index] = true;
+};
+
+// Check if any child link is active
+const hasActiveChild = (children) => {
+    if (!children) return false;
+    return children.some(child => isActiveLink(child.to));
 };
 
 const isActiveLink = (path) => {
-if (path === '/') {
-  return route.path === path;
-}
-return route.path.startsWith(path);
+    if (path === '/') {
+        return route.path === path;
+    }
+    return route.path.startsWith(path);
+};
+
+// Auto-open menu with active child on mount
+const initializeActiveMenu = () => {
+    // First, close all menus
+    Object.keys(openMenus.value).forEach(key => {
+        openMenus.value[key] = false;
+    });
+    
+    // Then open only the menu with active child
+    menuItems.value.forEach((item, index) => {
+        if (item.children && hasActiveChild(item.children)) {
+            openMenus.value[index] = true;
+        }
+    });
 };
 
 const emit = defineEmits(['toggle-active']);
@@ -301,6 +327,11 @@ if (window.innerWidth <= 1250) {
 }
 };
 
+// Watch route changes to update active menu
+watch(() => route.path, () => {
+    initializeActiveMenu();
+});
+
 watch(router, handleRouteChange);
 
 router.afterEach((to, from) => {
@@ -311,8 +342,9 @@ router.afterEach((to, from) => {
 });
 
 onMounted(() => {
-restoreScrollPosition();
-scrollToClickedLink();
+    initializeActiveMenu();
+    restoreScrollPosition();
+    scrollToClickedLink();
 });
 
 </script>
@@ -341,7 +373,7 @@ scrollToClickedLink();
 }
 
 .submenu {
-    padding-inline-start: 45px;
+    padding-inline-start: 25px;
     overflow: hidden;
     
     .sub-link {

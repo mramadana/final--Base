@@ -8,8 +8,9 @@
                         <i class="fa-solid fa-gear"></i>
                     </NuxtLink>
 
-                    <div v-if="globalStore?.title">                        
-                        <div class="d-flex align-items-center gap-2">
+                    <div v-if="globalStore?.title">  
+
+                        <div class="d-flex align-items-center gap-2 header-title">
 
                             <NuxtLink v-if="globalStore?.titleLink" :to="globalStore.titleLink" class="main-title bold md mb-0" style="color: #fff; text-decoration: none;">
                                 {{ globalStore.title }}
@@ -169,33 +170,41 @@
 
 
 <style lang="scss">
-.settings-link {
-    width: 35px;
-    height: 35px;
-    background: #3a3a3a;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 5px;
-    cursor: pointer;
-}
-.add-margin {
-    margin-bottom: 40px;
-}
-.defaultLayout {
-    position: sticky;
-    top: 0;
-    z-index: 3333;
-}
-.header {
-    transition: all 0.4s ease-in-out;
-    border: 1px solid #191919;
-    &.headerAdded {
-        transform: translateY(10px);
-        border-color: #fff;
-        background-color: #191919;
-        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    .settings-link {
+        width: 35px;
+        height: 35px;
+        background: #3a3a3a;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 5px;
+        cursor: pointer;
     }
-}
+    .add-margin {
+        margin-bottom: 40px;
+    }
+    .defaultLayout {
+        position: sticky;
+        top: 0;
+        z-index: 3333;
+    }
+    .header {
+        transition: all 0.4s ease-in-out;
+        border: 1px solid #191919;
+        &.headerAdded {
+            transform: translateY(10px);
+            border-color: #fff;
+            background-color: #191919;
+            box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+        }
+    }
+</style>
+
+<style lang="scss" scoped>
+    .header-title {
+        @media(max-width: 500px) {
+            display: none !important;
+        }
+    }
 </style>
