@@ -2,7 +2,6 @@
     "Titles": {
         "home": "الرئيسية",
         "cars" : "السيارات",
-        "car_details" : "تفاصيل السيارة",
         "pending" : "قيد الانتظار",
         "payment_pending" : "قيد الدفع",
         "current" : "حالية",
@@ -40,8 +39,6 @@
         "complaint": "من فضلك أدخل الشكوى",
         "rate": "التقييم مطلوب",
         "message": "الرسالة مطلوبة",
-        "rentalPeriod": "يجب ان تكون مدة التأجير على الاقل 1",
-        "enter_details": "يجب ادخال تفاصيل الطلب اولا",
         "required": "هذا الحقل مطلوب",
         "min": "يجب ان يكون {min} احرف على الاقل",
         "min_num": "يجب ان يكون {min} رقم على الاقل",
@@ -221,7 +218,7 @@
 
     "Sidebar": {
         "home": "الرئيسية",
-        "orders": "الطاولات",
+        "tables": "الطاولات",
         "my_orders": "طلباتي",
         "new_orders": "طلبات جديدة",
         "pending_orders": "طلبات قيد الدفع",
@@ -269,7 +266,15 @@
 
     "reservations": {
         "today_reservations": "جدول حجوزات اليوم",
-        "all_reservations": "عرض جميع الحجوزات"
+        "all_reservations": "عرض جميع الحجوزات",
+        "view_reservations": "استعرض جميع الحجوزات الخاصة بك من هنا",
+        "search_table": "البحث برقم الطاوله ",
+        "view_completed_orders" : "استعرض جميع الحجوزات المكتملة",
+        "view_cancelled_orders" : "استعرض جميع الحجوزات الملغية",
+        "status" : "حالة الحجز",
+        "choose_date": "اختر التاريخ",
+        "reservation_details": "تفاصيل الحجز",
+        "reservations": "الحجوزات"
     },
 
     "settings": {
@@ -289,6 +294,46 @@
         "save_changes" : "حفظ التغير",
         "calibration_standards" : "المعاير الخاصه بالمكان",
         "saved_successfully" : "تم حفظ التغير بنجاح"
+    },
+
+    "reservationDetails": {
+        "requested_services": "الخدمات المطلوبة",
+        "table": "الطاولة",
+        "number_of_people": "عدد الأفراد",
+        "location": "الموقع",
+        "booking_status": "حالة الحجز",
+        "approval_success": "تم الموافقة على الحجز بنجاح",
+        "reject_reason": "سبب الرفض",
+        "enter_reject_reason": "ادخل سبب الرفض",
+        "cancel": "تراجع",
+        "confirm_reject": "تأكيد رفض الحجز",
+        "reject_success": "تم رفض الحجز بنجاح",
+        "payment_pending_msg": "تم قبول الحجز بنجاح بانتظار الدفع من قبل العميل لتأكيد الحجز",
+        "payment_completed_msg": "تم تسديد قيمة الطلب بالكامل من قبل العميل وتأكيد الحجز",
+        "payment_failed_msg": "لم يتم تسديد قيمة الطلب بالكامل من قبل العميل وتأكيد الحجز"
+    },
+
+    "tables": {
+        "table_image": "صورة الطاولة",
+        "table_number": "رقم الطاولة",
+        "number_of_people": "عدد افراد",
+        "booking_price": "سعر الحجز",
+        "booking_date": "تاريخ الحجز",
+        "reservations": "الحجوزات",
+        "reservations_list": "قائمه الحجوزات",
+        "table_status": "حالة الحجز",
+        "actions": "اجراء",
+        "all": "الكل",
+        "available": "متاحة",
+        "reserved": "محجوزة",
+        "closed": "مغلقة الطاولة",
+        "edit": "تعديل",
+        "view": "عرض",
+        "delete": "حذف",
+        "delete_table": "حذف الطاولة",
+        "delete_confirmation": "هل أنت متأكد أنك تريد حذف الطاولة؟",
+        "confirm_delete": "تأكيد حذف الطاولة",
+        "cancel": "تراجع"
     },
 
     "noData" : {

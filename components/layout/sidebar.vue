@@ -122,20 +122,20 @@ const menuItems = ref([
         icon: '/_nuxt/assets/images/sidebar/home.svg'
     },
     {
-        label: 'Sidebar.orders',
+        label: 'Sidebar.tables',
         icon: '/_nuxt/assets/images/sidebar/tables.svg',
         children: [
-            { label: 'sideMenu.my_tables', to: '/myorders', icon: '/_nuxt/assets/images/sidebar/table-img.png' },
-            { label: 'sideMenu.add_new_table', to: '/orders/new', icon: '/_nuxt/assets/images/sidebar/add.png' },
+            { label: 'sideMenu.my_tables', to: '/tables', icon: '/_nuxt/assets/images/sidebar/table-img.png' },
+            { label: 'sideMenu.add_new_table', to: '/tables/new', icon: '/_nuxt/assets/images/sidebar/add.png' },
         ]
     },
     {
         label: 'Sidebar.my_reservation',
         icon: '/_nuxt/assets/images/sidebar/reservations.svg',
         children: [
-            { label: 'sideMenu.my_reservations', to: '/Reservations', icon: '/_nuxt/assets/images/sidebar/my-reservation-img.svg' },
-            { label: 'sideMenu.completed_reservations', to: '/orders/new', icon: '/_nuxt/assets/images/sidebar/completed-reservations.png' },
-            { label: 'sideMenu.cancelled_reservations', to: '/orders/pending', icon: '/_nuxt/assets/images/sidebar/cancle-reservation.png' }
+            { label: 'sideMenu.my_reservations', to: '/Reservations/myReservations', icon: '/_nuxt/assets/images/sidebar/my-reservation-img.svg' },
+            { label: 'sideMenu.completed_reservations', to: '/Reservations/completed', icon: '/_nuxt/assets/images/sidebar/completed-reservations.png' },
+            { label: 'sideMenu.cancelled_reservations', to: '/Reservations/cancelled', icon: '/_nuxt/assets/images/sidebar/cancle-reservation.png' }
         ]
     },
     {

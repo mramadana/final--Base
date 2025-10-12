@@ -3,7 +3,7 @@
   <div class="row g-3" v-if="!loading">
     <div :class="colClasses" v-for="item in items" :key="item.id">
       <div class="reservation-card" :class="{ 'cursor-pointer': linkTo }"
-        @click="linkTo ? navigateTo(`${linkTo}/${item.id}`) : null">
+        @click="linkTo ? navigateTo(`${linkTo}-${item.id}`) : null">
         <div class="card-inner">
           <div class="content-row">
             <div class="thumb" v-if="item.imageSrc">

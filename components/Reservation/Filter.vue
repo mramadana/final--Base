@@ -4,7 +4,6 @@
             
             <!-- Search Input -->
             <div v-if="showSearch" class="col-12 col-md-4 mb-3">
-                <label v-if="searchLabel" class="label mb-2">{{ searchLabel }}</label>
                 <div class="main_input">
                     <input 
                         type="text" 
@@ -26,14 +25,12 @@
                         :options="selectOptions"
                         :option-value="optionValue"
                         :placeholder="selectPlaceholder"
-                        :label="selectLabel"
                         @change="handleSelectChange"
                     />
                 </div>
     
                 <!-- Calendar (Flatpickr) -->
                 <div v-if="showCalendar" class="col-12 col-md-4 mb-3">
-                    <label v-if="calendarLabel" class="label">{{ calendarLabel }}</label>
                     <div class="main_input">
                         <flat-pickr
                             v-model="dateValue"
@@ -89,10 +86,6 @@ const props = defineProps({
         type: String,
         default: 'ابحث هنا...'
     },
-    searchLabel: {
-        type: String,
-        default: ''
-    },
     
     // Select props
     selectOptions: {
@@ -102,10 +95,6 @@ const props = defineProps({
     selectPlaceholder: {
         type: String,
         default: 'اختر من القائمة'
-    },
-    selectLabel: {
-        type: String,
-        default: ''
     },
     optionLabel: {
         type: String,
@@ -120,10 +109,6 @@ const props = defineProps({
     calendarPlaceholder: {
         type: String,
         default: 'اختر التاريخ'
-    },
-    calendarLabel: {
-        type: String,
-        default: ''
     },
     calendarMode: {
         type: String,
@@ -202,6 +187,19 @@ watch(() => props.modelValue?.date, (newVal) => {
 </script>
 
 <style lang="scss" scoped>
+:deep(.dropdown_card .p-dropdown-label) {
+    color: #fff;
+}
+:deep(.dropdown_card) {
+    background-color: #3a3a3a !important;
+}
+:deep(.dropdown_card .p-dropdown) {
+    background-color: #3a3a3a !important;
+}
+:deep(.p-icon) {
+    color: #fff;
+}
+
 .filter-component {
     :deep(.dropdown-select) {
         .form-group {
@@ -210,7 +208,7 @@ watch(() => props.modelValue?.date, (newVal) => {
     }
     .main_input {
         position: relative;
-        
+        background-color: #3a3a3a !important;
         input {
             padding-inline-start: 20px;
             height: 100%;
@@ -219,18 +217,19 @@ watch(() => props.modelValue?.date, (newVal) => {
             width: 100%;
             
             &::placeholder {
-                color: rgba(255, 255, 255, 0.5);
+                color: #fff;
             }
             
         }
         
         .search-icon, .calendar-icon {
             position: absolute;
-            right: 15px;
+            inset-inline-end: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: rgba(255, 255, 255, 0.5);
+            color: #fff;
             pointer-events: none;
+            font-size: 15px;
         }
     }
     
@@ -250,7 +249,7 @@ watch(() => props.modelValue?.date, (newVal) => {
     padding-inline-start: 20px;
     cursor: pointer;
     &::placeholder {
-        color: rgba(255, 255, 255, 0.5);
+        color: #fff;
         font-size: 12px;
     }
     
@@ -265,4 +264,5 @@ watch(() => props.modelValue?.date, (newVal) => {
         box-shadow: none;
     }
 }
+
 </style>

@@ -1,20 +1,26 @@
-<template>
-  <div class="container py-5">
-    <h1 class="main-title mb-4">{{ $t('reservations.view_reservations') }}</h1>
-    
-    <!-- <OrdersCardReservation :items="reservations" link-to="/reservations" /> -->
-    <OrdersCardReservation :items="reservations" />
 
-    <!--***** Paginator *****-->
-    <div class="paginate-parent" v-if="showPaginate">
-      <Paginator :rows="pageLimit" @page="onPaginate" :totalRecords="totalPage" class="mt-4" dir="ltr" />
+<template>
+    <div>
+      <OrdersCardReservation :items="filteredReservations" link-to="/reservation" />
     </div>
-  </div>
-</template>
+  </template>
 
 <script setup>
 
-const reservations = ref([
+definePageMeta({
+    name: 'sideMenu.my_reservations'
+})
+
+// Inject context from parent
+const context = inject('reservationContext');
+
+// Set page title
+onMounted(() => {
+  context.setPageTitle('reservations.view_reservations');
+});
+
+// Reservations data - البيانات بس!
+const reservations = [
   {
     id: 12548,
     metaTime: 'م 01:25 - 05/12/2024',
@@ -55,32 +61,11 @@ const reservations = ref([
     status: 'confirmed',
     statusText: 'مؤكد'
   }
-]);
+];
 
-// Paginator
-const currentPage = ref(1);
-const pageLimit = ref();
-const totalPage = ref();
-
-// Paginate Function
-const onPaginate = (e) => {
-    loading.value = true;
-    currentPage.value = e.page + 1;
-    window.scrollTo(0, 0);
-    // fetchReservations();
-};
-
-/******************* Computed *******************/
-let showPaginate = computed(() => {
-    return totalPage.value > pageLimit.value
+// استخدام الـ function من الصفحة الرئيسية - مكتوبة مرة واحدة! 🎯
+const filteredReservations = computed(() => {
+  return context.applyFilters(reservations);
 });
 
 </script>
-
-<style scoped>
-.main-title {
-  color: #fff;
-  font-size: 24px;
-  font-weight: 700;
-}
-</style>
