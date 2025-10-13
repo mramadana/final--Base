@@ -126,7 +126,7 @@ const menuItems = ref([
         icon: '/_nuxt/assets/images/sidebar/tables.svg',
         children: [
             { label: 'sideMenu.my_tables', to: '/tables', icon: '/_nuxt/assets/images/sidebar/table-img.png' },
-            { label: 'sideMenu.add_new_table', to: '/tables/new', icon: '/_nuxt/assets/images/sidebar/add.png' },
+            { label: 'sideMenu.add_new_table', to: '/tables/addTable', icon: '/_nuxt/assets/images/sidebar/add.png' },
         ]
     },
     {

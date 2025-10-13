@@ -78,7 +78,7 @@
                                 <div class="main_input special-input without-edit">
                                     <div
                                         class="d-flex align-items-center justify-content-center gap-2 flex-grow-1 gray">
-                                        <i class="fa-solid fa-camera fz- ml-1"></i>
+                                        <i class="fa-solid fa-camera fz-20 ml-1"></i>
                                         <span>{{ $t("Auth.add_logo") }}</span>
                                     </div>
                                 </div>
