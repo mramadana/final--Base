@@ -27,6 +27,7 @@
             class="main_input"
             :class="{ 'is-invalid': shouldShowError && !moveErrorToParent }"
             @input="onInput"
+            @keydown="onKeydown"
           />
           <img v-if="icon" :src="icon" alt="icon" class="input-icon" :class="localeDir" />
         </div>
@@ -41,6 +42,7 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n';
+import { nextTick } from 'vue';
 
 
 const props = defineProps({
@@ -113,8 +115,20 @@ const modelValue = defineModel('modelValue')
 const touched = ref(false)
 
 // Handle input event
-const onInput = () => {
+const onInput = (event) => {
   touched.value = true
+}
+
+// Handle keydown event to prevent negative signs and decimals
+const onKeydown = (event) => {
+  if (props.type === 'number') {
+    // Prevent minus sign (-) and decimal point (.)
+    if (event.key === '-' || event.key === '.' || event.key === '+' || event.key === 'e' || event.key === 'E') {
+      event.preventDefault()
+      touched.value = true // Show validation immediately
+      return false
+    }
+  }
 }
 
 // Show error if touched OR showErrors prop is true
@@ -140,6 +154,11 @@ const hasError = computed(() => {
   }
   
   if (props.type === 'number') {
+    const stringValue = String(modelValue.value);
+    // Check for negative signs or decimals immediately
+    if (stringValue.includes('-') || stringValue.includes('.')) {
+      return true;
+    }
     const numValue = Number(modelValue.value);
     if (isNaN(numValue) || numValue <= 0) {
       return true;

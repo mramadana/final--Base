@@ -56,7 +56,8 @@
         "attach_logo" : "قم باضافه صورة الشعار",
         "attach_profile_image" : "قم باضافه صورة البروفيل",
         "select_location" : "يرجى تحديد العنوان",
-        "account_number_only_digits" : "رقم الحساب يجب أن يحتوي على أرقام فقط"
+        "account_number_only_digits" : "رقم الحساب يجب أن يحتوي على أرقام فقط",
+        "booking_price_only_digits" : "يجب ان يحتوي مبلغ {field} على ارقام فقط"
       },
 
     "Auth": {
@@ -316,7 +317,7 @@
     "tables": {
         "table_image": "صورة الطاولة",
         "table_number": "رقم الطاولة",
-        "number_of_people": "عدد افراد",
+        "number_of_people": "عدد افراد الطاولة",
         "booking_price": "سعر الحجز",
         "booking_date": "تاريخ الحجز",
         "reservations": "الحجوزات",
@@ -333,7 +334,10 @@
         "delete_table": "حذف الطاولة",
         "delete_confirmation": "هل أنت متأكد أنك تريد حذف الطاولة؟",
         "confirm_delete": "تأكيد حذف الطاولة",
-        "cancel": "تراجع"
+        "cancel": "تراجع",
+        "min": "يجب ان يكون {min} ارقام على الاقل",
+        "max": "يجب ان يكون {max} ارقام على الاقصى"
+        
     },
 
     "noData" : {

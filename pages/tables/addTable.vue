@@ -11,11 +11,10 @@
                     <div class="col-12 col-md-6">
                         <!-- Table Number -->
                         <FormInput 
-                            v-model:modelValue="tableNumber" 
                             name="tableNumber" 
-                            type="text"
-                            label="رقم الطاولة"
-                            placeholder="رقم الطاولة"
+                            type="number"
+                            :label="$t('tables.table_number')"
+                            :placeholder="$t('tables.table_number')"
                             :validation-schema="validations.tableNumber"
                             :showErrors="showValidation"
                             :hasIcon="true"
@@ -26,11 +25,10 @@
                     <div class="col-12 col-md-6">
                         <!-- Number of People -->
                         <FormInput 
-                            v-model:modelValue="numberOfPeople" 
                             name="numberOfPeople" 
                             type="number"
-                            label="عدد أفراد الطاولة"
-                            placeholder="عدد أفراد الطاولة"
+                            :label="$t('tables.number_of_people')"
+                            :placeholder="$t('tables.number_of_people')"
                             :validation-schema="validations.numberOfPeople"
                             :showErrors="showValidation"
                             :hasIcon="true"
@@ -41,11 +39,12 @@
 
                     <!-- Booking Price -->
                     <FormInput 
-                        v-model:modelValue="bookingPrice" 
                         name="bookingPrice" 
                         type="number"
-                        label="سعر الحجز الخاص بالطاولة"
-                        placeholder="سعر الحجز الخاص بالطاولة"
+                        min="0"
+                        step="1"
+                        :label="$t('tables.booking_price')"
+                        :placeholder="$t('tables.booking_price')"
                         :validation-schema="validations.bookingPrice"
                         :showErrors="showValidation"
                         :hasIcon="true"
@@ -54,35 +53,37 @@
                     />
 
                     <!-- Description in Arabic -->
-                    <div class="form-group">
-                        <label class="label">وصف الطاولة بالعربي</label>
-                        <textarea 
-                            v-model="descriptionAr" 
-                            class="main_input main_area"
-                            :class="{ 'is-invalid': showValidation && !descriptionAr }"
-                            placeholder="وصف الطاولة بالعربي"
-                            rows="4">
-                        </textarea>
+                    <!-- <div class="form-group">
+                        <label class="label">{{ $t('Auth.project_desc_ar') }}</label>
+                        <div class="position-relative with_icon">
+                            <textarea 
+                                class="main_input main_area"
+                                :class="{ 'is-invalid': showValidation && !descriptionAr }"
+                                :placeholder="$t('Auth.project_desc_ar')"
+                                rows="4">
+                            </textarea>
+                            <img src="/_nuxt/assets/images/auth-img/user.svg" alt="icon" class="input-icon with-area" />
+                        </div>
                         <p v-if="showValidation && !descriptionAr" class="error-message text-danger mt-1">
-                            يرجى إدخال وصف الطاولة بالعربي
+                            {{ $t('validation.required_with_label', { field: $t('Auth.project_desc_ar') }) }}
                         </p>
-                    </div>
+                    </div> -->
 
                     <!-- Description in English -->
                     <div class="form-group">
-                        <label class="label">وصف الطاولة بالانجليزي</label>
+                        <label class="label">{{ $t('Auth.project_desc_en') }}</label>
                         <div class="position-relative with_icon">
                             <textarea 
                                 v-model="descriptionEn" 
                                 class="main_input main_area"
                                 :class="{ 'is-invalid': showValidation && !descriptionEn }"
-                                placeholder="وصف الطاولة بالانجليزي"
+                                :placeholder="$t('Auth.project_desc_en')"
                                 rows="4"
                             ></textarea>
-                            <img src="/_nuxt/assets/images/auth-img/user.svg" alt="icon" class="input-icon with-area" />
+                            <!-- <img src="/_nuxt/assets/images/auth-img/user.svg" alt="icon" class="input-icon with-area" /> -->
                         </div>
                         <p v-if="showValidation && !descriptionEn" class="error-message text-danger mt-1">
-                            يرجى إدخال وصف الطاولة بالانجليزي
+                            {{ $t('validation.required_with_label', { field: $t('Auth.project_desc_en') }) }}
                         </p>
                     </div>
 
@@ -111,24 +112,22 @@
 import { useI18n } from "vue-i18n";
 const { t } = useI18n({ useScope: "global" });
 
-// Form fields
-const tableNumber = ref("");
-const numberOfPeople = ref("");
-const bookingPrice = ref("");
-const descriptionAr = ref("");
-const descriptionEn = ref("");
-
 // Validation schemas
 const {
-    required,
-    customerName
+    tableNumber,
+    numberOfPeople,
+    bookingPrice,
+    // descriptionAr,
+    // descriptionEn
 } = useValidationSchema();
 
 // Validation schemas
 const validations = {
-    tableNumber: customerName("رقم الطاولة"),
-    numberOfPeople: required("عدد أفراد الطاولة"),
-    bookingPrice: required("سعر الحجز"),
+    tableNumber: tableNumber(),
+    numberOfPeople: numberOfPeople(),
+    bookingPrice: bookingPrice(t('tables.booking_price')),
+    // descriptionAr: descriptionAr(t('Auth.project_desc_ar')),
+    // descriptionEn: descriptionEn(t('Auth.project_desc_en')),
 };
 
 // Toast
@@ -142,11 +141,6 @@ const addTableForm = ref(null);
 const fileInput = ref(null);
 
 // Form data (reactive object for validation)
-const formData = computed(() => ({
-    tableNumber: tableNumber.value,
-    numberOfPeople: numberOfPeople.value,
-    bookingPrice: bookingPrice.value,
-}));
 
 // Use the composable for validation
 const { isFormValid, scrollToFirstError } = useFormValidation();
@@ -156,19 +150,8 @@ const submitTable = async () => {
     showValidation.value = true;
 
     const isValid = isFormValid(formData.value, validations);
-    const hasDescriptionAr = !!descriptionAr.value;
-    const hasDescriptionEn = !!descriptionEn.value;
 
-    if (!isValid || !hasDescriptionAr || !hasDescriptionEn) {
-        if (!hasDescriptionAr) {
-            errorToast("يرجى اختيار صورة الطاولة");
-        }
-        if (!hasDescriptionAr) {
-            errorToast("يرجى إدخال وصف الطاولة بالعربي");
-        }
-        if (!hasDescriptionEn) {
-            errorToast("يرجى إدخال وصف الطاولة بالانجليزي");
-        }
+    if (!isValid) {
         scrollToFirstError(formData.value, validations);
         console.log("Validation Failed");
     } else {

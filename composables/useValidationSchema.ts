@@ -232,6 +232,35 @@ export const useValidationSchema = () => {
         .max(500, t('validation.max', { field: t('Auth.project_desc_en'), max: 500 }))
         .label(t('Auth.project_desc_en'));
 
+    // table number
+    const tableNumber = () =>
+      yup
+        .string()
+        .trim()
+        .required(t('validation.required_with_label', { field: t('tables.table_number') }))
+        .max(2, t('tables.table_number') + " " + t('validation.max', { field: t('tables.table_number'), max: 2 }))
+        .label(t('tables.table_number'));
+
+    // table number of people
+    const numberOfPeople = () =>
+      yup
+        .string()
+        .trim()
+        .required(t('validation.required_with_label', { field: t('tables.number_of_people') }))
+        .max(2, t('tables.number_of_people') + " " + t('validation.max', { field: t('tables.number_of_people'), max: 2 }))
+        .label(t('tables.number_of_people'));
+
+    // table booking price
+    const bookingPrice = (label: string) =>
+      yup
+        .string()
+        .trim()
+        .required(t('validation.required_with_label', { field: label }))
+        .matches(/^[0-9]+$/,  t('validation.booking_price_only_digits', { field: label }))
+        .min(2, label + " " + t('tables.min', { field: label, min: 2 }))
+        .max(5, label + " " + t('tables.max', { field: label, max: 5 }))
+        .label(label);
+
   
   return {
     required,
@@ -258,6 +287,9 @@ export const useValidationSchema = () => {
     commerciaRumber,
     bankName,
     accountNumber,
-    accountHolderName
+    accountHolderName,
+    tableNumber,
+    numberOfPeople,
+    bookingPrice
   }
 }
