@@ -171,10 +171,5 @@
     border-radius: 8px;
 }
 
-.error-message {
-    font-size: 12px;
-    color: #e74c3c;
-    font-weight: 500;
-    margin-top: 5px;
-}
+
 </style>

@@ -253,10 +253,4 @@ definePageMeta({
     box-shadow: 0 0 5px rgba(231, 76, 60, 0.3) !important;
 }
 
-.error-message {
-    font-size: 12px;
-    color: #e74c3c;
-    font-weight: 500;
-    margin-top: 5px;
-}
 </style>

@@ -1,6 +1,6 @@
 export const useFormValidation = () => {
   
-  const isFormValid = (formData, validations) => {
+  const isFormValid = (formData, validations, imageUploaderRef = null) => {
     // فحص الحقول العادية
     const fieldsValid = Object.keys(validations).every(field => {
         try { 
@@ -17,7 +17,13 @@ export const useFormValidation = () => {
         dropdownsValid = formData.defaultSection && formData.defaultSection2;
     }
     
-    return fieldsValid && dropdownsValid;
+    // فحص الـ image uploader لو موجود
+    let imageValid = true;
+    if (imageUploaderRef && imageUploaderRef.value) {
+        imageValid = imageUploaderRef.value.validate();
+    }
+    
+    return fieldsValid && dropdownsValid && imageValid;
   };
 
   // دالة لإعادة تعيين الفورم
@@ -32,22 +38,39 @@ export const useFormValidation = () => {
     }
   };
 
+  // Helper function للـ scroll
+  const scrollToElement = (element, shouldFocus = false) => {
+    if (!element) return false;
+    element.scrollIntoView({ 
+      behavior: 'smooth', 
+      block: 'center' 
+    });
+    if (shouldFocus) element.focus();
+    return true;
+  };
+
   // دالة للعثور على أول عنصر غير صالح والتمرير إليه
-  const scrollToFirstError = (formData, validations) => {
+  const scrollToFirstError = (formData, validations, imageUploaderRef = null) => {
+    // فحص الـ image uploader أولاً (بدون إعادة validation، بس نشوف لو الصورة موجودة)
+    if (imageUploaderRef && imageUploaderRef.value) {
+      const uploadedImages = imageUploaderRef.value.uploadedImages || [];
+      if (uploadedImages.length === 0) {
+        const imageUploaderElement = document.querySelector('.single-input-upload');
+        if (scrollToElement(imageUploaderElement)) {
+          return 'imageUploader';
+        }
+      }
+    }
+
     // فحص الحقول العادية
     for (const field of Object.keys(validations)) {
       try {
         validations[field].validateSync(formData[field]);
       } catch {
         // إذا وجد خطأ، ابحث عن العنصر وتمرر إليه
-        const element = document.querySelector(`input[name="${field}"], select[name="${field}"]`);
-        if (element) {
-          element.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'center' 
-          });
-          element.focus();
-          return field; // إرجاع اسم الحقل الأول المخطئ
+        const element = document.querySelector(`input[name="${field}"], select[name="${field}"], textarea[name="${field}"]`);
+        if (scrollToElement(element, true)) {
+          return field;
         }
       }
     }
@@ -55,22 +78,14 @@ export const useFormValidation = () => {
     // فحص الـ dropdowns
     if (!formData.defaultSection) {
       const element = document.querySelector('.dropdown_card');
-      if (element) {
-        element.scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'center' 
-        });
+      if (scrollToElement(element)) {
         return 'defaultSection';
       }
     }
 
     if (!formData.defaultSection2) {
       const elements = document.querySelectorAll('.dropdown_card');
-      if (elements[1]) {
-        elements[1].scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'center' 
-        });
+      if (scrollToElement(elements[1])) {
         return 'defaultSection2';
       }
     }

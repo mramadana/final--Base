@@ -233,22 +233,23 @@ export const useValidationSchema = () => {
         .label(t('Auth.project_desc_en'));
 
     // table number
-    const tableNumber = () =>
+    const tableNumber = (label: string) =>
       yup
         .string()
         .trim()
-        .required(t('validation.required_with_label', { field: t('tables.table_number') }))
-        .max(2, t('tables.table_number') + " " + t('validation.max', { field: t('tables.table_number'), max: 2 }))
-        .label(t('tables.table_number'));
+        .required(t('validation.required_with_label', { field: label }))
+        .min(3, label + " " + t('validation.min', { field: label, min: 3 }))
+        .max(30, label + " " + t('validation.max', { field: label, max: 30 }))
+        .label(label);
 
     // table number of people
-    const numberOfPeople = () =>
+    const numberOfPeople = (label: string) =>
       yup
         .string()
         .trim()
-        .required(t('validation.required_with_label', { field: t('tables.number_of_people') }))
-        .max(2, t('tables.number_of_people') + " " + t('validation.max', { field: t('tables.number_of_people'), max: 2 }))
-        .label(t('tables.number_of_people'));
+        .required(t('validation.required_with_label', { field: label }))
+        .max(3, label + " " + t('tables.max', { field: label, max: 3 }))
+        .label(label);
 
     // table booking price
     const bookingPrice = (label: string) =>
@@ -258,7 +259,7 @@ export const useValidationSchema = () => {
         .required(t('validation.required_with_label', { field: label }))
         .matches(/^[0-9]+$/,  t('validation.booking_price_only_digits', { field: label }))
         .min(2, label + " " + t('tables.min', { field: label, min: 2 }))
-        .max(5, label + " " + t('tables.max', { field: label, max: 5 }))
+        .max(6, label + " " + t('tables.max', { field: label, max: 6 }))
         .label(label);
 
   

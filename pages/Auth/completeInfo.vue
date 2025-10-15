@@ -657,12 +657,7 @@ onUnmounted(() => {
 .handle-border-error {
     border-color: #e74c3c !important;
 }
-.error-message {
-    font-size: 12px;
-    color: #e74c3c !important;
-    font-weight: 500;
-    margin-top: 5px;
-}
+
 .step-indicator {
     padding: 12px;
     background-color: rgba(255, 255, 255, 0.15);

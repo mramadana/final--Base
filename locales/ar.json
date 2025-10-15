@@ -55,6 +55,7 @@
         "verification_code" : "يرجى ادخال رمز التفعيل",
         "attach_logo" : "قم باضافه صورة الشعار",
         "attach_profile_image" : "قم باضافه صورة البروفيل",
+        "attach_table_image" : "قم باضافه صورة الطاولة",
         "select_location" : "يرجى تحديد العنوان",
         "account_number_only_digits" : "رقم الحساب يجب أن يحتوي على أرقام فقط",
         "booking_price_only_digits" : "يجب ان يحتوي مبلغ {field} على ارقام فقط"
@@ -315,10 +316,12 @@
     },
 
     "tables": {
+        "add_new_table": "إضافة طاولة جديدة",
         "table_image": "صورة الطاولة",
         "table_number": "رقم الطاولة",
         "number_of_people": "عدد افراد الطاولة",
         "booking_price": "سعر الحجز",
+        "booking_price_table" : "سعر الحجز الخاص بالطاولة",
         "booking_date": "تاريخ الحجز",
         "reservations": "الحجوزات",
         "reservations_list": "قائمه الحجوزات",
@@ -336,8 +339,8 @@
         "confirm_delete": "تأكيد حذف الطاولة",
         "cancel": "تراجع",
         "min": "يجب ان يكون {min} ارقام على الاقل",
-        "max": "يجب ان يكون {max} ارقام على الاقصى"
-        
+        "max": "يجب ان يكون {max} ارقام على الاقصى",
+        "table_symbol" : "رمز الطاولة"
     },
 
     "noData" : {
