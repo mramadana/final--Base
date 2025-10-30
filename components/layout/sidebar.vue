@@ -122,6 +122,11 @@ const menuItems = ref([
         icon: '/_nuxt/assets/images/sidebar/home.svg'
     },
     {
+        label: 'Sidebar.working_time',
+        to: '/workingTime',
+        icon: '/_nuxt/assets/images/sidebar/home.svg'
+    },
+    {
         label: 'Sidebar.tables',
         icon: '/_nuxt/assets/images/sidebar/tables.svg',
         children: [

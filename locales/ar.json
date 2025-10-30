@@ -343,6 +343,36 @@
         "table_symbol" : "رمز الطاولة"
     },
 
+    "workingTime": {
+        "page_title": "مواعيد العمل",
+        "select_day": "اختر اليوم",
+        "time_from": "من",
+        "time_to": "إلى",
+        "add_new_time": "إضافة موعد جديد",
+        "save_working_time": "حفظ مواعيد العمل",
+        "success_saved": "تم حفظ مواعيد العمل بنجاح",
+        "days": {
+            "saturday": "السبت",
+            "sunday": "الأحد",
+            "monday": "الاثنين",
+            "tuesday": "الثلاثاء",
+            "wednesday": "الأربعاء",
+            "thursday": "الخميس",
+            "friday": "الجمعة"
+        },
+        "validation": {
+            "select_day_first": "الرجاء اختيار اليوم أولاً",
+            "select_time_from": "الرجاء تحديد وقت البداية (من)",
+            "select_time_to": "الرجاء تحديد وقت النهاية (إلى)",
+            "duplicate_time": "هذا الموعد موجود بالفعل! الرجاء اختيار موعد مختلف"
+        },
+        "messages": {
+            "time_added": "تم إضافة موعد جديد بنجاح",
+            "time_deleted": "تم حذف الموعد بنجاح",
+            "save_error": "حدث خطأ أثناء حفظ مواعيد العمل"
+        }
+    },
+
     "noData" : {
         "no_reservations" : "لا توجد حجوزات حاليا"
     }
