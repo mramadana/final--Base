@@ -30,21 +30,46 @@
         :rows="10"
         :sortable="false"
         :showImage="true"
-        :routeTable="{
-          header: $t('tables.actions'),
-          path: '/tables',
-          id: 'id'
-        }"
-        @deleteItem="handleDeleteItem"
+        :actionsHeader="$t('tables.actions')"
         @refreshData="fetchTablesData"
-        @editItem="handleEditItem"
-        @viewItem="handleViewItem"
-      />
+      >
+        <template #actions="{ data }">
+          <div class="table-actions-group">
+            <button class="table-action-btn btn-view" @click="handleViewItem(data.id)">
+              <i class="fas fa-eye"></i>
+              {{ $t('tables.view') }}
+            </button>
+            <button class="table-action-btn btn-edit" @click="handleEditItem(data.id)">
+              {{ $t('tables.edit') }}
+            </button>
+            <button class="table-action-btn btn-delete" @click="openDeleteDialog(data.id)">
+              {{ $t('tables.delete_table') }}
+            </button>
+          </div>
+        </template>
+      </DatatableTable>
 
       <!-- No Data -->
       <div v-else class="no-data-message">
         <p>{{ $t('noData.no_reservations') }}</p>
       </div>
+
+      <!-- Delete Confirmation Dialog -->
+      <Dialog v-model:visible="showDeleteDialog" modal :draggable="false" class="custum_dialog_width without-close" :style="{ width: '500px' }">
+        <div class="delete-content">
+          <img src="@/assets/images/alert.gif" loading="lazy" alt="check-img" class="lgg mb-4">
+          <h3 class="main-title md mb-0">{{ $t('tables.delete_confirmation') }}</h3>
+          <div class="delete-actions">
+            <button @click="showDeleteDialog = false" class="btn-cancel" :disabled="isDeleting">
+              {{ $t('tables.cancel') }}
+            </button>
+            <button @click="confirmDelete" class="btn-confirm-delete" :disabled="isDeleting">
+              <i v-if="isDeleting" class="fas fa-spinner fa-spin"></i>
+              <span v-else>{{ $t('tables.confirm_delete') }}</span>
+            </button>
+          </div>
+        </div>
+      </Dialog>
   
     </div>
   </template>
@@ -61,6 +86,11 @@
   const globalStore = useGlobalStore();
 
   const pageHeadTitle = ref(t("Sidebar.tables"));
+  
+  // Delete dialog state
+  const showDeleteDialog = ref(false);
+  const itemToDelete = ref(null);
+  const isDeleting = ref(false);
   
   // Filter values
   const filterValues = ref({
@@ -254,12 +284,43 @@
     }
   };
 
-  // Handle Delete Item (local removal)
-  const handleDeleteItem = (id) => {
-    // Remove from local array after successful API delete
-    const index = tables.value.findIndex(item => item.id === id);
-    if (index > -1) {
-      tables.value.splice(index, 1);
+  // Open delete dialog
+  const openDeleteDialog = (id) => {
+    itemToDelete.value = id;
+    showDeleteDialog.value = true;
+  };
+
+  // Confirm delete
+  const confirmDelete = async () => {
+    if (!itemToDelete.value) return;
+    
+    isDeleting.value = true;
+    
+    try {
+      // API Call - replace with your actual endpoint
+      const response = await $fetch(`/api/tables/${itemToDelete.value}`, {
+        method: 'DELETE'
+      });
+      
+      // Success - remove from local array
+      const index = tables.value.findIndex(item => item.id === itemToDelete.value);
+      if (index > -1) {
+        tables.value.splice(index, 1);
+      }
+      
+      // Close dialog and reset
+      showDeleteDialog.value = false;
+      itemToDelete.value = null;
+      
+      // Optional: Show success message
+      // useToast().success('تم حذف الطاولة بنجاح');
+      
+    } catch (error) {
+      console.error('Delete error:', error);
+      // Optional: Show error message
+      // useToast().error('حدث خطأ أثناء حذف الطاولة');
+    } finally {
+      isDeleting.value = false;
     }
   };
 
@@ -290,5 +351,67 @@
     padding: 40px;
     color: #888;
     font-size: 16px;
+  }
+
+  .delete-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 24px;
+  }
+
+  .delete-actions {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    margin-top: 8px;
+    
+    button {
+      flex: 1;
+      padding: 14px 24px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .btn-cancel {
+      background: #fff;
+      color: #1a1a1a;
+      
+      &:hover:not(:disabled) {
+        background: #f0f0f0;
+      }
+      
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+    
+    .btn-confirm-delete {
+      background: #DC2626;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      
+      &:hover:not(:disabled) {
+        background: #B91C1C;
+      }
+      
+      &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+      
+      i.fa-spinner {
+        font-size: 16px;
+      }
+    }
   }
   </style>

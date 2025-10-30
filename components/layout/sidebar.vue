@@ -228,10 +228,8 @@ const hasActiveChild = (children) => {
 };
 
 const isActiveLink = (path) => {
-    if (path === '/') {
-        return route.path === path;
-    }
-    return route.path.startsWith(path);
+    // Always use exact match to avoid nested routes being active together
+    return route.path === path;
 };
 
 // Auto-open menu with active child on mount

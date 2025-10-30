@@ -55,10 +55,14 @@
         </div>
 
 
-        <!--*********** Actions Column (3 buttons) ***********-->
-        <Column :header="routeTable.header" v-if="routeTable">
+        <!--*********** Actions Column (Slot) ***********-->
+        <Column :header="actionsHeader || routeTable?.header" v-if="$slots.actions || routeTable">
             <template #body="slotProps">
-                <div class="table-actions-group">
+                <!-- Use slot if provided -->
+                <slot name="actions" :data="slotProps.data" v-if="$slots.actions" />
+                
+                <!-- Fallback to old routeTable approach -->
+                <div class="table-actions-group" v-else-if="routeTable">
                     <button class="table-action-btn btn-view" @click="viewItem(slotProps.data.id)">
                         <i class="fas fa-eye"></i>
                         {{ $t('tables.view') }}
@@ -238,22 +242,6 @@
 
       </Dialog>
 
-      <!-- Delete Confirmation Dialog -->
-      <Dialog v-model:visible="showDeleteDialog" modal :draggable="false" class="custum_dialog_width without-close" :style="{ width: '500px' }">
-        <div class="delete-content">
-          <img src="@/assets/images/alert.gif" loading="lazy" alt="check-img" class="lgg mb-4">
-          <h3 class="main-title md mb-0">{{ $t('tables.delete_confirmation') }}</h3>
-          <div class="delete-actions">
-            <button @click="showDeleteDialog = false" class="btn-cancel" :disabled="isDeleting">
-              {{ $t('tables.cancel') }}
-            </button>
-            <button @click="confirmDelete" class="btn-confirm-delete" :disabled="isDeleting">
-              <i v-if="isDeleting" class="fas fa-spinner fa-spin"></i>
-              <span v-else>{{ $t('tables.confirm_delete') }}</span>
-            </button>
-          </div>
-        </div>
-      </Dialog>
     </div>
 </template>
 
@@ -270,11 +258,6 @@ const currentPage = ref(1);
 const showReservationsDialog = ref(false);
 const selectedRowId = ref(null);
 const reservationsList = ref([]);
-
-// Delete dialog state
-const showDeleteDialog = ref(false);
-const itemToDelete = ref(null);
-const isDeleting = ref(false);
 
 // Open reservations with static data for now
 const openReservations = (rowId) => {
@@ -330,8 +313,13 @@ const props = defineProps({
       default: false, // hide showOrderId by default, change to true when you want to show it
     },
 
+    actionsHeader: {
+        type: String,
+        default: '', // header for actions column when using slot
+    },
+
     routeTable: {
-        type: Object, // pass object with path and header
+        type: Object, // pass object with path and header (legacy - prefer using actions slot)
     },
 
     DropDownManagers: {
@@ -394,6 +382,11 @@ const editItem = (id) => {
 const viewItem = (id) => {
   emit('viewItem', id);
 };
+
+// Expose methods to parent if needed
+defineExpose({
+  openReservations
+});
 
 </script>
 
@@ -483,50 +476,6 @@ const viewItem = (id) => {
 }
 .chip-dark { background-color: #1e1e1e; color: #fff; }
 
-// Table Actions Group (3 buttons in actions column)
-.table-actions-group {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  justify-content: flex-start;
-  
-  .table-action-btn {
-    padding: 8px 14px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: all 0.3s;
-    white-space: nowrap;
-    border: none;
-    
-    i {
-      font-size: 13px;
-    }
-    
-    &.btn-view {
-      background-color: #1e1e1e;
-      color: #fff;
-      &:hover { background-color: #2a2a2a; }
-    }
-    
-    &.btn-edit {
-      background-color: #1e1e1e;
-      color: #fff;
-      &:hover { background-color: #2a2a2a; }
-    }
-    
-    &.btn-delete {
-      background-color: #dc2626; // vivid red
-      color: #fff;
-      &:hover { background-color: #b91c1c; }
-    }
-  }
-}
-
 .chip-dark {
   cursor: pointer;
   transition: all 0.3s;
@@ -604,79 +553,6 @@ const viewItem = (id) => {
   
   &:hover {
     background: #353535;
-  }
-}
-
-.delete-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 24px;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.1);
-    opacity: 0.8;
-  }
-}
-
-.delete-actions {
-  display: flex;
-  gap: 12px;
-  width: 100%;
-  margin-top: 8px;
-  
-  button {
-    flex: 1;
-    padding: 14px 24px;
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s;
-  }
-  
-  .btn-cancel {
-    background: #fff;
-    color: #1a1a1a;
-    
-    &:hover:not(:disabled) {
-      background: #f0f0f0;
-    }
-    
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-  }
-  
-  .btn-confirm-delete {
-    background: #DC2626;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    
-    &:hover:not(:disabled) {
-      background: #B91C1C;
-    }
-    
-    &:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-    }
-    
-    i.fa-spinner {
-      font-size: 16px;
-    }
   }
 }
 </style>

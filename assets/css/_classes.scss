@@ -588,6 +588,51 @@ margin: 0;
 }
 
 
+// Slotted styles for actions slot content from parent
+.table-actions-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-start;
+  
+  .table-action-btn {
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s;
+    white-space: nowrap;
+    border: none;
+    
+    i {
+      font-size: 13px;
+    }
+    
+    &.btn-view {
+      background-color: #1e1e1e;
+      color: #fff;
+      &:hover { background-color: #2a2a2a; }
+    }
+    
+    &.btn-edit {
+      background-color: #1e1e1e;
+      color: #fff;
+      &:hover { background-color: #2a2a2a; }
+    }
+    
+    &.btn-delete {
+      background-color: #dc2626;
+      color: #fff;
+      &:hover { background-color: #b91c1c; }
+    }
+  }
+}
+
+
 
 
 
