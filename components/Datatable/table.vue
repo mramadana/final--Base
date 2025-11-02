@@ -40,10 +40,18 @@
               </span>
 
               <!-- Reservations column as dark chip -->
-              <span
+              <!-- <span
                 v-else-if="col.field === 'reservations'"
                 class="chip chip-dark"
                 @click="openReservations(slotProps.data.id)"
+              >
+                {{ slotProps.data.reservations }}
+              </span> -->
+
+              <span
+                v-else-if="col.field === 'reservations'"
+                class="chip chip-dark"
+                @click="navigateToAppointment(slotProps.data.id)"
               >
                 {{ slotProps.data.reservations }}
               </span>
@@ -278,6 +286,14 @@ const openReservations = (rowId) => {
     { time: '١١:٣٠ م', isBooked: true }
   ];
   showReservationsDialog.value = true;
+};
+
+// Navigate to addAppointment page with table id
+const navigateToAppointment = (tableId) => {
+  navigateTo({
+    path: '/tables/addAppointment',
+    query: { tableId: tableId }
+  });
 };
 
 /******************* Provide && Inject *******************/

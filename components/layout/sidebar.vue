@@ -122,9 +122,9 @@ const menuItems = ref([
         icon: '/_nuxt/assets/images/sidebar/home.svg'
     },
     {
-        label: 'Sidebar.working_time',
+        label: 'workingTime.page_title',
         to: '/workingTime',
-        icon: '/_nuxt/assets/images/sidebar/home.svg'
+        icon: '/_nuxt/assets/images/sidebar/clock.svg'
     },
     {
         label: 'Sidebar.tables',
@@ -147,7 +147,7 @@ const menuItems = ref([
         label: 'Sidebar.menu_list',
         icon: '/_nuxt/assets/images/sidebar/menu-board.svg',
         children: [
-            { label: 'sideMenu.my_menus', to: '/myorders', icon: '/_nuxt/assets/images/sidebar/folder-open.png' },
+            { label: 'sideMenu.my_menus', to: '/Menu', icon: '/_nuxt/assets/images/sidebar/folder-open.png' },
             { label: 'sideMenu.add_meal', to: '/orders/new', icon: '/_nuxt/assets/images/sidebar/folder-add.png' }
         ]
     },

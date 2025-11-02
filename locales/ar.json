@@ -340,7 +340,12 @@
         "cancel": "تراجع",
         "min": "يجب ان يكون {min} ارقام على الاقل",
         "max": "يجب ان يكون {max} ارقام على الاقصى",
-        "table_symbol" : "رمز الطاولة"
+        "table_symbol" : "رمز الطاولة",
+        "success_add_table": "تم إضافة الطاولة بنجاح",
+        "add_table" : "اضافة طاولة",
+        "edit_table" : "تعديل الطاولة",
+        "edittable_info" : "تعديل بيانات الطاولة",
+        "table_info" : " بيانات الطاولة"
     },
 
     "workingTime": {
@@ -351,6 +356,19 @@
         "add_new_time": "إضافة موعد جديد",
         "save_working_time": "حفظ مواعيد العمل",
         "success_saved": "تم حفظ مواعيد العمل بنجاح",
+        "add_appointment_title": "إضافة موعد كحجوز",
+        "available_date": "التاريخ المتاح",
+        "available_time": "الموعد المتاح",
+        "choose_date": "اختر التاريخ",
+        "choose_time": "اختر الموعد",
+        "customer_name": "اسم المعميل",
+        "phone_number": "رقم الجوال",
+        "notes": "إضافة ملاحظة",
+        "save_appointment": "حفظ الموعد",
+        "appointment_saved_success": "تم حفظ الموعد بنجاح",
+        "date_required": "التاريخ المتاح مطلوب",
+        "time_required": "الموعد المتاح مطلوب",
+        "date_and_time_required": "يرجى إدخال التاريخ والموعد المتاح",
         "days": {
             "saturday": "السبت",
             "sunday": "الأحد",

@@ -47,9 +47,8 @@
                 <button 
                     type="button" 
                     class="add-time-btn"
-                    @click="addNewDay()"
-                >
-                    <i class="fas fa-plus"></i>
+                    @click="addNewDay()">
+                    <i class="fa-solid fa-circle-plus"></i>
                     {{ $t('workingTime.add_new_time') }}
                 </button>
             </div>
@@ -136,7 +135,6 @@ import { useI18n } from "vue-i18n";
 import flatPickr from 'vue-flatpickr-component';
 import 'flatpickr/dist/flatpickr.css';
 import { Arabic } from "flatpickr/dist/l10n/ar";
-import Dropdown from 'primevue/dropdown';
 
 const { t } = useI18n({ useScope: "global" });
 
@@ -294,14 +292,16 @@ onMounted(() => {
 
 // Page meta
 definePageMeta({
-    name: "working_time",
+    name: "workingTime.page_title",
     layout: "default",
 });
+
 </script>
 
 <style lang="scss" scoped>
 // Booking Schedule Styles
 .add-calender {
+    padding-bottom: 25px;
     // Current Input Row
     .current-input {
         margin-bottom: 24px;
@@ -406,7 +406,7 @@ definePageMeta({
             min-width: 160px;
             
             i {
-                font-size: 14px;
+                font-size: 20px;
             }
         }
     }

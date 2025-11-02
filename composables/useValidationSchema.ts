@@ -214,6 +214,15 @@ export const useValidationSchema = () => {
         .label(label);
 
     // Project Description Schema
+    const Notes = (labelKey: string) =>
+      yup
+        .string()
+        .trim()
+        .required(t('validation.required_with_label', { field: t(labelKey) }))
+        .min(3, t('validation.min', { field: t(labelKey), min: 3 }))
+        .max(500, t('validation.max', { field: t(labelKey), max: 500 }))
+        .label(labelKey);
+
     const projectDescription_ar = (labelKey: string) =>
       yup
         .string()
@@ -291,6 +300,7 @@ export const useValidationSchema = () => {
     accountHolderName,
     tableNumber,
     numberOfPeople,
-    bookingPrice
+    bookingPrice,
+    Notes
   }
 }

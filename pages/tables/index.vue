@@ -19,7 +19,7 @@
         calendar-mode="single" 
         @search="handleSearch"
         @select-change="handleSelectChange" 
-        @date-change="handleDateChange" 
+        @date-change="handleDateChange"
       />
         
       <!-- Data Table -->
@@ -121,7 +121,7 @@
   // Fake Data for Tables
   const tables = ref([
     {
-      id: 'T698',
+      id: '1',
       image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&q=80',
       tableNumber: '١٠',
       numberOfPeople: '٥ أفراد',
@@ -132,7 +132,7 @@
       statusBadge: 'available'
     },
     {
-      id: 'T698',
+      id: '2',
       image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&q=80',
       tableNumber: '١٠',
       numberOfPeople: '٥ أفراد',
@@ -143,7 +143,7 @@
       statusBadge: 'available'
     },
     {
-      id: 'T698',
+      id: '3',
       image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&q=80',
       tableNumber: '١٠',
       numberOfPeople: '٥ أفراد',
@@ -154,7 +154,7 @@
       statusBadge: 'reserved'
     },
     {
-      id: 'T698',
+      id: '4',
       image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&q=80',
       tableNumber: '١٠',
       numberOfPeople: '٥ أفراد',
@@ -165,7 +165,7 @@
       statusBadge: 'reserved'
     },
     {
-      id: 'T698',
+      id: '5',
       image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&q=80',
       tableNumber: '١٠',
       numberOfPeople: '٥ أفراد',
@@ -176,7 +176,7 @@
       statusBadge: 'available'
     },
     {
-      id: 'T698',
+      id: '6',
       image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&q=80',
       tableNumber: '١٠',
       numberOfPeople: '٥ أفراد',
@@ -187,7 +187,7 @@
       statusBadge: 'available'
     },
     {
-      id: 'T698',
+      id: '7',
       image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&q=80',
       tableNumber: '١٠',
       numberOfPeople: '٥ أفراد',
@@ -198,7 +198,7 @@
       statusBadge: 'reserved'
     },
     {
-      id: 'T698',
+      id: '8',
       image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&q=80',
       tableNumber: '١٠',
       numberOfPeople: '٥ أفراد',
@@ -327,15 +327,19 @@
   // Handle Edit Item
   const handleEditItem = (id) => {
     console.log('Edit item:', id);
-    // Navigate to edit page or open edit dialog
-    // navigateTo(`/tables/edit/${id}`);
+    navigateTo({
+      path: '/tables/editTable',
+      query: { id: id }
+    });
   };
 
   // Handle View Item
   const handleViewItem = (id) => {
     console.log('View item:', id);
-    // Navigate to view page
-    // navigateTo(`/tables/${id}`);
+    navigateTo({
+      path: '/tables/viewTable',
+      query: { id: id }
+    });
   };
 
   // Set global store

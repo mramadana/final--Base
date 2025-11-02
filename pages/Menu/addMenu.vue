@@ -10,7 +10,6 @@
 
                 <!-- Logo Upload -->
                 <div class="label">{{ $t('tables.table_image') }}</div>
-
                 <div class="position-relative single-input-upload mb-4">
                     
                     <div class="main_input special-input without-edit" :class="{ 'is-invalid': showValidation && uploadedImage?.length === 0 }">
@@ -30,17 +29,6 @@
                         :errorMessage="t('validation.attach_table_image')"
                         @uploaded-images-updated="updateUploadedImages" />
                 </div>
-
-                <!-- Main Section Dropdown -->
-                <GlobalCustomDropdown 
-                    v-model="mainSection" 
-                    :options="sectionOptions"
-                    option-value="value"
-                    :placeholder="$t('Auth.select_main_section')" 
-                    :label="$t('Auth.main_section')"
-                    :showValidation="showValidation"
-                    :validation-schema="validations.mainSection"
-                />
                 
                 <div class="row">
                     <div class="col-12 col-md-6">
@@ -182,7 +170,6 @@ const { successToast, errorToast } = toastMsg();
 
 // Form state
 const loading = ref(false);
-const mainSection = ref(null);
 const showValidation = ref(false);
 const successDialog = ref(false);
 const addTableForm = ref(null);
@@ -211,13 +198,6 @@ const formData = computed(() => ({
     descriptionAr: descriptionAr.value,
     descriptionEn: descriptionEn.value
 }));
-
-// Dropdown options
-const sectionOptions = ref([
-    { name: 'مستلزمات الأطفال', value: 'baby_supplies' },
-    { name: 'الأعشاب', value: 'herbs' },
-    { name: 'الطبخ', value: 'cuisine' }
-]);
 
 // Use the composable for validation
 const { isFormValid, scrollToFirstError } = useFormValidation();
@@ -287,7 +267,7 @@ const submitTable = async () => {
 
 // Page meta
 definePageMeta({
-    name: "tables.add_new_table",
+    // name: "tables.add_new_table",
     layout: "default",
 });
 </script>

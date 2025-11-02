@@ -1,7 +1,7 @@
 <template>
     <div>
         <h1 class="main-title bold md mb-5">
-            {{ $t('tables.add_new_table') }}
+            {{ $t('tables.table_info') }}
         </h1>
         <div class="layout-form">
 
@@ -10,7 +10,6 @@
 
                 <!-- Logo Upload -->
                 <div class="label">{{ $t('tables.table_image') }}</div>
-
                 <div class="position-relative single-input-upload mb-4">
                     
                     <div class="main_input special-input without-edit" :class="{ 'is-invalid': showValidation && uploadedImage?.length === 0 }">
@@ -30,17 +29,6 @@
                         :errorMessage="t('validation.attach_table_image')"
                         @uploaded-images-updated="updateUploadedImages" />
                 </div>
-
-                <!-- Main Section Dropdown -->
-                <GlobalCustomDropdown 
-                    v-model="mainSection" 
-                    :options="sectionOptions"
-                    option-value="value"
-                    :placeholder="$t('Auth.select_main_section')" 
-                    :label="$t('Auth.main_section')"
-                    :showValidation="showValidation"
-                    :validation-schema="validations.mainSection"
-                />
                 
                 <div class="row">
                     <div class="col-12 col-md-6">
@@ -56,6 +44,7 @@
                             :hasIcon="true"
                             icon="/_nuxt/assets/images/sidebar/table-img.png"
                             :with_icon="true"
+                            :disabled="true"
                         />
                     </div>
                     <div class="col-12 col-md-6">
@@ -71,6 +60,7 @@
                             :hasIcon="true"
                             icon="/_nuxt/assets/images/auth-img/user.svg"
                             :with_icon="true"
+                            :disabled="true"
                         />
                     </div>
 
@@ -88,6 +78,7 @@
                         :hasIcon="true"
                         icon="/_nuxt/assets/images/money.svg"
                         :with_icon="true"
+                        :disabled="true"
                     />
 
                     <!-- Description in Arabic -->
@@ -101,8 +92,9 @@
                                 class="main_input main_area"
                                 :class="{ 'is-invalid': descriptionArError }"
                                 :placeholder="$t('Auth.project_desc_ar')"
-                                rows="4">
-                            </textarea>
+                                rows="4"
+                                disabled
+                            ></textarea>
                             <img src="@/assets/images/file-img.svg" alt="icon" class="input-icon with-area" />
                         </div>
                         <p v-if="descriptionArError" class="error-message text-danger mt-1">
@@ -122,6 +114,7 @@
                                 :class="{ 'is-invalid': descriptionEnError }"
                                 :placeholder="$t('Auth.project_desc_en')"
                                 rows="4"
+                                disabled
                             ></textarea>
                             <img src="@/assets/images/file-img.svg" alt="icon" class="input-icon with-area" />
                         </div>
@@ -131,11 +124,7 @@
                     </div>
 
                 </div>
-                <!-- Submit Button -->
-                <button type="submit" class="custom-btn md" :disabled="loading">
-                    {{ $t('tables.add_table') }}
-                    <span class="spinner-border spinner-border-sm" v-if="loading" role="status" aria-hidden="true"></span>
-                </button>
+
             </form>
         </div>
 
@@ -155,6 +144,10 @@
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n({ useScope: "global" });
+
+// Get table ID from URL
+const route = useRoute();
+const tableId = ref(route.query.id || null);
 
 // Axios
 const axios = useApi();
@@ -182,7 +175,6 @@ const { successToast, errorToast } = toastMsg();
 
 // Form state
 const loading = ref(false);
-const mainSection = ref(null);
 const showValidation = ref(false);
 const successDialog = ref(false);
 const addTableForm = ref(null);
@@ -212,13 +204,6 @@ const formData = computed(() => ({
     descriptionEn: descriptionEn.value
 }));
 
-// Dropdown options
-const sectionOptions = ref([
-    { name: 'مستلزمات الأطفال', value: 'baby_supplies' },
-    { name: 'الأعشاب', value: 'herbs' },
-    { name: 'الطبخ', value: 'cuisine' }
-]);
-
 // Use the composable for validation
 const { isFormValid, scrollToFirstError } = useFormValidation();
 
@@ -247,6 +232,40 @@ const updateUploadedImages = (images) => {
     uploadedImage.value = images;
 };
 
+// Fetch table data
+const fetchTableData = async () => {
+    if (!tableId.value) {
+        errorToast('Table ID not found');
+        navigateTo('/tables');
+        return;
+    }
+
+    loading.value = true;
+    try {
+        // API call to get table data
+        // const res = await axios.get(`tables/${tableId.value}`);
+        // Populate form fields with fetched data
+        // tableNumberRef.value = res.data.tableNumber;
+        // numberOfPeopleRef.value = res.data.numberOfPeople;
+        // bookingPriceRef.value = res.data.bookingPrice;
+        // descriptionAr.value = res.data.descriptionAr;
+        // descriptionEn.value = res.data.descriptionEn;
+        // uploadedImage.value = res.data.image;
+        
+        console.log('Fetching table data for ID:', tableId.value);
+    } catch (error) {
+        console.error('Error fetching table data:', error);
+        errorToast('حدث خطأ أثناء جلب بيانات الطاولة');
+    } finally {
+        loading.value = false;
+    }
+};
+
+// Fetch data on mount
+onMounted(() => {
+    fetchTableData();
+});
+
 // Submit table function
 const submitTable = async () => {
     showValidation.value = true;
@@ -268,7 +287,7 @@ const submitTable = async () => {
             await new Promise(resolve => setTimeout(resolve, 1500));
 
             successDialog.value = true;
-            successToast(t('tables.success_add_table'));
+            successToast("{{ $t('tables.success_add_table') }}");
 
             // Reset form on success
             setTimeout(() => {
@@ -287,7 +306,7 @@ const submitTable = async () => {
 
 // Page meta
 definePageMeta({
-    name: "tables.add_new_table",
+    name: "tables.table_info",
     layout: "default",
 });
 </script>
