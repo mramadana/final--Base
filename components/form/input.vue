@@ -7,9 +7,10 @@
       <template v-if="readonly">
         <div class="position-relative" :class="{ 'with_icon': with_icon }">
           <input 
-            :value="value"
+            :value="modelValue"
             :type="type" 
             :name="name"
+            :placeholder="placeholder"
             readonly
             class="main_input"
           />

@@ -148,6 +148,14 @@ const { t } = useI18n({ useScope: "global" });
 const route = useRoute();
 const tableId = ref(route.query.id || null);
 
+const globalStore = useGlobalStore();
+// Set global store
+const pageHeadTitle = ref(t("Sidebar.tables"));
+globalStore.title = pageHeadTitle.value;
+globalStore.titleIcon = 'fa-solid fa-angle-left';
+globalStore.titleLink = '/tables';
+globalStore.subtitle = t('tables.edit_table');
+
 // Axios
 const axios = useApi();
 

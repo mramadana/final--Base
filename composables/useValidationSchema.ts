@@ -271,6 +271,46 @@ export const useValidationSchema = () => {
         .max(6, label + " " + t('tables.max', { field: label, max: 6 }))
         .label(label);
 
+    // Menu Name Ar Schema
+    const menuNameAr = (label: string) =>
+      yup
+        .string()
+        .trim()
+        .required(t('validation.required_with_label', { field: t('Auth.menu_name_ar') }))
+        .min(3, t('Auth.menu_name_ar') + " " + t('validation.min', { field: label, min: 3 }))
+        .max(50, t('Auth.menu_name_ar') + " " + t('validation.max', { field: label, max: 50 }))
+        .label(label);
+
+    // Menu Name En Schema
+    const menuNameEn = (label: string) =>
+      yup
+        .string()
+        .trim()
+        .required(t('validation.required_with_label', { field: t('Auth.menu_name_en') }))
+        .min(3, t('Auth.menu_name_en') + " " + t('validation.min', { field: label, min: 3 }))
+        .max(50, t('Auth.menu_name_en') + " " + t('validation.max', { field: label, max: 50 }))
+        .label(label);
+
+    // Menu Description Ar Schema
+    const menuDescriptionAr = (label: string) =>
+      yup
+        .string()
+        .trim()
+        .required(t('validation.required_with_label', { field: t('Auth.menu_description_ar') }))
+        .min(3, t('Auth.menu_description_ar') + " " + t('validation.min', { field: label, min: 3 }))
+        .max(500, t('Auth.menu_description_ar') + " " + t('validation.max', { field: label, max: 500 }))
+        .label(label);
+
+    // Menu Description En Schema
+    const menuDescriptionEn = (label: string) =>
+      yup
+        .string()
+        .trim()
+        .required(t('validation.required_with_label', { field: t('Auth.menu_description_en') }))
+        .min(3, t('Auth.menu_description_en') + " " + t('validation.min', { field: label, min: 3 }))
+        .max(500, t('Auth.menu_description_en') + " " + t('validation.max', { field: label, max: 500 }))
+        .label(label);
+
   
   return {
     required,
@@ -301,6 +341,10 @@ export const useValidationSchema = () => {
     tableNumber,
     numberOfPeople,
     bookingPrice,
-    Notes
+    Notes,
+    menuNameAr,
+    menuNameEn,
+    menuDescriptionAr,
+    menuDescriptionEn
   }
 }

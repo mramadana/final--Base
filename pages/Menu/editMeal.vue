@@ -1,15 +1,15 @@
 <template>
     <div>
         <h1 class="main-title bold md mb-5">
-            {{ $t('menu.add_new_menu') }}
+            {{ $t('menu.edit_meal') }}
         </h1>
         <div class="layout-form">
-
+            <h1 class="main-title md mb-4">{{ id }}</h1>
             <!-- Add Table Form -->
             <form @submit.prevent="submitTable" ref="addTableForm">
 
                 <!-- Logo Upload -->
-                <div class="label">{{ $t('tables.menu_image') }}</div>
+                <div class="label">{{ $t('menu.meal_image') }}</div>
 
                 <div class="position-relative single-input-upload mb-4">
                     
@@ -27,7 +27,7 @@
                         :resetTrigger="resetImageTrigger"
                         :showValidation="showValidation"
                         :required="true"
-                        :errorMessage="t('validation.attach_menu_image')"
+                        :errorMessage="t('validation.attach_meal_image')"
                         @uploaded-images-updated="updateUploadedImages" />
                 </div>
                 
@@ -35,14 +35,15 @@
                     v-model="mainSection" 
                     :options="sectionOptions"
                     option-value="value"
-                    :placeholder="$t('Global.category')" 
-                    :label="$t('Global.category')"
+                    :placeholder="$t('menu.select_menu')" 
+                    :label="$t('menu.select_menu')"
                     :showValidation="showValidation"
                     :validation-schema="validations.mainSection"
                 />
 
                 <!-- Table Number -->
                 <div class="row">
+
                     <div class="col-12 col-md-6">
                         <!-- Table Number -->
                         <FormInput 
@@ -55,6 +56,7 @@
                             :showErrors="showValidation"
                         />
                     </div>
+
                     <div class="col-12 col-md-6">
                         <!-- Number of People -->
                         <FormInput 
@@ -64,6 +66,20 @@
                             :label="$t('menu.meal_name_en')"
                             :placeholder="$t('menu.meal_name_en')"
                             :validation-schema="validations.numberOfPeople"
+                            :showErrors="showValidation"
+                        />
+                    </div>
+                    
+                    <div class="col-12">
+                        <FormInput 
+                            v-model:modelValue="bookingPriceRef"
+                            name="bookingPrice" 
+                            type="number"
+                            min="0"
+                            step="1"
+                            :label="$t('menu.meal_price')"
+                            :placeholder="$t('menu.meal_price')"
+                            :validation-schema="validations.bookingPrice"
                             :showErrors="showValidation"
                         />
                     </div>
@@ -109,7 +125,7 @@
                 </div>
                 <!-- Submit Button -->
                 <button type="submit" class="custom-btn md" :disabled="loading">
-                    {{ $t('menu.add_meal') }}
+                    {{ $t('Global.Saving_changes') }}
                     <span class="spinner-border spinner-border-sm" v-if="loading" role="status" aria-hidden="true"></span>
                 </button>
             </form>
@@ -128,24 +144,23 @@
 </template>
 
 <script setup>
-
 import { useI18n } from "vue-i18n";
+import { useRoute } from 'vue-router';
 
 const { t } = useI18n({ useScope: "global" });
 
-// Page meta
-definePageMeta({
-    name: "menu.add_new_menu",
-    layout: "default",
-});
-
+// Global store
 const globalStore = useGlobalStore();
 // Set global store
 const pageHeadTitle = ref(t("Sidebar.menu_list"));
 globalStore.title = pageHeadTitle.value;
 globalStore.titleIcon = 'fa-solid fa-angle-left';
 globalStore.titleLink = '/Menu';
-globalStore.subtitle = t('menu.add_new_menu');
+globalStore.subtitle = t('menu.edit_meal');
+
+// Get id and menuId from query
+const route = useRoute();
+const id = route.query.id;
 
 // Axios
 const axios = useApi();
@@ -161,6 +176,7 @@ const validations = {
     numberOfPeople: tableNumber(t('menu.meal_name_en')),
     descriptionAr: tableNumber(t('menu.meal_description_ar')),
     descriptionEn: tableNumber(t('menu.meal_description_en')),
+    bookingPrice: tableNumber(t('menu.meal_price')),
 };
 
 // Toast
@@ -180,6 +196,7 @@ const resetImageTrigger = ref(0);
 // Form fields as separate refs
 const tableNumberRef = ref('');
 const numberOfPeopleRef = ref('');
+const bookingPriceRef = ref('');
 const descriptionAr = ref('');
 const descriptionEn = ref('');
 
@@ -196,6 +213,7 @@ const sectionOptions = ref([
 const formData = computed(() => ({
     tableNumber: tableNumberRef.value,
     numberOfPeople: numberOfPeopleRef.value,
+    bookingPrice: bookingPriceRef.value,
     descriptionAr: descriptionAr.value,
     descriptionEn: descriptionEn.value
 }));
@@ -266,7 +284,11 @@ const submitTable = async () => {
     }
 };
 
-
+// Page meta
+definePageMeta({
+    name: "menu.edit_meal",
+    layout: "default",
+});
 </script>
 
 <style lang="scss" scoped>

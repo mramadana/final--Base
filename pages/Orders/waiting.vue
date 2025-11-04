@@ -6,24 +6,26 @@
 
 <script setup>
 
-  import { useI18n } from 'vue-i18n';
-  const { t } = useI18n({ useScope: 'global' });
-
-  const globalStore = useGlobalStore();
-  // Set global store
-  const pageHeadTitle = ref(t("sideMenu.cancelled_reservations"));
-  globalStore.title = pageHeadTitle.value;
-
 definePageMeta({
-    name: 'sideMenu.cancelled_reservations'
+    name: 'Sidebar.waiting_list'
 })
+
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n({ useScope: "global" });
+
+// Global store
+const globalStore = useGlobalStore();
+// Set global store
+const pageHeadTitle = ref(t("Sidebar.waiting_list"));
+globalStore.title = pageHeadTitle.value;
 
 // Inject context from parent
 const context = inject('reservationContext');
 
 // Set page title
 onMounted(() => {
-  context.setPageTitle('reservations.view_cancelled_orders');
+  context.setPageTitle('orders.review_requests_waiting');
 });
 
 // Reservations data (cancelled only) - بيانات بس!

@@ -1,22 +1,23 @@
-
 <template>
-    <div>
-      <OrdersCardReservation :items="filteredReservations" link-to="/reservation" />
-    </div>
-  </template>
+  <div>
+    <OrdersCardReservation :items="filteredReservations" link-to="/reservation" />
+  </div>
+</template>
 
 <script setup>
 
 definePageMeta({
-    name: 'sideMenu.my_reservations'
+    name: 'sideMenu.scheduled_reservations'
 })
 
-  import { useI18n } from 'vue-i18n';
-  const { t } = useI18n({ useScope: 'global' });
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n({ useScope: "global" });
+
+// Global store
 const globalStore = useGlobalStore();
-const pageHeadTitle = ref(t("Sidebar.my_reservation"));
 // Set global store
+const pageHeadTitle = ref(t("sideMenu.scheduled_reservations"));
 globalStore.title = pageHeadTitle.value;
 
 // Inject context from parent
@@ -24,10 +25,10 @@ const context = inject('reservationContext');
 
 // Set page title
 onMounted(() => {
-  context.setPageTitle('reservations.view_reservations');
+  context.setPageTitle('reservations.scheduled_reservations');
 });
 
-// Reservations data - البيانات بس!
+// Reservations data (completed only) - بيانات بس!
 const reservations = [
   {
     id: 12548,
@@ -38,26 +39,6 @@ const reservations = [
     imageSrc: '/_nuxt/assets/images/Logo.svg',
     status: 'confirmed',
     statusText: 'مؤكد'
-  },
-  {
-    id: 12549,
-    metaTime: 'م 02:30 - 06/12/2024',
-    title: 'مطعم البيك طاوله رقم T15',
-    timeRange: 'م 07:30 - 09:30',
-    customerName: 'سالم العتيبي',
-    imageSrc: '/_nuxt/assets/images/Logo.svg',
-    status: 'pending',
-    statusText: 'قيد التأكيد'
-  },
-  {
-    id: 12550,
-    metaTime: 'م 03:15 - 07/12/2024',
-    title: 'مطعم البيك طاوله رقم T20',
-    dateRange: 'م 06:00 - 08:00',
-    customerName: 'أحمد الشمري',
-    imageSrc: '/_nuxt/assets/images/Logo.svg',
-    status: 'canceled',
-    statusText: 'ملغي'
   },
   {
     id: 12551,

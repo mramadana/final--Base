@@ -130,6 +130,14 @@ import { Arabic } from "flatpickr/dist/l10n/ar";
 
 const { t } = useI18n({ useScope: "global" });
 
+const globalStore = useGlobalStore();
+const pageHeadTitle = ref(t("Sidebar.tables"));
+// Set global store
+globalStore.title = pageHeadTitle.value;
+globalStore.titleIcon = 'fa-solid fa-angle-left';
+globalStore.titleLink = '/tables';
+globalStore.subtitle = t('sideMenu.add_new_table');
+
 // Get tableId from URL
 const route = useRoute();
 const tableId = ref(route.query.tableId || null);
@@ -289,7 +297,7 @@ watch(() => route.query.tableId, (newId) => {
 
 // Page meta
 definePageMeta({
-    name: "tables.addAppointment",
+    name: "workingTime.add_appointment_title",
     layout: "default",
 });
 </script>

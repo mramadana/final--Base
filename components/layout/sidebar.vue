@@ -148,41 +148,40 @@ const menuItems = ref([
         icon: '/_nuxt/assets/images/sidebar/menu-board.svg',
         children: [
             { label: 'sideMenu.my_menus', to: '/Menu', icon: '/_nuxt/assets/images/sidebar/folder-open.png' },
-            { label: 'sideMenu.add_meal', to: '/orders/new', icon: '/_nuxt/assets/images/sidebar/folder-add.png' }
+            { label: 'sideMenu.add_meal', to: '/addMeal', icon: '/_nuxt/assets/images/sidebar/folder-add.png' }
         ]
     },
 
     {
         label: 'Sidebar.new_orders',
         icon: '/_nuxt/assets/images/sidebar/new-order.svg',
-        to: '/payment/pending',
+        to: '/orders/new',
     },
     {
         label: 'Sidebar.pending_payment',
         icon: '/_nuxt/assets/images/sidebar/money-time.svg',
-        to: '/payment/pending',
+        to: '/orders/payment-pending',
     },
     {
         label: 'Sidebar.waiting_list',
-        to: '/waiting',
+        to: '/orders/waiting',
         icon: '/_nuxt/assets/images/sidebar/timer.svg'
     },
     {
         label: 'Sidebar.reservations',
         icon: '/_nuxt/assets/images/sidebar/calendar-tick.svg',
         children: [
-            { label: 'sideMenu.active_reservations', to: '/reservations/today', icon: '/_nuxt/assets/images/sidebar/active-reservations.png' },
-            { label: 'sideMenu.scheduled_reservations', to: '/reservations/upcoming', icon: '/_nuxt/assets/images/sidebar/scheduled-reservations.png' }
+            { label: 'sideMenu.active_reservations', to: '/ReservationMade/activeReservations', icon: '/_nuxt/assets/images/sidebar/active-reservations.png' },
+            { label: 'sideMenu.scheduled_reservations', to: '/ReservationMade/scheduledReservations', icon: '/_nuxt/assets/images/sidebar/scheduled-reservations.png' }
         ]
     },
     {
         label: 'Sidebar.financial_transactions',
         icon: '/_nuxt/assets/images/sidebar/coin.svg',
         children: [
-            { label: 'sideMenu.due_amount', to: '/myorders', icon: '/_nuxt/assets/images/sidebar/money-change.png' },
-            { label: 'sideMenu.current_settlement', to: '/orders/new', icon: '/_nuxt/assets/images/sidebar/money-time-new.png' },
-            { label: 'sideMenu.finished_settlement', to: '/orders/new', icon: '/_nuxt/assets/images/sidebar/money-remove.png' },
-            { label: 'sideMenu.financial_reports_profits', to: '/orders/new', icon: '/_nuxt/assets/images/sidebar/money-disscount.png' },
+            { label: 'sideMenu.due_amount', to: '/financialTransactions', icon: '/_nuxt/assets/images/sidebar/money-change.png' },
+            { label: 'sideMenu.current_settlement', to: '/orders/1', icon: '/_nuxt/assets/images/sidebar/money-time-new.png' },
+            { label: 'sideMenu.finished_settlement', to: '/orders/2', icon: '/_nuxt/assets/images/sidebar/money-remove.png' },
         ]
     },
     {

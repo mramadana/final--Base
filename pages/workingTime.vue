@@ -138,6 +138,10 @@ import { Arabic } from "flatpickr/dist/l10n/ar";
 
 const { t } = useI18n({ useScope: "global" });
 
+const globalStore = useGlobalStore();
+const pageTilte = ref(t("workingTime.page_title"));
+globalStore.title = pageTilte.value;
+
 // Axios
 const axios = useApi(); 
 

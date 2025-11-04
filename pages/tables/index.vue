@@ -344,9 +344,9 @@
 
   // Set global store
   globalStore.title = pageHeadTitle.value;
-  globalStore.titleIcon = null;
+  globalStore.titleIcon = 'fa-solid fa-angle-left';
   globalStore.titleLink = null;
-  globalStore.subtitle = null;
+  globalStore.subtitle = t('sideMenu.my_tables');
   </script>
 
   <style scoped lang="scss">

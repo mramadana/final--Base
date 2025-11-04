@@ -10,6 +10,15 @@ definePageMeta({
     name: 'sideMenu.completed_reservations'
 })
 
+  import { useI18n } from 'vue-i18n';
+  const { t } = useI18n({ useScope: 'global' });
+
+  const globalStore = useGlobalStore();
+// Set global store
+const pageHeadTitle = ref(t("sideMenu.completed_reservations"));
+globalStore.title = pageHeadTitle.value;
+
+
 // Inject context from parent
 const context = inject('reservationContext');
 

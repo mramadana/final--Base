@@ -210,7 +210,6 @@ watch(() => props.modelValue?.date, (newVal) => {
         position: relative;
         background-color: #3a3a3a !important;
         input {
-            padding-inline-start: 20px;
             height: 100%;
             background: transparent;
             color: #fff;
@@ -246,7 +245,7 @@ watch(() => props.modelValue?.date, (newVal) => {
     background: transparent;
     color: #fff;
     border-radius: 8px;
-    padding-inline-start: 20px;
+    padding-inline-start: 0;
     cursor: pointer;
     &::placeholder {
         color: #fff;

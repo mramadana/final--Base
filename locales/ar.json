@@ -56,6 +56,8 @@
         "attach_logo" : "قم باضافه صورة الشعار",
         "attach_profile_image" : "قم باضافه صورة البروفيل",
         "attach_table_image" : "قم باضافه صورة الطاولة",
+        "attach_menu_image" : "قم باضافه صورة المنيو",
+        "attach_meal_image" : "قم باضافه صورة الوجبة",
         "select_location" : "يرجى تحديد العنوان",
         "account_number_only_digits" : "رقم الحساب يجب أن يحتوي على أرقام فقط",
         "booking_price_only_digits" : "يجب ان يحتوي مبلغ {field} على ارقام فقط"
@@ -215,7 +217,8 @@
         "provider" : "مقدم خدمة",
         "imgs": "لا يوجد صور حاليا",
         "no_products" : "لا توجد طلبات حاليا",
-        "complete_info" : "استكمال البيانات"
+        "complete_info" : "استكمال البيانات",
+        "category" : "التصنيف"
     },
 
     "Sidebar": {
@@ -263,7 +266,8 @@
         "finished_settlement": "تسوية منتهية",
         "financial_reports_profits": "التقارير المالية والارباح",
         "view_users": "عرض المستخدمين",
-        "add_user": "اضافة مستخدم"
+        "add_user": "اضافة مستخدم",
+        "add_meals": "اضافة الوجبة"
     },
 
     "reservations": {
@@ -276,7 +280,9 @@
         "status" : "حالة الحجز",
         "choose_date": "اختر التاريخ",
         "reservation_details": "تفاصيل الحجز",
-        "reservations": "الحجوزات"
+        "reservations": "الحجوزات",
+        "active_reservations": "استعرض جميع الحجوزات النشطة",
+        "scheduled_reservations": "استعرض جميع الحجوزات المجدولة"
     },
 
     "settings": {
@@ -318,6 +324,7 @@
     "tables": {
         "add_new_table": "إضافة طاولة جديدة",
         "table_image": "صورة الطاولة",
+        "menu_image": "صورة المنيو",
         "table_number": "رقم الطاولة",
         "number_of_people": "عدد افراد الطاولة",
         "booking_price": "سعر الحجز",
@@ -391,8 +398,82 @@
         }
     },
 
+    "menu": {
+        "my_menus": "منيوهاتي",
+        "add_new_menu": "إضافة منيو جديد",
+        "view_details": "عرض التفاصيل",
+        "add_new_meal" : "اضافة وجبه جديدة",
+        "add_meal" : "اضافه الوجبه",
+        "meal_name_ar" : "اسم بالغة العربية",
+        "meal_name_en" : "اسم باللغة الإنجليزية",
+        "meal_description_ar" : "وصف باللغة العربية",
+        "meal_description_en" : "وصف باللغة الإنجليزية",
+        "meals_menu" : "منيو الوجبات",
+        "search_meal" : "البحث عن وجبة",
+        "menu_date" : "تاريخ الاضافة",
+        "all" : "الكل",
+        "meals" : "وجبات",
+        "drinks" : "مشروبات",
+        "desserts" : "حلويات",
+        "meal_image" : "صورة الوجبة",
+        "type" : "النوع",
+        "price" : "السعر",
+        "actions" : "اجراء",
+        "view" : "عرض",
+        "edit" : "التعديل",
+        "delete_meal" : "حذف الوجبة",
+        "no_meals" : "لا توجد وجبات حالياً",
+        "delete_confirmation" : "هل أنت متأكد من حذف هذه الوجبة؟",
+        "cancel" : "إلغاء",
+        "confirm_delete" : "تأكيد الحذف",
+        "edit_meal" : "تعديل الوجبة",
+        "select_menu" : "تحديد المنيو",
+        "meal_price" : "سعر الوجبة",
+        "meal_details" : "عرض تفاصيل الوجبة"
+    },
+
     "noData" : {
         "no_reservations" : "لا توجد حجوزات حاليا"
+    },
+
+    "orders": {
+        "orders": "الطلبات",
+        "view_all_orders": "استعرض جميع الطلبات",
+        "new_orders": "استعرض جميع الطلبات الجديدة",
+        "payment_pending_orders": "استعرض جميع الطلبات قيد الدفع",
+        "waiting_orders": "استعرض جميع الطلبات قيد الانتظار",
+        "search_order": "البحث برقم الطلب او اسم المطعم",
+        "order_status": "حالة الطلب",
+        "all": "الكل",
+        "new": "جديد",
+        "payment_pending": "قيد الدفع",
+        "waiting": "الانتظار",
+        "confirmed": "مؤكد",
+        "canceled": "ملغي",
+        "status_new": "بانتظار القبول",
+        "status_payment_pending": "بانتظار الدفع",
+        "status_waiting": "بانتظار القبول",
+        "status_confirmed": "مؤكد",
+        "status_canceled": "ملغي",
+        "table_number": "رقم الطاولة",
+        "view_details": "عرض التفاصيل",
+        "no_new_orders": "لا توجد طلبات جديدة حالياً",
+        "no_payment_pending_orders": "لا توجد طلبات قيد الدفع حالياً",
+        "no_waiting_orders": "لا توجد طلبات قيد الانتظار حالياً",
+        "new_order": "الطلبات الجديدة",
+        "review_requests": "استعرض جميع الطلبات الجديدة",
+        "review_requests_waiting": "استعرض جميع الطلبات في قائمه الانتظار"
+    },
+
+    "financial": {
+        "search_placeholder": "البحث برقم الطلب / اسم العميل",
+        "settlement": "تسوية",
+        "total_dues_title": "إجمالي المستحقات",
+        "total_reservations": "إجمالي الحجوزات",
+        "total_bookings_count": "إجمالي الحجوزات",
+        "vat_tax": "ضريبة القيمة المضافة",
+        "net_due": "المستحق",
+        "due_reservations_title": "الحجوزات المستحقة للتسوية"
     }
 
 }

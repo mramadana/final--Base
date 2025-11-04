@@ -141,6 +141,12 @@
 </template>
 
 <script setup>
+// Page meta
+definePageMeta({
+    name: "tables.table_info",
+    layout: "default",
+});
+
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n({ useScope: "global" });
@@ -151,6 +157,14 @@ const tableId = ref(route.query.id || null);
 
 // Axios
 const axios = useApi();
+
+const globalStore = useGlobalStore();
+// Set global store
+const pageHeadTitle = ref(t("Sidebar.tables"));
+globalStore.title = pageHeadTitle.value;
+globalStore.titleIcon = 'fa-solid fa-angle-left';
+globalStore.titleLink = '/tables';
+globalStore.subtitle = t('tables.table_info');
 
 // Validation schemas
 const {
@@ -304,11 +318,6 @@ const submitTable = async () => {
     }
 };
 
-// Page meta
-definePageMeta({
-    name: "tables.table_info",
-    layout: "default",
-});
 </script>
 
 <style lang="scss" scoped>

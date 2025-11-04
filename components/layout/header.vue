@@ -18,12 +18,19 @@
 
                             <h3 v-else class="main-title bold md mb-0">{{ globalStore.title }}</h3>
 
-                            <i v-if="globalStore?.titleIcon" class="mr-1" :class="globalStore.titleIcon" style="color: #fff;"></i>
+                            <i v-if="globalStore?.titleIcon" class="fz-20" :class="globalStore.titleIcon" style="color: #fff;"></i>
 
                             
-                            <div v-if="globalStore?.subtitle" style="font-size: 12px; color: #ccc; margin-top: 2px;">
+                            <div v-if="globalStore?.subtitle" style="font-size: 13px; color: #ccc;">
                                 {{ globalStore.subtitle }}
                             </div>
+
+                            <i v-if="globalStore?.subTitleIcon" class="fz-20" :class="globalStore.subTitleIcon" style="color: #fff;"></i>
+
+                            <div v-if="globalStore?.subSubTitle" style="font-size: 13px; color: #ccc;">
+                                {{ globalStore.subSubTitle }}
+                            </div>
+                            
                         </div>
                     </div>
 

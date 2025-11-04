@@ -2,43 +2,28 @@
     <div class="menu-page layout-form">
         <!-- Header Section -->
         <div class="header-section">
-            <h1 class="main-title bold md">مينيومالي</h1>
+            <h1 class="main-title bold md">{{ $t('menu.my_menus') }}</h1>
             <NuxtLink to="/Menu/addMenu" class="add-menu-btn">
                 <i class="fas fa-plus"></i>
-                إضافة منيو جديد
+                {{ $t('menu.add_new_menu') }}
             </NuxtLink>
         </div>
 
         <!-- Menu Cards Section -->
         <div class="menu-cards-container">
-            <!-- Meals Menu Card -->
-            <div class="menu-card">
-                <h2 class="menu-card-title">منيو الوجبات</h2>
+            <!-- Menu Card Loop -->
+            <div class="menu-card" v-for="menu in menus" :key="menu.id">
+                <h2 class="menu-card-title">{{ menu.name }}</h2>
                 <div class="menu-card-image">
                     <img 
-                        src="@/assets/images/meals-menu.svg" 
-                        alt="منيو الوجبات"
+                        :src="menu.image" 
+                        :alt="menu.name"
                         @error="handleImageError"
                     />
                 </div>
-                <button class="custom-btn w-100" @click="handleViewMealsMenu">
-                    عرض التفاصيل
-                </button>
-            </div>
-
-            <!-- Drinks Menu Card -->
-            <div class="menu-card">
-                <h2 class="menu-card-title">منيو المشروبات</h2>
-                <div class="menu-card-image">
-                    <img 
-                        src="@/assets/images/meals-menu.svg" 
-                        alt="منيو المشروبات"
-                        @error="handleImageError"
-                    />
-                </div>
-                <button class="custom-btn w-100" @click="handleViewDrinksMenu">
-                    عرض التفاصيل
-                </button>
+                <NuxtLink :to="`/Menu/${menu.id}`" class="custom-btn w-100">
+                    {{ $t('menu.view_details') }}
+                </NuxtLink>
             </div>
         </div>
     </div>
@@ -46,28 +31,56 @@
 
 <script setup>
 
-// Handle view meals menu
-const handleViewMealsMenu = () => {
-    console.log('View meals menu clicked');
-    // Navigate to meals menu details
-    // navigateTo('/menu/meals');
-};
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n({ useScope: 'global' });
 
-// Handle view drinks menu
-const handleViewDrinksMenu = () => {
-    console.log('View drinks menu clicked');
-    // Navigate to drinks menu details
-    // navigateTo('/menu/drinks');
-};
+const globalStore = useGlobalStore();
+// Set global store
+const pageHeadTitle = ref(t("Sidebar.menu_list"));
+globalStore.title = pageHeadTitle.value;
+globalStore.titleIcon = 'fa-solid fa-angle-left';
+globalStore.titleLink = '/Menu';
+globalStore.subtitle = t('menu.my_menus');
+
+// Menus data - سيتم استبدالها بالداتا من الباك اند
+const menus = ref([
+    {
+        id: 1,
+        name: 'منيو الوجبات',
+        image: '/_nuxt/assets/images/meals-menu.svg'
+    },
+    {
+        id: 2,
+        name: 'منيو المشروبات',
+        image: '/_nuxt/assets/images/meals-menu.svg'
+    }
+]);
 
 // Handle image error (fallback)
 const handleImageError = (event) => {
     event.target.src = 'https://via.placeholder.com/500x300?text=Menu+Image';
 };
 
+// Fetch menus from API (مثال - قم بإلغاء التعليق عند الاستخدام)
+// const axios = useApi();
+// const fetchMenus = async () => {
+//     try {
+//         const response = await axios.get('menus');
+//         menus.value = response.data;
+//     } catch (error) {
+//         console.error('Error fetching menus:', error);
+//     }
+// };
+
+// Call on component mount
+// onMounted(() => {
+//     fetchMenus();
+// });
+
 // Page meta
+
 definePageMeta({
-    name: "Sidebar.menu",
+    name: "menu.my_menus",
     layout: "default",
 });
 </script>

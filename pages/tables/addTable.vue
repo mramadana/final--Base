@@ -156,6 +156,14 @@ import { useI18n } from "vue-i18n";
 
 const { t } = useI18n({ useScope: "global" });
 
+const globalStore = useGlobalStore();
+// Set global store
+const pageHeadTitle = ref(t("Sidebar.tables"));
+globalStore.title = pageHeadTitle.value;
+globalStore.titleIcon = 'fa-solid fa-angle-left';
+globalStore.titleLink = null;
+globalStore.subtitle = t('sideMenu.add_new_table');
+
 // Axios
 const axios = useApi();
 

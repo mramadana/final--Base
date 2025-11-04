@@ -8,7 +8,7 @@
         :search-placeholder="$t('reservations.search_table')" :select-options="statusOptions"
         :select-placeholder="$t('reservations.status')" option-label="name" option-value="id"
         :calendar-placeholder="$t('reservations.choose_date')" calendar-mode="single" @search="handleSearch"
-        @select-change="handleSelectChange" @date-change="handleDateChange" />
+        @select-change="handleSelectChange" @date-change="handleDateChange" :showSelect="false" />
   
         <!-- Child pages will display their own content with transitions -->
         <NuxtPage />
@@ -24,19 +24,19 @@
   <script setup>
   
   definePageMeta({
-      name: 'Sidebar.my_reservation'
+    //   name: 'Sidebar.my_reservation'
   })
 
   import { useI18n } from 'vue-i18n';
   const { t } = useI18n({ useScope: 'global' });
 
-  // const globalStore = useGlobalStore();
-  // const pageHeadTitle = ref(t("Sidebar.tables"));
-  // // Set global store
-  // globalStore.title = pageHeadTitle.value;
-  // globalStore.titleIcon = 'fa-solid fa-angle-left';
-  // globalStore.titleLink = '/tables';
-  // globalStore.subtitle = t('sideMenu.add_new_table');
+  const globalStore = useGlobalStore();
+
+
+  // Page title - يتغير من الصفحات الفرعية
+  const pageTitle = ref('reservations.view_reservations');
+
+  const pageHeadTitle = ref(t("reservations.reservations"));
   
   // Filter values
   const filterValues = ref({
@@ -68,9 +68,6 @@
   
   // Dummy data to show filter
   const reservations = ref([{ id: 1 }]);
-
-  // Page title state
-  const pageTitle = ref('Sidebar.my_reservation');
 
   // Function to set page title from child pages
   const setPageTitle = (title) => {
@@ -136,4 +133,8 @@
     showPaginate
   });
   
+  globalStore.title = pageHeadTitle.value;
+    globalStore.titleIcon = null;
+    globalStore.titleLink = null;
+    globalStore.subtitle = null;
   </script>

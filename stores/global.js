@@ -11,13 +11,25 @@ export const useGlobalStore = defineStore("global", {
     isCountriesLoading: false,
     title: '',
     titleIcon: null,
+    subTitleIcon: null,
     titleLink: null,
-    subtitle: null
+    subtitle: null,
+    subSubTitle: null,
   }),
   actions: {
 
     setTitle(newTitle) {
       this.title = newTitle
+    },
+
+    // Reset header values
+    resetHeader() {
+      this.title = ''
+      this.titleIcon = null
+      this.titleLink = null
+      this.subtitle = null,
+      this.subTitleIcon = null,
+      this.subSubTitle = null
     },
 
     // get Countries

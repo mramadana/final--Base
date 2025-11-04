@@ -8,15 +8,17 @@
 <script setup>
 
 definePageMeta({
-    name: 'sideMenu.my_reservations'
+    name: 'sideMenu.active_reservations'
 })
 
-  import { useI18n } from 'vue-i18n';
-  const { t } = useI18n({ useScope: 'global' });
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n({ useScope: "global" });
+
+// Global store
 const globalStore = useGlobalStore();
-const pageHeadTitle = ref(t("Sidebar.my_reservation"));
 // Set global store
+const pageHeadTitle = ref(t("sideMenu.active_reservations"));
 globalStore.title = pageHeadTitle.value;
 
 // Inject context from parent
@@ -24,7 +26,7 @@ const context = inject('reservationContext');
 
 // Set page title
 onMounted(() => {
-  context.setPageTitle('reservations.view_reservations');
+  context.setPageTitle('reservations.active_reservations');
 });
 
 // Reservations data - البيانات بس!
