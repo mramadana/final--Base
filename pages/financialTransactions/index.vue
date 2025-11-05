@@ -34,24 +34,24 @@
                 <div class="stat-row">
                     <div class="stat-label">{{ $t('financial.total_reservations') }}</div>
                     <div class="stat-value">
-                        <span class="currency-symbol">ر.س</span>
                         {{ stats.totalReservations }}
+                        <span class="currency-symbol">ر.س</span>
                     </div>
                 </div>
                 
                 <div class="stat-row">
                     <div class="stat-label">{{ $t('financial.vat_tax') }}</div>
                     <div class="stat-value">
-                        <span class="currency-symbol">ر.س</span>
                         {{ stats.vatTax }}
+                        <span class="currency-symbol">ر.س</span>
                     </div>
                 </div>
                 
                 <div class="stat-row highlight">
                     <div class="stat-label">{{ $t('financial.net_due') }}</div>
                     <div class="stat-value">
-                        <span class="currency-symbol">ر.س</span>
                         {{ stats.netDue }}
+                        <span class="currency-symbol">ر.س</span>
                     </div>
                 </div>
             </div>
@@ -254,7 +254,7 @@ const filteredReservations = computed(() => {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                padding: 20px 24px;
+                padding: 10px 14px;
                 border-bottom: 1px solid #3a3a3a;
                 
                 &:last-child {
@@ -277,7 +277,7 @@ const filteredReservations = computed(() => {
                 
                 .stat-value {
                     color: #fff;
-                    font-size: 20px;
+                    font-size: 15px;
                     font-weight: 600;
                     display: flex;
                     align-items: center;
