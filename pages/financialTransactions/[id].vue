@@ -1,29 +1,19 @@
 <template>
     <div class="financial-transactions-page layout-form">
-        
-        <!-- Search and Settlement Button -->
-        <div class="header-section mb-4">
-            <div class="main_input">
-                <input 
-                    type="text" 
-                    class="" 
-                    :placeholder="$t('financial.search_placeholder')"
-                    v-model="searchQuery"
-                />
-                <i class="fas fa-search search-icon"></i>
-            </div>
-            
-            <!-- Settlement Button -->
-            <button class="custom-btn">
-                {{ $t('financial.settlement') }}
-            </button>
-        </div>
 
         <!-- Statistics Section -->
         <div class="statistics-section mb-4">
             <h3 class="section-title">{{ $t('financial.total_dues_title') }}</h3>
             
             <div class="stats-card">
+
+                <div class="stat-row">
+                    <div class="stat-label">{{ $t('financial.settlement_status') }}</div>
+                    <div class="stat-value">
+                        test
+                    </div>
+                </div>
+
                 <div class="stat-row">
                     <div class="stat-label">{{ $t('financial.total_reservations') }}</div>
                     <div class="stat-value">
@@ -70,7 +60,6 @@ const { t } = useI18n({ useScope: 'global' });
 
 // Page meta
 definePageMeta({
-    name: 'Sidebar.financial_transactions',
     layout: 'default',
 });
 
@@ -162,12 +151,6 @@ const reservations = ref([
 const filteredReservations = computed(() => {
     if (!searchQuery.value) return reservations.value;
     
-    const query = searchQuery.value.toLowerCase();
-    return reservations.value.filter(item => 
-        item.id.toString().includes(query) ||
-        item.title?.toLowerCase().includes(query) ||
-        item.customerName?.toLowerCase().includes(query)
-    );
 });
 </script>
 

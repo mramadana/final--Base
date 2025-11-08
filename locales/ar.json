@@ -473,7 +473,12 @@
         "total_bookings_count": "إجمالي الحجوزات",
         "vat_tax": "ضريبة القيمة المضافة",
         "net_due": "المستحق",
-        "due_reservations_title": "الحجوزات المستحقة للتسوية"
+        "due_reservations_title": "الحجوزات المستحقة للتسوية",
+        "settlement_status" : "حالة التسوية"
+    },
+
+    "Table": {
+        "Loading": "جاري التحميل"
     }
 
 }

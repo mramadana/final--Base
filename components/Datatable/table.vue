@@ -414,7 +414,6 @@ defineExpose({
     thead, tbody, tfoot, tr, td, th {
         text-align: center;
         background-color: rgba(255, 255, 255, 0.05);
-
         color: #fff; 
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         white-space: nowrap;
@@ -423,9 +422,9 @@ defineExpose({
 
 :deep(.main-table .p-datatable-wrapper) {
     border-radius: 8px;
-:deep(.p-datatable .p-column-header-content) {
-  justify-content: center;
-}
+  :deep(.p-datatable .p-column-header-content) {
+    justify-content: center;
+  }
 }
 
 // Status Badges
@@ -441,6 +440,12 @@ defineExpose({
   }
   &.status-reserved {
     background-color: #FFFFFF40;
+  }
+  &.status-accepted {
+    color: #4ADE80;
+  }
+  &.status-rejected {
+    color: #F87171;
   }
   .action-btn {
     padding: 8px 16px;

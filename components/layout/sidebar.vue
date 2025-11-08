@@ -180,8 +180,8 @@ const menuItems = ref([
         icon: '/_nuxt/assets/images/sidebar/coin.svg',
         children: [
             { label: 'sideMenu.due_amount', to: '/financialTransactions', icon: '/_nuxt/assets/images/sidebar/money-change.png' },
-            { label: 'sideMenu.current_settlement', to: '/orders/1', icon: '/_nuxt/assets/images/sidebar/money-time-new.png' },
-            { label: 'sideMenu.finished_settlement', to: '/orders/2', icon: '/_nuxt/assets/images/sidebar/money-remove.png' },
+            { label: 'sideMenu.current_settlement', to: '/financialTransactions/currentSettlement', icon: '/_nuxt/assets/images/sidebar/money-time-new.png' },
+            { label: 'sideMenu.finished_settlement', to: '/financialTransactions/requestSettlement', icon: '/_nuxt/assets/images/sidebar/money-remove.png' },
         ]
     },
     {

@@ -5,7 +5,7 @@
   
       <!-- Filter Component -->
       <ReservationFilter 
-        v-if="tables?.length > 0" 
+        v-if="!loading && tables?.length > 0" 
         v-model="filterValues" 
         :show-search="true" 
         :show-select="true" 
@@ -22,36 +22,48 @@
         @date-change="handleDateChange"
       />
         
-      <!-- Data Table -->
-      <DatatableTable
-        v-if="filteredTables?.length > 0"
-        :products="filteredTables"
-        :columns="tableColumns"
-        :rows="10"
-        :sortable="false"
-        :showImage="true"
-        :actionsHeader="$t('tables.actions')"
-        @refreshData="fetchTablesData"
-      >
-        <template #actions="{ data }">
-          <div class="table-actions-group">
-            <button class="table-action-btn btn-view" @click="handleViewItem(data.id)">
-              <i class="fas fa-eye"></i>
-              {{ $t('tables.view') }}
-            </button>
-            <button class="table-action-btn btn-edit" @click="handleEditItem(data.id)">
-              {{ $t('tables.edit') }}
-            </button>
-            <button class="table-action-btn btn-delete" @click="openDeleteDialog(data.id)">
-              {{ $t('tables.delete_table') }}
-            </button>
-          </div>
-        </template>
-      </DatatableTable>
+      <!-- ***** datatable ***** -->
+      <div v-if="!loading">
+        <DatatableTable
+          v-if="filteredTables?.length > 0"
+          :products="filteredTables"
+          :columns="tableColumns"
+          :rows="10"
+          :sortable="false"
+          :showImage="true"
+          :actionsHeader="$t('tables.actions')"
+          @refreshData="fetchTablesData"
+        >
+          <template #actions="{ data }">
+            <div class="table-actions-group">
+              <button class="table-action-btn btn-view" @click="handleViewItem(data.id)">
+                <i class="fas fa-eye"></i>
+                {{ $t('tables.view') }}
+              </button>
+              <button class="table-action-btn btn-edit" @click="handleEditItem(data.id)">
+                {{ $t('tables.edit') }}
+              </button>
+              <button class="table-action-btn btn-delete" @click="openDeleteDialog(data.id)">
+                {{ $t('tables.delete_table') }}
+              </button>
+            </div>
+          </template>
+        </DatatableTable>
 
-      <!-- No Data -->
-      <div v-else class="no-data-message">
-        <p>{{ $t('noData.no_reservations') }}</p>
+        <!-- No Data -->
+        <div v-else class="no-data-message">
+          <p>{{ $t('noData.no_reservations') }}</p>
+        </div>
+      </div>
+
+      <!-- ***** datatable skeleton ***** -->
+      <div v-if="loading">
+        <DatatableSkelton :SkeletonProducts="SkeletonProducts" />
+      </div>
+
+      <!--***** Paginator *****-->
+      <div class="paginate-parent mt-4" v-if="showPaginate">
+        <Paginator :rows="pageLimit" @page="onPaginate" :totalRecords="totalPage" dir="ltr" />
       </div>
 
       <!-- Delete Confirmation Dialog -->
@@ -87,6 +99,9 @@
 
   const pageHeadTitle = ref(t("Sidebar.tables"));
   
+  // Loading state
+  const loading = ref(true);
+  
   // Delete dialog state
   const showDeleteDialog = ref(false);
   const itemToDelete = ref(null);
@@ -117,6 +132,9 @@
     { field: 'reservations', header: t('tables.reservations') },
     { field: 'status', header: t('tables.table_status') }
   ]);
+
+  // Skeleton products for loading state
+  const SkeletonProducts = new Array(tableColumns.value.length);
   
   // Fake Data for Tables
   const tables = ref([
@@ -256,13 +274,15 @@
   
   // Paginator
   const currentPage = ref(1);
-  const pageLimit = ref(10);
-  const totalPage = ref(0);
+  const pageLimit = ref();
+  const totalPage = ref();
   
   // Paginate Function
   const onPaginate = (e) => {
+    loading.value = true;
     currentPage.value = e.page + 1;
     window.scrollTo(0, 0);
+    getData();
   };
   
   /******************* Computed *******************/
@@ -270,18 +290,32 @@
     return totalPage.value > pageLimit.value
   });
 
+  // Get Data Function (API Call)
+  const getData = async () => {
+    loading.value = true;
+    
+    try {
+      // استبدل هذا بـ API call الحقيقي
+      // const axios = useApi();
+      // const config = { headers: { Authorization: `Bearer ${token}` } };
+      // const res = await axios.get(`tables?page=${currentPage.value}`, config);
+      // tables.value = res.data.data.tables;
+      // totalPage.value = res.data.data.pagination.total_items;
+      // pageLimit.value = res.data.data.pagination.per_page;
+      
+      // محاكاة API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      loading.value = false;
+    } catch (err) {
+      console.log(err);
+      loading.value = false;
+    }
+  };
+
   // Fetch Tables Data (API Call)
   const fetchTablesData = async () => {
-    try {
-      // Replace with your actual API endpoint
-      // const response = await $fetch('/api/tables');
-      // tables.value = response.data;
-      
-      // For now, using static data - refresh will keep current data
-      console.log('Refreshing tables data...');
-    } catch (error) {
-      console.error('Error fetching tables:', error);
-    }
+    await getData();
   };
 
   // Open delete dialog
@@ -347,6 +381,11 @@
   globalStore.titleIcon = 'fa-solid fa-angle-left';
   globalStore.titleLink = null;
   globalStore.subtitle = t('sideMenu.my_tables');
+
+  // OnMounted - Get data on page load
+  onMounted(async () => {
+    await getData();
+  });
   </script>
 
   <style scoped lang="scss">

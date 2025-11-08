@@ -1537,6 +1537,9 @@ input.p-inputtext.p-component {
   }
   .p-paginator.p-component {
     gap: 7px;
+    #{$rtl} & {
+      transform: scale(-1);
+    }
   }
   span.p-paginator-pages {
     display: flex;
@@ -1544,14 +1547,12 @@ input.p-inputtext.p-component {
     #{$ltr} & {
       flex-direction: row;
     }
-    #{$rtl} & {
-      flex-direction: row-reverse;
+    .p-paginator-page {
+      #{$rtl} & {
+        transform: scale(-1);
+      }
     }
   }
-
-  // .p-paginator-first, .p-paginator-prev, .p-paginator-next, .p-paginator-last {
-  //   transform: scale(-1);
-  // }
 
 }
 
@@ -1784,24 +1785,34 @@ input.p-inputtext.p-component {
 }
 
 .rate-parent {
-  .p-rating-icon {
-    width: 1.3rem;
-    height: 1.3rem;
-  }
-  &.sm-rate {
-    .p-rating-item {
-      width: 0.8rem;
-      height: 0.8rem;
-    }
-  }
+
+
+
   .p-rating .p-rating-item.p-rating-item-active .p-rating-icon {
-    color: var(--main);
+    color: #EAB250;
   }
 
   .p-rating-item {
     &:hover {
       .p-rating-icon {
         color: var(--main);
+      }
+    }
+  }
+
+  &.sm-rate {
+    .p-rating-item {
+      .p-icon {
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+  &.lg-rate {
+    .p-rating-item {
+      .p-icon {
+        width: 26px;
+        height: 26px;
       }
     }
   }
