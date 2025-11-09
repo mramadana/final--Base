@@ -180,8 +180,8 @@ export const useValidationSchema = () => {
     const multipleCheckboxes = (labelKey: string, minRequired: number = 1) =>
       yup
         .array()
-        .min(minRequired, t('validation.select_at_least', { field: t(labelKey), min: minRequired }))
-        .required(t('validation.required_with_label', { field: t(labelKey) }))
+        .min(minRequired, t('validation.required_with_select', { field: t(labelKey) }))
+        .required()
         .label(t(labelKey));
 
     // Password Schema

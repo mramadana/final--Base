@@ -17,6 +17,7 @@
     "validation": {
         "fullName" : "الاسم بالكامل",
         "required_with_label": "حقل {field} مطلوب.",
+        "required_with_select": " {field}",
         "image": "الصورة مطلوبة",
         "name": "من فضلك أدخل الاسم",
         "phone": "من فضلك أدخل رقم الهاتف",
@@ -186,7 +187,8 @@
         "send_code" : "اسال رمز التحقق",
         "remember_your_password" : "تذكرتها لاتقلق روح سجل؟",
         "password_reset_success" : "تم اعادة كلمه المرور بنجاح",
-        "password_reset_success_desc" : "تهانينا تم اعادة تعيين  كلمه المرور الخاص بك  بنجاح"
+        "password_reset_success_desc" : "تهانينا تم اعادة تعيين  كلمه المرور الخاص بك  بنجاح",
+        "permissions" : "يجب اختيار صلاحية واحدة ع الاقل"
     },
     
     "Global": {
@@ -475,6 +477,18 @@
         "net_due": "المستحق",
         "due_reservations_title": "الحجوزات المستحقة للتسوية",
         "settlement_status" : "حالة التسوية"
+    },
+
+    "users": {
+        "search_user": "البحث عن مستخدم",
+        "users_management": "إدارة المستخدمين",
+        "users": "المستخدمين",
+        "user_name": "اسم المستخدم",
+        "country_code": "كود الدولة",
+        "phone": "رقم الجوال",
+        "created_at": "تاريخ الاضافة",
+        "permissions": "الصلاحيات",
+        "no_users_data": "لا توجد بيانات مستخدمين"
     },
 
     "Table": {

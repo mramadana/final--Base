@@ -194,7 +194,7 @@ const menuItems = ref([
         icon: '/_nuxt/assets/images/sidebar/people.svg',
         children: [
             { label: 'sideMenu.view_users', to: '/users', icon: '/_nuxt/assets/images/sidebar/user-tag.png' },
-            { label: 'sideMenu.add_user', to: '/users/active', icon: '/_nuxt/assets/images/sidebar/user-add.png' },
+            { label: 'sideMenu.add_user', to: '/users/addUser', icon: '/_nuxt/assets/images/sidebar/user-add.png' },
         ]
     },
     {

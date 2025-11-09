@@ -12,7 +12,7 @@
         :rows="10"
         :sortable="false"
         :showImage="false"
-        :actionsHeader="'اجراء'"
+        :actionsHeader="$t('tables.actions')"
       >
         <template #actions="{ data }">
           <div class="table-actions-group">

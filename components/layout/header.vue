@@ -194,7 +194,8 @@
     .defaultLayout {
         position: sticky;
         top: 0;
-        z-index: 3333;
+        // z-index: 3333;
+        z-index: 33;
     }
     .header {
         transition: all 0.4s ease-in-out;
