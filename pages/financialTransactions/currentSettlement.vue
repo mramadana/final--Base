@@ -46,7 +46,7 @@
 <script setup>
 
 definePageMeta({
-  name: 'currentSettlement',
+  name: 'sideMenu.current_settlement',
   layout: 'default'
 })
 
@@ -60,15 +60,15 @@ const loading = ref(true);
 
 // Paginator
 const currentPage = ref(1);
-const pageLimit = ref(10);
-const totalPage = ref(90); // إجمالي عدد العناصر
+const pageLimit = ref();
+const totalPage = ref(); // إجمالي عدد العناصر
 
 // Settlement Columns (من اليمين لليسار حسب الصورة)
 const settlementColumns = ref([
-  { field: 'requestNumber', header: 'رقم الطلب' },
-  { field: 'drinksValue', header: 'قيمة الوجبات او المشروبات' },
-  { field: 'addedValue', header: 'القيمة المضافة' },
-  { field: 'totalAmount', header: 'اجمالى المبلغ' }
+  { field: 'requestNumber', header: t('financial.request_number') },
+  { field: 'drinksValue', header: t('financial.drinks_value') },
+  { field: 'addedValue', header: t('financial.added_value') },
+  { field: 'totalAmount', header: t('financial.total_amount') }
 ]);
 
 // Skeleton products for loading state
@@ -189,10 +189,11 @@ let showPaginate = computed(() => {
 });
 
 // Set global store
-globalStore.title = 'طلب تسوية';
+const pageHeadTitle = ref(t('Sidebar.financial_transactions'));
+globalStore.title = pageHeadTitle.value;
 globalStore.titleIcon = 'fa-solid fa-angle-left';
 globalStore.titleLink = '/financialTransactions';
-globalStore.subtitle = 'المعاملات المالية';
+globalStore.subtitle = t('sideMenu.current_settlement');
 
 // OnMounted - Get data on page load
 onMounted(async () => {

@@ -89,7 +89,7 @@
                 </div>
                 <!-- Submit button -->
                 <button type="submit" class="custom-btn md mt-4" :disabled="loading">
-                    {{ $t("Auth.create_acc") }}
+                    {{ $t("sideMenu.add_user") }}
                     <span class="spinner-border spinner-border-sm" v-if="loading" role="status"
                         aria-hidden="true"></span>
                 </button>
@@ -118,11 +118,11 @@ const {
 } = useValidationSchema();
 
 const fakePermissions = ref([
-    { key: "edit", label: "تعديل", selected: false },
-    { key: "delete_user", label: "حذف مستخدم", selected: false },
-    { key: "add", label: "إضافة", selected: false },
-    { key: "manage_offers", label: "إدارة العروض", selected: false },
-    { key: "support", label: "الدعم الفني", selected: false },
+    { key: "edit", label: t('users.permission_edit'), selected: false },
+    { key: "delete_user", label: t('users.permission_delete_user'), selected: false },
+    { key: "add", label: t('users.permission_add'), selected: false },
+    { key: "manage_offers", label: t('users.permission_manage_offers'), selected: false },
+    { key: "support", label: t('users.permission_support'), selected: false },
 ]);
 
 const selectedPermissions = computed(() =>
@@ -226,9 +226,15 @@ const addUser = async () => {
     }
 };
 
+const globalStore = useGlobalStore();
+globalStore.title = t('users.users');
+globalStore.titleIcon = 'fa-solid fa-angle-left';
+globalStore.titleLink = '/users';
+globalStore.subtitle = t('sideMenu.add_user');
+
 // Page meta
 definePageMeta({
-    // name: "Auth.create_account",
+    name: "sideMenu.add_user",
     layout: "default",
 });
 </script>

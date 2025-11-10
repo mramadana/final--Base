@@ -98,6 +98,9 @@ onMounted(() => {
     console.log('Calibration page mounted');
 });
 
+    const globalStore = useGlobalStore();
+    globalStore.title = t('Auth.settings');
+
 </script>
 
 <style lang="scss" scoped>

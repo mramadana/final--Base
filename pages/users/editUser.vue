@@ -52,7 +52,7 @@
                     </div>
 
                     <div class="col-12">
-                        <h4 class="main-title md mb-4">الصلاحيات</h4>
+                        <h4 class="main-title md mb-4">{{ $t('users.permissions') }}</h4>
                         
                         <div class="permissions-section d-flex flex-wrap align-items-center gap-3 mt-4">
 
@@ -130,11 +130,11 @@ const {
 } = useValidationSchema();
 
 const fakePermissions = ref([
-    { key: "edit", label: "تعديل", selected: false },
-    { key: "delete_user", label: "حذف مستخدم", selected: false },
-    { key: "add", label: "إضافة", selected: false },
-    { key: "manage_offers", label: "إدارة العروض", selected: false },
-    { key: "support", label: "الدعم الفني", selected: false },
+    { key: "edit", label: t('users.permission_edit'), selected: false },
+    { key: "delete_user", label: t('users.permission_delete_user'), selected: false },
+    { key: "add", label: t('users.permission_add'), selected: false },
+    { key: "manage_offers", label: t('users.permission_manage_offers'), selected: false },
+    { key: "support", label: t('users.permission_support'), selected: false },
 ]);
 
 const selectedPermissions = computed(() =>
@@ -266,9 +266,19 @@ const fetchUserData = async () => {
     }
 };
 
+// Set page title
+const globalStore = useGlobalStore();
+globalStore.title = t('users.users');
+globalStore.titleIcon = 'fa-solid fa-angle-left';
+globalStore.subTitleIcon = 'fa-solid fa-angle-left';
+globalStore.titleLink = '/users';
+globalStore.subtitle = t('sideMenu.view_users');
+globalStore.subSubTitle = t('users.edit_user_data');
+
 // Page meta
 definePageMeta({
     layout: "default",
+    name: "users.edit_user_data",
 });
 
 // OnMounted - Get user data on page load

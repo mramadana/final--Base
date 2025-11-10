@@ -46,6 +46,12 @@ import { useI18n } from "vue-i18n";
 
 const { t } = useI18n({ useScope: "global" });
 
+// Page meta
+definePageMeta({
+    name: "Sidebar.booking_form",
+    layout: "default",
+});
+
 // Axios
 const axios = useApi();
 
@@ -118,5 +124,8 @@ const addInquiry = async () => {
         }
     }
 };
+
+const globalStore = useGlobalStore();
+globalStore.title = t('Sidebar.booking_form');
 
 </script>

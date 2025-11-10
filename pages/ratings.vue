@@ -15,7 +15,7 @@
             <!-- متوسط التقييمات - على اليمين -->
             <div class="col-12 col-lg-4 col-md-5">
                 <div class="rating-stats">
-                    <h3 class="section-title">متوسط التقييمات</h3>
+                    <h3 class="section-title">{{ $t('ratings.average_ratings') }}</h3>
                     
                     <div class="average-rating">
                         <div class="rating-number">
@@ -44,7 +44,7 @@
             <!-- التقييمات - على اليسار -->
             <div class="col-12 col-lg-8 col-md-7">
                 <div class="reviews-list">
-                    <h3 class="section-title">التقييمات</h3>
+                    <h3 class="section-title">{{ $t('ratings.ratings') }}</h3>
                     
                     <div class="reviews-wrapper">
                         <div v-for="review in reviews" :key="review.id" class="review-card">
@@ -54,7 +54,7 @@
                                     <Rating v-model="review.rating" readonly :cancel="false" :dir="'ltr'"/>
                                 </div>
                             </div>
-                            <p class="review-date">منذ {{ review.daysAgo }} يوم</p>
+                            <p class="review-date">{{ $t('ratings.since') }} {{ review.daysAgo }} {{ $t('ratings.day') }}</p>
                             <p class="review-text">{{ review.comment }} 👌</p>
                         </div>
                     </div>
@@ -62,7 +62,7 @@
                     <!-- View All Button -->
                     <NuxtLink to="/allRating" class="view-all-btn" @click="viewAllReviews">
                         <i class="fas fa-eye"></i>
-                        عرض جميع التقييمات
+                        {{ $t('ratings.view_all_ratings') }}
                     </NuxtLink>
 
                 </div>
@@ -149,8 +149,7 @@ const getData = async () => {
 };
 
 // Set global store
-globalStore.title = 'التقييمات';
-globalStore.titleIcon = 'fa-solid fa-angle-left';
+globalStore.title = t('Sidebar.ratings');
 globalStore.titleLink = null;
 
 // OnMounted - Get data on page load

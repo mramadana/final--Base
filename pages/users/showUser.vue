@@ -8,9 +8,8 @@
                     <div class="col-12 col-md-6">
                         <!-- Customer name input -->
                         <FormInput v-model:modelValue="name" name="name" type="text" :label="$t('Auth.customer_name')"
-                            :placeholder="$t('Auth.customer_name')" :validation-schema="validations.name"
-                            :showErrors="showValidation" :hasIcon="true" icon="/_nuxt/assets/images/auth-img/user.svg"
-                            :with_icon="true" :readonly="true" />
+                            :placeholder="$t('Auth.customer_name')" :hasIcon="true"
+                            icon="/_nuxt/assets/images/auth-img/user.svg" :with_icon="true" :readonly="true" />
                     </div>
 
                     <div class="col-12 col-md-6">
@@ -21,25 +20,19 @@
                             </label>
                             <div class="with_cun_select" :class="{ 'is-invalid': phoneInputRef?.shouldShowError }">
                                 <FormInput ref="phoneInputRef" v-model:modelValue="phone" name="phone" type="number"
-                                    :placeholder="$t('Auth.enter_mobile_number')" :validation-schema="validations.phone"
-                                    :showErrors="showValidation" :moveErrorToParent="true" :hasIcon="true"
+                                    :placeholder="$t('Auth.enter_mobile_number')"
+                                    :moveErrorToParent="true" :hasIcon="true"
                                     icon="/_nuxt/assets/images/auth-img/mobile.svg" :with_icon="true" :readonly="true" />
                                 <GlobalCountryDropdown v-model="selectedCountry"
                                     :placeholder="$t('Auth.select_country')" :disabled="true" />
                             </div>
-                            <!-- Display validation error message for phone -->
-                            <p v-if="phoneInputRef?.shouldShowError" class="error-message text-danger mt-1"
-                                :class="phoneInputRef?.localeDir">
-                                {{ phoneInputRef?.errorMessage }}
-                            </p>
                         </div>
                     </div>
 
                     <div class="col-12 col-md-6">
                         <!-- Email input -->
                         <FormInput v-model:modelValue="email" name="email" type="email" :label="$t('Auth.email')"
-                            :placeholder="$t('Auth.enter_email')" :validation-schema="validations.email"
-                            :showErrors="showValidation" :hasIcon="true" icon="/_nuxt/assets/images/auth-img/sms.svg"
+                            :placeholder="$t('Auth.enter_email')" :hasIcon="true" icon="/_nuxt/assets/images/auth-img/sms.svg"
                             :with_icon="true" :readonly="true" />
                     </div>
 
@@ -47,12 +40,12 @@
                         <!-- Password input -->
                         <FormInput v-model:modelValue="password" name="password" type="password"
                             :label="$t('Auth.password')" :placeholder="$t('Auth.please_enter_password')"
-                            :validation-schema="validations.password" :showErrors="showValidation" :hasIcon="true"
+                            :hasIcon="true"
                             icon="/_nuxt/assets/images/auth-img/lock.svg" :with_icon="true" :readonly="true" />
                     </div>
 
                     <div class="col-12">
-                        <h4 class="main-title md mb-4">الصلاحيات</h4>
+                        <h4 class="main-title md mb-4">{{ $t('users.permissions') }}</h4>
                         
                         <div class="permissions-section d-flex flex-wrap align-items-center gap-3 mt-4">
 
@@ -79,10 +72,6 @@
                             </div>
                         </div>
                         
-                        <div v-if="showValidation && validations.permissions" class="text-danger mt-1">
-                            <span v-if="getValidationError('permissions')">{{ getValidationError('permissions')
-                                }}</span>
-                        </div>
                     </div>
 
                 </div>
@@ -105,36 +94,13 @@ const phone = ref("");
 const email = ref("");
 const password = ref("");
 
-// Validation schemas
-const {
-    phoneNumber,
-    customerName,
-    email: emailValidation,
-    multipleCheckboxes,
-} = useValidationSchema();
-
 const fakePermissions = ref([
-    { key: "edit", label: "تعديل", selected: false },
-    { key: "delete_user", label: "حذف مستخدم", selected: false },
-    { key: "add", label: "إضافة", selected: false },
-    { key: "manage_offers", label: "إدارة العروض", selected: false },
-    { key: "support", label: "الدعم الفني", selected: false },
+    { key: "edit", label: t('users.permission_edit'), selected: false },
+    { key: "delete_user", label: t('users.permission_delete_user'), selected: false },
+    { key: "add", label: t('users.permission_add'), selected: false },
+    { key: "manage_offers", label: t('users.permission_manage_offers'), selected: false },
+    { key: "support", label: t('users.permission_support'), selected: false },
 ]);
-
-const selectedPermissions = computed(() =>
-    fakePermissions.value
-        .filter((p) => p.selected)
-        .map((p) => p.key)
-);
-
-
-// Validation schemas - exactly like login
-const validations = {
-    name: customerName("Auth.customer_name"),
-    phone: phoneNumber("Auth.mobile_number"),
-    email: emailValidation("Auth.email"),
-    permissions: multipleCheckboxes("Auth.permissions", 1),
-};
 
 // success response
 const { response } = responseApi();
@@ -146,9 +112,7 @@ const { successToast, errorToast } = toastMsg();
 const axios = useApi();
 
 // Form data
-const loading = ref(false);
 const showValidation = ref(false);
-const successRegister = ref(false);
 const addUserForm = ref(null);
 
 // Countries
@@ -156,29 +120,6 @@ const selectedCountry = ref(null);
 
 // FormInput ref for phone
 const phoneInputRef = ref(null);
-
-// Form data (reactive object for validation)
-const formData = computed(() => ({
-    name: name.value,
-    phone: phone.value,
-    email: email.value,
-    password: password.value,
-    permissions: selectedPermissions.value, // Add permissions here
-}));
-
-// use the composable for the validation - exactly like login
-const { isFormValid, scrollToFirstError } = useFormValidation();
-
-// function to get validation error for a specific field
-const getValidationError = (field) => {
-    if (!showValidation.value || !validations[field]) return null;
-    try {
-        validations[field].validateSync(formData.value[field]);
-        return null;
-    } catch (error) {
-        return error.message;
-    }
-};
 
 // Fetch user data for display
 const fetchUserData = async () => {
@@ -211,8 +152,18 @@ onMounted(async () => {
     await fetchUserData();
 });
 
+// Set page title
+const globalStore = useGlobalStore();
+globalStore.title = t('users.users');
+globalStore.titleIcon = 'fa-solid fa-angle-left';
+globalStore.subTitleIcon = 'fa-solid fa-angle-left';
+globalStore.titleLink = '/users';
+globalStore.subtitle = t('sideMenu.view_users');
+globalStore.subSubTitle = t('users.user_details');
+
 // Page meta
 definePageMeta({
+    name: "users.user_details",
     layout: "default",
 });
 </script>

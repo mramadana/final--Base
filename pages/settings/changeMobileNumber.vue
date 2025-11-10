@@ -110,4 +110,7 @@ const changePhone = async () => {
         // loading.value = false;
     }
 };
+
+    const globalStore = useGlobalStore();
+    globalStore.title = t('Auth.settings');
 </script>

@@ -63,6 +63,8 @@
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n({ useScope: 'global' });
 definePageMeta({
     name: "Home.settings",
     middleware: 'auth',
@@ -98,13 +100,8 @@ const deletedAcount = async () => {
     res.status == "success" ? successToast(res.msg) : errorToast(res.msg);
     navigateTo("/Auth/register");
 
-    // تعيين عنوان الصفحة مع أيقونة وعنوان فرعي
-    const globalStore = useGlobalStore();
-    globalStore.title = 'الإعدادات';
-    globalStore.titleIcon = 'fa-solid fa-gear';
-    globalStore.titleLink = null;
-    globalStore.subtitle = 'إدارة حسابك';
 }
+
 </script>
 
 <style lang="scss" scoped>

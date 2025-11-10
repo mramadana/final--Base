@@ -83,7 +83,7 @@
 <script setup>
 
 definePageMeta({
-  name: 'usersIndex',
+  name: 'users.users',
   layout: 'default'
 })
 
@@ -107,8 +107,8 @@ const filterValues = ref({
 
 // Paginator
 const currentPage = ref(1);
-const pageLimit = ref(10);
-const totalPage = ref(0);
+const pageLimit = ref();
+const totalPage = ref();
 
 // User Columns (من اليمين لليسار حسب الصورة)
 const userColumns = ref([
@@ -328,10 +328,10 @@ const editUser = (id) => {
 };
 
 // Set global store
-globalStore.title = t('users.users_management');
+globalStore.title = t('users.users');
 globalStore.titleIcon = 'fa-solid fa-angle-left';
 globalStore.titleLink = '/users';
-globalStore.subtitle = t('users.users');
+globalStore.subtitle = t('sideMenu.view_users');
 
 // OnMounted - Get data on page load
 onMounted(async () => {

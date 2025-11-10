@@ -46,7 +46,7 @@
 <script setup>
 
     definePageMeta({
-        name: "Global.wallet",
+        name: "Auth.portfolio",
         middleware: 'auth'
     })
 
@@ -131,4 +131,8 @@
     onMounted(() => {
         getWallet();
     })
+
+const globalStore = useGlobalStore();
+globalStore.title = t('Global.charge_balance');
+
 </script>

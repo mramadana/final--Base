@@ -138,7 +138,7 @@
         "awamer_alshabaka" : "أوامر الشبكة",
         "copy_right" : "جميع الحقوق محفوظة لموقع أميال",
         "profile_personly" : "الملف الشخصي",
-        "settings" : "الاعدادات",
+        "settings" : "الإعدادات",
         "portfolio" : "المحفظة",
         "myrequests" : "طلباتي",
         "logout" : "تسجيل خروج",
@@ -481,7 +481,14 @@
         "settlement_status" : "حالة التسوية",
         "settlement_request": "طلب تسوية",
         "request_details": "تفاصيل الطلب",
-        "no_settlements" : "لا توجد طلبات تسوية"
+        "no_settlements" : "لا توجد طلبات تسوية",
+        "request_number": "رقم الطلب",
+        "booking_value": "قيمة الحجز",
+        "drinks_value": "قيمة الوجبات او المشروبات",
+        "booking_date": "تاريخ الحجز",
+        "added_value": "القيمة المضافة",
+        "total_amount": "اجمالى المبلغ",
+        "request_status": "حالة الطلب"
     },
 
     "users": {
@@ -498,7 +505,23 @@
         "message_content": "نص الرسالة",
         "contact_admin": "التواصل مع اإلادارة",
         "completion_shipping_process": "اتمام عمليه شحن",
-        "wallet_balance_desc": "للاستفادة من خدمات التطبيق واستقبال طلبات العملاء، يرجى سداد رسوم الاشتراك السنوي الخاصة بدولتك"
+        "wallet_balance_desc": "للاستفادة من خدمات التطبيق واستقبال طلبات العملاء، يرجى سداد رسوم الاشتراك السنوي الخاصة بدولتك",
+        "user_details": "تفاصيل المستخدم",
+        "edit_user_data": "تعديل بيانات المستخدم",
+        "permission_edit": "تعديل",
+        "permission_delete_user": "حذف مستخدم",
+        "permission_add": "إضافة",
+        "permission_manage_offers": "إدارة العروض",
+        "permission_support": "الدعم الفني"
+    },
+
+    "ratings": {
+        "average_ratings": "متوسط التقييمات",
+        "ratings": "التقييمات",
+        "since": "منذ",
+        "day": "يوم",
+        "days": "أيام",
+        "view_all_ratings": "عرض جميع التقييمات"
     },
 
     "Table": {

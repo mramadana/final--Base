@@ -176,4 +176,7 @@ const editProfile = async () => {
 onMounted(async () => {
     await getProfile();
 });
+
+    const globalStore = useGlobalStore();
+    globalStore.title = t('Auth.settings');
 </script>

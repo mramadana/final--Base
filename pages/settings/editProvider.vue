@@ -228,4 +228,7 @@ const updateProvider = async () => {
 onMounted(() => {
     loadProviderData();
 });
+
+    const globalStore = useGlobalStore();
+    globalStore.title = t('Auth.settings');
 </script>

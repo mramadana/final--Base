@@ -1,7 +1,7 @@
 <template>
   <div class="layout-form">
 
-    <h1 class="main-title md mb-4">طلب تسوية</h1>
+    <h1 class="main-title md mb-4">{{ $t('financial.settlement_request') }}</h1>
 
     <!-- ***** datatable ***** -->
     <div v-if="!loading">
@@ -18,7 +18,7 @@
           <div class="table-actions-group">
             <NuxtLink class="table-action-btn btn-view" :to="`/financialTransactions/${data.id}`">
               <i class="fas fa-eye"></i>
-              تفاصيل الطلب
+              {{ $t('financial.request_details') }}
             </NuxtLink>
           </div>
         </template>
@@ -26,7 +26,7 @@
 
       <!-- No Data -->
       <div v-else class="no-data-message">
-        <p>لا توجد طلبات تسوية</p>
+        <p>{{ $t('financial.no_settlements') }}</p>
       </div>
     </div>
 
@@ -46,7 +46,7 @@
 <script setup>
 
 definePageMeta({
-  name: 'requestSettlement',
+  name: 'sideMenu.finished_settlement',
   layout: 'default'
 })
 
@@ -65,13 +65,13 @@ const totalPage = ref(); // إجمالي عدد العناصر
 
 // Settlement Columns (من اليمين لليسار حسب الصورة)
 const settlementColumns = ref([
-  { field: 'requestNumber', header: 'رقم الطلب' },
-  { field: 'bookingValue', header: 'قيمة الحجز' },
-  { field: 'drinksValue', header: 'قيمة الوجبات او المشروبات' },
-  { field: 'bookingDate', header: 'تاريخ الحجز' },
-  { field: 'addedValue', header: 'القيمة المضافة' },
-  { field: 'totalAmount', header: 'اجمالى المبلغ' },
-  { field: 'status', header: 'حالة الطلب' }
+  { field: 'requestNumber', header: t('financial.request_number') },
+  { field: 'bookingValue', header: t('financial.booking_value') },
+  { field: 'drinksValue', header: t('financial.drinks_value') },
+  { field: 'bookingDate', header: t('financial.booking_date') },
+  { field: 'addedValue', header: t('financial.added_value') },
+  { field: 'totalAmount', header: t('financial.total_amount') },
+  { field: 'status', header: t('financial.request_status') }
 ]);
 
 // Skeleton products for loading state
@@ -218,10 +218,11 @@ let showPaginate = computed(() => {
 });
 
 // Set global store
-globalStore.title = 'طلب تسوية';
+const pageHeadTitle = ref(t('Sidebar.financial_transactions'));
+globalStore.title = pageHeadTitle.value;
 globalStore.titleIcon = 'fa-solid fa-angle-left';
 globalStore.titleLink = '/financialTransactions';
-globalStore.subtitle = 'المعاملات المالية';
+globalStore.subtitle = t('sideMenu.finished_settlement');
 
 // OnMounted - Get data on page load
 onMounted(async () => {

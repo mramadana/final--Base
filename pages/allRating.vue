@@ -19,7 +19,7 @@
 
         <!-- Ratings Content -->
         <div v-else class="reviews-list">
-            <h3 class="section-title">التقييمات</h3>
+            <h3 class="section-title">{{ $t('ratings.ratings') }}</h3>
             
             <div class="reviews-wrapper">
                 <div v-for="review in reviews" :key="review.id" class="review-card">
@@ -29,7 +29,7 @@
                             <Rating v-model="review.rating" readonly :cancel="false" :dir="'ltr'"/>
                         </div>
                     </div>
-                    <p class="review-date">منذ {{ review.daysAgo }} يوم</p>
+                    <p class="review-date">{{ $t('ratings.since') }} {{ review.daysAgo }} {{ $t('ratings.day') }}</p>
                     <p class="review-text">{{ review.comment }} 👌</p>
                 </div>
             </div>
@@ -119,7 +119,7 @@ const viewAllReviews = () => {
 };
 
 // Set global store
-globalStore.title = 'التقييمات';
+globalStore.title = t('Sidebar.ratings');
 globalStore.titleIcon = 'fa-solid fa-angle-left';
 globalStore.titleLink = null;
 
