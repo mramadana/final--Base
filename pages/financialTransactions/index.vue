@@ -70,7 +70,7 @@ const { t } = useI18n({ useScope: 'global' });
 
 // Page meta
 definePageMeta({
-    name: 'Sidebar.financial_transactions',
+    name: 'sideMenu.due_amount',
     layout: 'default',
 });
 

@@ -1,7 +1,7 @@
 <template>
   <div class="layout-form">
 
-    <h1 class="main-title md mb-4">طلب تسوية</h1>
+    <h1 class="main-title md mb-4">{{ $t('financial.settlement_request') }}</h1>
 
     <!-- ***** datatable ***** -->
     <div v-if="!loading">
@@ -18,7 +18,7 @@
           <div class="table-actions-group">
             <NuxtLink class="table-action-btn btn-view" :to="`/financialTransactions/${data.id}`">
               <i class="fas fa-eye"></i>
-              تفاصيل الطلب
+              {{ $t('financial.request_details') }} 
             </NuxtLink>
           </div>
         </template>
@@ -26,7 +26,7 @@
 
       <!-- No Data -->
       <div v-else class="no-data-message">
-        <p>لا توجد طلبات تسوية</p>
+        <p>{{ $t('financial.no_settlements') }}</p>
       </div>
     </div>
 

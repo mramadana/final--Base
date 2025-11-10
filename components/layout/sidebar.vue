@@ -199,12 +199,12 @@ const menuItems = ref([
     },
     {
         label: 'Sidebar.booking_form',
-        to: '/booking-form',
+        to: '/inquiryForm',
         icon: '/_nuxt/assets/images/sidebar/document-text.svg'
     },
     {
         label: 'Sidebar.schedule',
-        to: '/schedule',
+        to: '/Wallet',
         icon: '/_nuxt/assets/images/sidebar/wallet-money.svg'
     }
 ]);

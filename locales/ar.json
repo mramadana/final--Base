@@ -172,7 +172,7 @@
         "annual_subscription_payment" : "إتمام دفع الاشتراك السنوي",
         "payment_description" : "للاستفادة من خدمات التطبيق واستقبال طلبات العملاء، يرجى سداد رسوم الاشتراك السنوي الخاصة بدولتك",
         "subscription_value_country" : "قيمة الاشتراك الخاص بدولتك",
-        "sar" : "ريس",
+        "sar" : "ر.س",
         "payment_method" : "طريقة الدفع",
         "electronic_payment" : "الدفع الإلكتروني",
         "complete_payment_process" : "إتمام عملية الدفع",
@@ -220,7 +220,9 @@
         "imgs": "لا يوجد صور حاليا",
         "no_products" : "لا توجد طلبات حاليا",
         "complete_info" : "استكمال البيانات",
-        "category" : "التصنيف"
+        "category" : "التصنيف",
+        "wallet_balance" : "رصيد المحفظة",
+        "charge_balance" : "شحن المحفظة"
     },
 
     "Sidebar": {
@@ -476,7 +478,10 @@
         "vat_tax": "ضريبة القيمة المضافة",
         "net_due": "المستحق",
         "due_reservations_title": "الحجوزات المستحقة للتسوية",
-        "settlement_status" : "حالة التسوية"
+        "settlement_status" : "حالة التسوية",
+        "settlement_request": "طلب تسوية",
+        "request_details": "تفاصيل الطلب",
+        "no_settlements" : "لا توجد طلبات تسوية"
     },
 
     "users": {
@@ -488,7 +493,12 @@
         "phone": "رقم الجوال",
         "created_at": "تاريخ الاضافة",
         "permissions": "الصلاحيات",
-        "no_users_data": "لا توجد بيانات مستخدمين"
+        "no_users_data": "لا توجد بيانات مستخدمين",
+        "message_title": "عنوان الرسالة",
+        "message_content": "نص الرسالة",
+        "contact_admin": "التواصل مع اإلادارة",
+        "completion_shipping_process": "اتمام عمليه شحن",
+        "wallet_balance_desc": "للاستفادة من خدمات التطبيق واستقبال طلبات العملاء، يرجى سداد رسوم الاشتراك السنوي الخاصة بدولتك"
     },
 
     "Table": {

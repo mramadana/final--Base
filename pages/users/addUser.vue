@@ -52,10 +52,10 @@
                     </div>
 
                     <div class="col-12">
-                        <h4 class="main-title md mb-4">الصلاحيات</h4>
+                        <!-- Permissions -->
+                        <h4 class="main-title md mb-4">{{ $t('users.permissions') }}</h4>
                         
                         <div class="permissions-section d-flex flex-wrap align-items-center gap-3 mt-4">
-
                             <div v-for="(permission, index) in fakePermissions" :key="index" class=" mb-3">
                                 <div class="d-flex align-items-center justify-content-between payment-field">
                                     <div class="check-text hint d-flex ml-4">
@@ -80,8 +80,9 @@
                         </div>
                         
                         <div v-if="showValidation && validations.permissions" class="text-danger mt-1">
-                            <span v-if="getValidationError('permissions')">{{ getValidationError('permissions')
-                                }}</span>
+                            <span v-if="getValidationError('permissions')">
+                                {{ getValidationError('permissions')}}
+                            </span>
                         </div>
                     </div>
 

@@ -1,21 +1,22 @@
 <template>
     <div class="container">
-        <div class="layout-form custom-width">
-            <h1 class="main-title bold lg mb-5">{{ $t("Global.wallet") }}</h1>
+        <div class="layout-form">
+            <h1 class="main-title bold lg mb-4">{{ $t("users.completion_shipping_process") }}</h1>
+            <p class="main-disc mb-5">{{ $t("users.wallet_balance_desc") }}</p>
             <div class="row">
                 <div class="col-12 col-md-8 mr-auto">
                     <div class="text-center mb-5">
-                        <img src="@/assets/images/walletillustration.png" alt="restore-image" class="restore-image mb-4">
-                        <div class="mb-3">
-                            <h4 class="main-disc mb-3">{{ $t("Global.current_balance") }}</h4>
-                            <h2 v-if="!loading" class="main-title">{{ walletValue }}</h2>
+                        <img src="@/assets/images/Illustration.svg" alt="restore-image" class="restore-image mb-4">
+                        <h4 class="main-disc mb-3">{{ $t("Global.wallet_balance") }}</h4>
+                        <div class="mb-3 d-flex align-items-center justify-content-center gap-2">
+                            <h2 v-if="!loading" class="main-title mb-0">{{ walletValue }} 555</h2>
+                            <h4 v-if="!loading" class="main-title normal mb-0">{{ $t("Auth.sar") }}</h4>
                             <div class="d-flex align-items-center justify-content-center mt-3 mb-3" v-if="loading">
                                 <Skeleton height=".9rem" width="4rem"></Skeleton>
                             </div>
-                            <h4 class="main-title normal">{{ $t("Global.SR") }}</h4>
                         </div>
                     </div>
-                    <button type="button" @click="successfullySent = true"  class="custom-btn w-100 mr-auto">
+                    <button type="button" @click="successfullySent = true"  class="custom-btn lg mr-auto">
                          {{ $t('Global.charge_balance') }} 
                     </button>
                 </div>
