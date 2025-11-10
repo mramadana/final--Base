@@ -88,12 +88,22 @@
                 </div>
                 <!-- Submit button -->
                 <button type="submit" class="custom-btn md mt-4" :disabled="loading">
-                    {{ $t("Auth.create_acc") }}
+                    {{ $t("settings.save_changes") }}
                     <span class="spinner-border spinner-border-sm" v-if="loading" role="status"
                         aria-hidden="true"></span>
                 </button>
             </form>
         </div>
+
+        <!-- Success Modal -->
+        <Dialog v-model:visible="showSuccessModal" modal class="custum_dialog_width without-close" :draggable="false">
+            <div class="text-center">
+                <img src="@/assets/images/Success.gif" alt="check-img" class="check-img lg" loading="lazy" />
+                <h1 class="main-title bold mb-3 hint_success">
+                    {{ $t("settings.saved_successfully") }}
+                </h1>
+            </div>
+        </Dialog>
     </div>
 </template>
 
@@ -102,6 +112,9 @@
 import { useI18n } from "vue-i18n";
 const { t } = useI18n({ useScope: "global" });
 
+const route = useRoute();
+const userId = ref(route.query.id || null);
+const showSuccessModal = ref(false);
 // Form fields (moved before validation to avoid undefined errors)
 const name = ref("");
 const phone = ref("");
@@ -183,7 +196,7 @@ const getValidationError = (field) => {
     }
 };
 
-// Add user function - same validation pattern as login
+// Edit user function - same validation pattern as login
 const addUser = async () => {
     showValidation.value = true;
 
@@ -203,32 +216,64 @@ const addUser = async () => {
             const fd = new FormData(addUserForm.value);
             fd.append("country_code", selectedCountry.value?.key || "");
             fd.append('permissions', JSON.stringify(selectedPermissions.value));
-            const res = await axios.post("users", fd);
+            fd.append('_method', 'PUT'); // For Laravel PUT method
+            const res = await axios.post(`users?id=${userId.value}`, fd);
             if (response(res) === "success") {
                 successToast(res.msg);
                 successRegister.value = true;
-                // Reset form on success
-                name.value = "";
-                phone.value = "";
-                email.value = "";
-                selectedCountry.value = null;
-                showValidation.value = false;
+                // Navigate back to users list
+                showSuccessModal.value = true;
+                setTimeout(() => {
+                    showSuccessModal.value = false;
+                    setTimeout(() => {
+                        navigateTo('/users');
+                    }, 1000);
+                }, 1000);
             } else {
                 errorToast(res.msg);
             }
         } catch (error) {
-            console.error("Register error:", error);
-            errorToast(t("Auth.registration_failed"));
+            console.error("Edit error:", error);
+            errorToast(t("Auth.update_failed"));
         } finally {
             loading.value = false;
         }
     }
 };
 
+// Fetch user data
+const fetchUserData = async () => {
+    try {
+        const res = await axios.get(`users?id=${userId.value}`);
+        if (response(res) === "success") {
+            const userData = res.data.user;
+            name.value = userData.name || "";
+            phone.value = userData.phone || "";
+            email.value = userData.email || "";
+            selectedCountry.value = userData.country ? { key: userData.country_code, name: userData.country } : null;
+            
+            // Set permissions
+            if (userData.permissions) {
+                const userPermissions = Array.isArray(userData.permissions) ? userData.permissions : JSON.parse(userData.permissions);
+                fakePermissions.value.forEach(permission => {
+                    permission.selected = userPermissions.includes(permission.key);
+                });
+            }
+        }
+    } catch (error) {
+        console.error("Fetch user error:", error);
+        errorToast(t("Auth.fetch_failed"));
+    }
+};
+
 // Page meta
 definePageMeta({
-    // name: "Auth.create_account",
     layout: "default",
+});
+
+// OnMounted - Get user data on page load
+onMounted(async () => {
+    await fetchUserData();
 });
 </script>
 

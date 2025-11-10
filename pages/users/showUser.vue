@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="layout-form">
-            <form @submit.prevent="addUser" ref="addUserForm">
+            <form ref="addUserForm">
 
                 <div class="row">
 
@@ -10,7 +10,7 @@
                         <FormInput v-model:modelValue="name" name="name" type="text" :label="$t('Auth.customer_name')"
                             :placeholder="$t('Auth.customer_name')" :validation-schema="validations.name"
                             :showErrors="showValidation" :hasIcon="true" icon="/_nuxt/assets/images/auth-img/user.svg"
-                            :with_icon="true" />
+                            :with_icon="true" :readonly="true" />
                     </div>
 
                     <div class="col-12 col-md-6">
@@ -23,9 +23,9 @@
                                 <FormInput ref="phoneInputRef" v-model:modelValue="phone" name="phone" type="number"
                                     :placeholder="$t('Auth.enter_mobile_number')" :validation-schema="validations.phone"
                                     :showErrors="showValidation" :moveErrorToParent="true" :hasIcon="true"
-                                    icon="/_nuxt/assets/images/auth-img/mobile.svg" :with_icon="true" />
+                                    icon="/_nuxt/assets/images/auth-img/mobile.svg" :with_icon="true" :readonly="true" />
                                 <GlobalCountryDropdown v-model="selectedCountry"
-                                    :placeholder="$t('Auth.select_country')" />
+                                    :placeholder="$t('Auth.select_country')" :disabled="true" />
                             </div>
                             <!-- Display validation error message for phone -->
                             <p v-if="phoneInputRef?.shouldShowError" class="error-message text-danger mt-1"
@@ -40,7 +40,7 @@
                         <FormInput v-model:modelValue="email" name="email" type="email" :label="$t('Auth.email')"
                             :placeholder="$t('Auth.enter_email')" :validation-schema="validations.email"
                             :showErrors="showValidation" :hasIcon="true" icon="/_nuxt/assets/images/auth-img/sms.svg"
-                            :with_icon="true" />
+                            :with_icon="true" :readonly="true" />
                     </div>
 
                     <div class="col-12 col-md-6">
@@ -48,7 +48,7 @@
                         <FormInput v-model:modelValue="password" name="password" type="password"
                             :label="$t('Auth.password')" :placeholder="$t('Auth.please_enter_password')"
                             :validation-schema="validations.password" :showErrors="showValidation" :hasIcon="true"
-                            icon="/_nuxt/assets/images/auth-img/lock.svg" :with_icon="true" />
+                            icon="/_nuxt/assets/images/auth-img/lock.svg" :with_icon="true" :readonly="true" />
                     </div>
 
                     <div class="col-12">
@@ -68,7 +68,7 @@
                                     <div class="radios form-group check-inner mb-0">
                                         <div class="d-flex align-items-center justify-content-between gap-3">
                                             <label class="custom-radio custom-check">
-                                                <input type="checkbox" v-model="permission.selected" class="d-none" />
+                                                <input type="checkbox" v-model="permission.selected" class="d-none" disabled />
                                                 <span class="mark m-0">
                                                     <i class="fas fa-check icon"></i>
                                                 </span>
@@ -86,12 +86,6 @@
                     </div>
 
                 </div>
-                <!-- Submit button -->
-                <button type="submit" class="custom-btn md mt-4" :disabled="loading">
-                    {{ $t("Auth.create_acc") }}
-                    <span class="spinner-border spinner-border-sm" v-if="loading" role="status"
-                        aria-hidden="true"></span>
-                </button>
             </form>
         </div>
     </div>
@@ -101,6 +95,9 @@
 // Imports and utilities
 import { useI18n } from "vue-i18n";
 const { t } = useI18n({ useScope: "global" });
+
+const route = useRoute();
+const userId = ref(route.query.id || null);
 
 // Form fields (moved before validation to avoid undefined errors)
 const name = ref("");
@@ -183,51 +180,39 @@ const getValidationError = (field) => {
     }
 };
 
-// Add user function - same validation pattern as login
-const addUser = async () => {
-    showValidation.value = true;
-
-    const isValid = isFormValid(formData.value, validations);
-
-    console.log("Is Valid:", isValid);
-
-    if (!isValid) {
-        // if the form has validation errors
-        scrollToFirstError(formData.value, validations);
-        console.log("Validation Failed");
-    } else {
-        console.log("Validation Passed");
-        loading.value = true;
-
-        try {
-            const fd = new FormData(addUserForm.value);
-            fd.append("country_code", selectedCountry.value?.key || "");
-            fd.append('permissions', JSON.stringify(selectedPermissions.value));
-            const res = await axios.post("users", fd);
-            if (response(res) === "success") {
-                successToast(res.msg);
-                successRegister.value = true;
-                // Reset form on success
-                name.value = "";
-                phone.value = "";
-                email.value = "";
-                selectedCountry.value = null;
-                showValidation.value = false;
-            } else {
-                errorToast(res.msg);
+// Fetch user data for display
+const fetchUserData = async () => {
+    try {
+        const res = await axios.get(`users?id=${userId.value}`);
+        if (response(res) === "success") {
+            const userData = res.data.user;
+            name.value = userData.name || "";
+            phone.value = userData.phone || "";
+            email.value = userData.email || "";
+            password.value = "••••••••"; // Mask password for display
+            selectedCountry.value = userData.country ? { key: userData.country_code, name: userData.country } : null;
+            
+            // Set permissions
+            if (userData.permissions) {
+                const userPermissions = Array.isArray(userData.permissions) ? userData.permissions : JSON.parse(userData.permissions);
+                fakePermissions.value.forEach(permission => {
+                    permission.selected = userPermissions.includes(permission.key);
+                });
             }
-        } catch (error) {
-            console.error("Register error:", error);
-            errorToast(t("Auth.registration_failed"));
-        } finally {
-            loading.value = false;
         }
+    } catch (error) {
+        console.error("Fetch user error:", error);
+        errorToast(t("Auth.fetch_failed"));
     }
 };
 
+// OnMounted - Get user data on page load
+onMounted(async () => {
+    await fetchUserData();
+});
+
 // Page meta
 definePageMeta({
-    // name: "Auth.create_account",
     layout: "default",
 });
 </script>

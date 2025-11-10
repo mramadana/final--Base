@@ -319,12 +319,12 @@ let showPaginate = computed(() => {
 // Action handlers
 const viewUser = (id) => {
   console.log('View user:', id);
-  // Navigate to user details or open modal
+  navigateTo(`/users/showUser?id=${id}`);
 };
 
 const editUser = (id) => {
   console.log('Edit user:', id);
-  // Navigate to edit user page or open modal
+  navigateTo(`/users/editUser?id=${id}`);
 };
 
 // Set global store
