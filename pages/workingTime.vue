@@ -248,6 +248,12 @@ const removeSavedDay = (index) => {
 
 // Save working time
 const saveWorkingTime = async () => {
+    // Validation: التأكد من وجود أوقات محددة
+    if (savedDays.value.length === 0) {
+        errorToast(t('workingTime.validation.no_times_added'));
+        return;
+    }
+
     loading.value = true;
 
     try {
@@ -272,27 +278,6 @@ const saveWorkingTime = async () => {
     }
 };
 
-// Fetch working time on mount
-const fetchWorkingTime = async () => {
-    try {
-        const res = await axios.get('working-time');
-        if (res.data && res.data.booking_schedule) {
-            // Load saved data with unique IDs
-            savedDays.value = res.data.booking_schedule.map((day, index) => ({
-                ...day,
-                id: day.id || Date.now() + index
-            }));
-            selectDayEnabled.value = res.data.select_day_enabled || false;
-        }
-    } catch (error) {
-        console.error("Fetch working time error:", error);
-    }
-};
-
-// Load data on mount
-onMounted(() => {
-    fetchWorkingTime();
-});
 
 // Page meta
 definePageMeta({
@@ -303,6 +288,7 @@ definePageMeta({
 </script>
 
 <style lang="scss" scoped>
+
 // Booking Schedule Styles
 .add-calender {
     padding-bottom: 25px;
@@ -324,11 +310,12 @@ definePageMeta({
         gap: 12px;
         padding-bottom: 20px;
         border-bottom: 2px solid #3a3a3a;
+        flex-wrap: wrap;
         // Day Dropdown Wrapper
         .day-dropdown-wrapper {
             position: relative;
             flex-grow: 1;
-            min-width: 350px;
+            width: 350px;
             max-width: 100%;
             .dropdown-icon {
                 position: absolute;

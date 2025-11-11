@@ -16,7 +16,7 @@
                 </div>
             </div>
 
-            <div class="col-12 col-md-8 d-flex justify-content-end gap-3">
+            <div class="col-12 col-md-8 d-flex justify-content-end flex-wrap gap-3">
 
                 <!-- Select Dropdown -->
                 <div v-if="showSelect" class="col-12 col-md-3 mb-3 dropdown-select">

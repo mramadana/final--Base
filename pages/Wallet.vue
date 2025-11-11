@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div>
         <div class="layout-form">
             <h1 class="main-title bold lg mb-4">{{ $t("users.completion_shipping_process") }}</h1>
             <p class="main-disc mb-5">{{ $t("users.wallet_balance_desc") }}</p>

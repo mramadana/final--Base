@@ -162,6 +162,9 @@ definePageMeta({
         position: relative;
         border-radius: 8px;
         margin-bottom: 20px;
+        @media (max-width: 550px) {
+            height: 200px;
+        }
         img {
             width: 100%;
             height: 100%;

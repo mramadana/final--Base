@@ -13,7 +13,7 @@
         <div v-else class="row">
             
             <!-- متوسط التقييمات - على اليمين -->
-            <div class="col-12 col-lg-4 col-md-5">
+            <div class="col-12 col-lg-4 col-md-5 mb-4">
                 <div class="rating-stats">
                     <h3 class="section-title">{{ $t('ratings.average_ratings') }}</h3>
                     
@@ -42,7 +42,7 @@
             </div>
 
             <!-- التقييمات - على اليسار -->
-            <div class="col-12 col-lg-8 col-md-7">
+            <div class="col-12 col-lg-8 col-md-7 mb-4">
                 <div class="reviews-list">
                     <h3 class="section-title">{{ $t('ratings.ratings') }}</h3>
                     
@@ -78,7 +78,7 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n({ useScope: 'global' });
 
 definePageMeta({
-    name: 'ratings',
+    name: 'Sidebar.ratings',
     layout: 'default'
 });
 

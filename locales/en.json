@@ -244,6 +244,37 @@
         "no_new_orders": "No new orders available",
         "no_payment_pending_orders": "No payment pending orders available",
         "no_waiting_orders": "No waiting orders available"
+    },
+
+    "workingTime": {
+        "page_title": "Working Time",
+        "select_day": "Select Day",
+        "time_from": "From",
+        "time_to": "To",
+        "add_new_time": "Add New Time",
+        "save_working_time": "Save Working Time",
+        "success_saved": "Working time saved successfully",
+        "days": {
+            "saturday": "Saturday",
+            "sunday": "Sunday",
+            "monday": "Monday",
+            "tuesday": "Tuesday",
+            "wednesday": "Wednesday",
+            "thursday": "Thursday",
+            "friday": "Friday"
+        },
+        "validation": {
+            "select_day_first": "Please select a day first",
+            "select_time_from": "Please select start time (from)",
+            "select_time_to": "Please select end time (to)",
+            "duplicate_time": "This time slot already exists! Please choose a different time",
+            "no_times_added": "Please add at least one time slot before saving"
+        },
+        "messages": {
+            "time_added": "New time slot added successfully",
+            "time_deleted": "Time slot deleted successfully",
+            "save_error": "An error occurred while saving working time"
+        }
     }
 
 }
