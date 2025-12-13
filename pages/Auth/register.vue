@@ -200,17 +200,18 @@ const signUp = async () => {
         try {
             const fd = new FormData();
             fd.append("name", name.value);
-            fd.append("phone_email", phone.value);
+            fd.append("phone", phone.value);
             fd.append("email", email.value);
             fd.append("password", password.value);
             fd.append("password_confirmation", confirmPassword.value);
-            fd.append("country_code", selectedCountry.value?.key || "");
+            // fd.append("country_code", selectedCountry.value?.key || "");
+            fd.append("country_id", 1);
             fd.append("device_id", 111);
             fd.append("device_type", "web");
 
             // Get Returned Data From Store
             const res = await signUpHandler(fd);
-
+            console.log(res, "res res res res res");
             if (response(res) === "success") {
                 successToast(res.msg);
                 successRegister.value = true;

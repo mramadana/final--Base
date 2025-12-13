@@ -54,7 +54,7 @@ export const useAuthStore = defineStore("auth", {
     // Sign Up
 
     async signUpHandler(formData) {
-      const { data, error } = await submitApiForm("sign-up", formData);
+      const { data, error } = await submitApiForm("provider/auth/register", formData);
     
       if (error) {
         console.error("Sign-up error:", error);

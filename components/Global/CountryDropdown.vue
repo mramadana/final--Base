@@ -74,7 +74,7 @@ const handleChange = (e) => {
 };
 
 // Fetch countries data using the useApiFetch composable
-const { data: countries } = useApiFetch("countries");
+const { data: countries } = useApiFetch("get-countries");
 
 // Expose the countries data to parent components using defineExpose
 // This makes it possible for parent components to access this data using template refs

@@ -6,12 +6,13 @@ const createFetchOptions = (options = {}) => {
     const token = "";
     const lang = useCookie("lang");
     const config = useRuntimeConfig();
-    const baseURL = "https://dashboard.amyalcar.com/api/";
+    const baseURL = "https://reevent-sa.com/api/";
   
     const headers = {
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       // Authorization: `Bearer ${token}`,
-      lang: lang.value || "ar",
+      // lang: lang.value || "ar",
+      "x-api-key": "5f43766dcd92b8c3e7639d2a8791063c",
       ...options.headers,
     };
   
