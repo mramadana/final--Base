@@ -84,7 +84,7 @@ const verificationCode = async () => {
 
   fd.append('code', bindModal.value);
   fd.append('phone', user.value.phone);
-  fd.append('country_code', user.value.country_code);
+  fd.append('country_code', user.value.country_id);
 
   try {
     const { data, error } = await submitApiForm("forget-password-check-code", fd);
@@ -116,7 +116,7 @@ const verificationCode = async () => {
 // Resend code function
 const resendCode = async () => {
   try {
-    const { data, error } = await fetchApiData(`forget-password-resend-code?country_code=${user.value.country_code}&phone=${user.value.phone}`);
+    const { data, error } = await fetchApiData(`forget-password-resend-code?country_code=${user.value.country_id}&phone=${user.value.phone}`);
 
     if (error) {
       console.error("Resend Code error:", error);

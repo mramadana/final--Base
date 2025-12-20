@@ -152,7 +152,7 @@ const forgetPassword = async () => {
 
       if (data.key === "success") {
         user.value.phone = phone.value;
-        user.value.country_code = selectedCountry.value.key;
+        user.value.country_id = selectedCountry.value.key;
         successToast(data.msg);
         // Reset form on success
         phone.value = '';

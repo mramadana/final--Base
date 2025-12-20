@@ -72,7 +72,7 @@ export const useAuthStore = defineStore("auth", {
 
     // Verification Code
     async verificationHandler(formData) {
-      const resData = await axios.post("activate?_method=patch", formData);
+      const resData = await axios.post("provider/auth/activate-phone", formData);
       if (response(resData) == "success") {
         this.token = resData.data.data.token;
         this.isLoggedIn = true;

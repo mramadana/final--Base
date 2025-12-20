@@ -92,7 +92,7 @@
     const submitData = async () => {
         const fd = new FormData(confirmPasswordForm.value);
         fd.append('phone', user.value.phone);
-        fd.append('country_code', user.value.country_code);
+        fd.append('country_code', user.value.country_id);
         fd.append('code', localStorage.getItem('newCode'));
 
         validate();

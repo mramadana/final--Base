@@ -18,10 +18,10 @@
                 </div>
             </div>
 
-            <!-- Multi-step Form -->
-            <form @submit.prevent="handleSubmit" ref="completeInfoForm">
-                <!-- Step 1: Project Basic Data -->
-                <div v-show="currentStep === 1" class="step-content">
+            <!-- Multi-step Forms -->
+            <!-- Step 1: Project Basic Data -->
+            <form @submit.prevent="handleSubmit" ref="step1Form" v-show="currentStep === 1">
+                <div class="step-content">
                     <div class="row">
 
                         <div class="col-12 col-md-8 mr-auto">
@@ -29,7 +29,7 @@
                             <!-- Project Name Arabic -->
                             <FormInput 
                                 v-model:modelValue="projectNameAr" 
-                                name="projectNameAr" 
+                                name="project_name_ar" 
                                 type="text" 
                                 :label="$t('Auth.project_name_ar')"
                                 :placeholder="$t('Auth.project_name_ar')" 
@@ -40,7 +40,7 @@
                             <!-- Project Name English -->
                             <FormInput 
                                 v-model:modelValue="projectNameEn" 
-                                name="projectNameEn" 
+                                name="project_name_en" 
                                 type="text" 
                                 :label="$t('Auth.project_name_en')"
                                 :placeholder="$t('Auth.project_name_en')" 
@@ -51,7 +51,7 @@
                             <!-- Project Description Arabic -->
                             <FormInput 
                                 v-model:modelValue="projectDescAr" 
-                                name="projectDescAr" 
+                                name="project_description_ar" 
                                 type="textarea" 
                                 :label="$t('Auth.project_desc_ar')"
                                 :placeholder="$t('Auth.project_desc_ar')" 
@@ -63,7 +63,7 @@
                             <!-- Project Description English -->
                             <FormInput 
                                 v-model:modelValue="projectDescEn" 
-                                name="projectDescEn" 
+                                name="project_description_en" 
                                 type="textarea" 
                                 :label="$t('Auth.project_desc_en')"
                                 :placeholder="$t('Auth.project_desc_en')" 
@@ -85,7 +85,7 @@
                                 <!-- if you want to remove the validation, you can set the required to false
                                 and remove showValidation -->
                                 <GlobalImgUploader 
-                                    ref="imageUploader"
+                                    ref="logoUploader"
                                     acceptedFiles="image/*" 
                                     :resetTrigger="resetImageTrigger"
                                     :showValidation="showValidation"
@@ -106,7 +106,7 @@
                                 <!-- if you want to remove the validation, you can set the required to false
                                 and remove showValidation -->
                                 <GlobalImgUploader 
-                                    ref="imageUploader"
+                                    ref="profileImageUploader"
                                     acceptedFiles="image/*" 
                                     :resetTrigger="resetImageTrigger"
                                     :showValidation="showValidation"
@@ -123,9 +123,11 @@
                         </div>
                     </div>
                 </div>
+            </form>
 
                 <!-- Step 2: Additional Info -->
-                <div v-show="currentStep === 2" class="step-content">
+                <form @submit.prevent="handleSubmit" ref="step2Form" v-show="currentStep === 2">
+                    <div class="step-content">
                     
                     <div class="row">
 
@@ -135,34 +137,37 @@
                             <GlobalCustomDropdown 
                                 v-model="mainSection" 
                                 :options="sectionOptions"
-                                option-value="value"
+                                option-value="id"
                                 :placeholder="$t('Auth.select_main_section')" 
                                 :label="$t('Auth.main_section')"
                                 :showValidation="showValidation"
                                 :validation-schema="validationsStep2.mainSection"
                             />
+                            <input type="hidden" name="main_section" :value="mainSection || ''" />
 
                             <!-- Country Dropdown -->
                             <GlobalCustomDropdown 
                                 v-model="country" 
                                 :options="countryOptions"
-                                option-value="value"
+                                option-value="id"
                                 :placeholder="$t('Auth.select_country')" 
                                 :label="$t('Auth.country')"
                                 :showValidation="showValidation"
                                 :validation-schema="validationsStep2.country"
                             />
+                            <input type="hidden" name="country" :value="country || ''" />
 
                             <!-- Region Dropdown -->
                             <GlobalCustomDropdown 
                                 v-model="region" 
                                 :options="regionOptions"
-                                option-value="value"
+                                option-value="id"
                                 :placeholder="$t('Auth.select_region')" 
                                 :label="$t('Auth.region')"
                                 :showValidation="showValidation"
                                 :validation-schema="validationsStep2.region"
                             />
+                            <input type="hidden" name="region" :value="region || ''" />
 
                             <!-- Location Input -->
                             <div class="position-relative single-input-upload mb-4">
@@ -174,11 +179,13 @@
                                         <span v-else class="text-white">{{ address }}</span>
                                     </div>
                                 </div>
-                                <!-- Hidden input for validation -->
-                                <input type="hidden" v-model="address" />
+                                <!-- Hidden input for validation and form submission -->
+                                <input type="hidden" name="map_desc" :value="address" />
+                                <input type="hidden" name="lat" :value="location.lat || ''" />
+                                <input type="hidden" name="lng" :value="location.lng || ''" />
                                 <!-- Validation error message -->
                                 <div v-if="showValidation && !address" class="error-message mt-2">
-                                    <span class="text-danger error-message">{{ $t('validation.select_location') }}</span>
+                                    <p class="text-danger error-message">{{ $t('validation.select_location') }}</p>
                                 </div>
                             </div>
 
@@ -204,16 +211,17 @@
 
                     </div>
                 </div>
+            </form>
 
                 <!-- Step 3: Banking Info -->
-
-                <div v-show="currentStep === 3" class="step-content">
+                <form @submit.prevent="handleSubmit" ref="step3Form" v-show="currentStep === 3">
+                    <div class="step-content">
                     <div class="row">
                         <div class="col-12 col-md-8 mr-auto">
                             <!-- Bank Name Input -->
                             <FormInput 
                                 v-model:modelValue="bankNameField" 
-                                name="bankName" 
+                                name="bank_name" 
                                 type="text" 
                                 :label="$t('Auth.bank_name')"
                                 :placeholder="$t('Auth.bank_name')" 
@@ -224,7 +232,7 @@
                             <!-- Account Number Input -->
                             <FormInput 
                                 v-model:modelValue="accountNumberField" 
-                                name="accountNumber" 
+                                name="bank_account_number" 
                                 type="text" 
                                 :label="$t('Auth.account_number')"
                                 :placeholder="$t('Auth.account_number')" 
@@ -235,7 +243,7 @@
                             <!-- Account Holder Name Input -->
                             <FormInput 
                                 v-model:modelValue="accountHolderNameField" 
-                                name="accountHolderName" 
+                                name="bank_account_name" 
                                 type="text" 
                                 :label="$t('Auth.account_holder_name')"
                                 :placeholder="$t('Auth.account_holder_name')" 
@@ -246,7 +254,7 @@
                             <!-- IBAN Input -->
                             <FormInput 
                                 v-model:modelValue="ibanField" 
-                                name="iban" 
+                                name="bank_iban_number" 
                                 type="text" 
                                 :label="$t('Auth.iban')"
                                 :placeholder="$t('Auth.iban')" 
@@ -264,6 +272,7 @@
                         </div>
                     </div>
                 </div>
+            </form>
 
                 <div class="new-sign mt-4">
                     {{ $t('Auth.have_account') }}
@@ -271,7 +280,6 @@
                 </div>
 
                 <NuxtLink to="/Auth/terms"> {{ $t('Auth.terms_and_conditions') }} </NuxtLink>
-            </form>
             
         </div>
 
@@ -351,7 +359,7 @@ const formDataStep2 = computed(() => ({
     mainSection: mainSection.value,
     country: country.value,
     region: region.value,
-    address: address.value,
+    map_desc: address.value,
     commercialRegNumber: commercialRegNumber.value
 }));
 
@@ -362,16 +370,21 @@ const formDataStep3 = computed(() => ({
     iban: ibanField.value
 }));
 
-// image uploader
-const imageUploader = ref(null);
+// image uploaders
+const logoUploader = ref(null);
+const profileImageUploader = ref(null);
 
 // Step management
-const currentStep = ref(1);
+const currentStep = ref(3);
 const loading = ref(false);
 const showValidation = ref(false);
 
-// Refs
-const completeInfoForm = ref(null);
+// Form refs
+const step1Form = ref(null);
+const step2Form = ref(null);
+const step3Form = ref(null);
+
+// Image refs
 const uploadedImage = ref([]);
 const uploadedProfileImage = ref([]);
 const resetImageTrigger = ref(0);
@@ -415,21 +428,22 @@ const validationsStep3 = {
 
 // Dropdown options
 const sectionOptions = ref([
-    { name: 'مستلزمات الأطفال', value: 'baby_supplies' },
-    { name: 'الأعشاب', value: 'herbs' },
+    { name: 'مستلزمات الأطفال', value: 'baby_supplies', id: 1 },
+    { name: 'الأعشاب', value: 'herbs', id: 2 },
+    { name: 'الطبخ', value: 'cuisine', id: 3 },
     { name: 'الطبخ', value: 'cuisine' }
 ]);
 
 const countryOptions = ref([
-    { name: 'السعودية', value: 'saudi' },
-    { name: 'الإمارات', value: 'uae' },
-    { name: 'مصر', value: 'egypt' }
+    { name: 'السعودية', value: 'saudi', id: 1 },
+    { name: 'الإمارات', value: 'uae', id: 2 },
+    { name: 'مصر', value: 'egypt', id: 3 }
 ]);
 
 const regionOptions = ref([
-    { name: 'الرياض', value: 'riyadh' },
-    { name: 'جدة', value: 'jeddah' },
-    { name: 'الدمام', value: 'dammam' }
+    { name: 'الرياض', value: 'riyadh', id: 1 },
+    { name: 'جدة', value: 'jeddah', id: 2 },
+    { name: 'الدمام', value: 'dammam', id: 3 },
 ]);
 
 // Progress calculation
@@ -513,11 +527,116 @@ const updateAddress = async () => {
     }, 100);
 };
 
+// API submission for Step 1
+const submitStep1 = async () => {
+    loading.value = true;
+    try {
+        // Create FormData from form reference (this will include all fields with name attribute)
+        const fd = new FormData(step1Form.value);
+        
+        // Append images (they don't have name attributes in the form)
+        if (uploadedImage.value) {
+            fd.append('project_logo', uploadedImage.value);
+        }
+        if (uploadedProfileImage.value) {
+            fd.append('project_logo', uploadedProfileImage.value);
+        }
+        
+        console.log('Submitting Step 1...');
+        
+        const res = await axios.post('provider/auth/complete-account-first-step', fd);
+        
+        console.log('Step 1 Response:', res);
+        
+        if (res.data && res.data.success) {
+            successToast(res.data.message || 'تم حفظ بيانات المرحلة الأولى بنجاح');
+            nextStep();
+        } else {
+            errorToast(res.data?.message || 'حدث خطأ أثناء حفظ بيانات المرحلة الأولى');
+        }
+        
+    } catch (error) {
+        console.error('Step 1 error:', error);
+        errorToast(error.response?.data?.message || 'حدث خطأ أثناء حفظ بيانات المرحلة الأولى');
+    } finally {
+        loading.value = false;
+    }
+};
+
+// API submission for Step 2
+const submitStep2 = async () => {
+    loading.value = true;
+    try {
+        // Create FormData from form reference (this will include all fields with name attribute)
+        const fd = new FormData(step2Form.value);
+        // fd.append('category_id', mainSection.value);
+        // fd.append('region_id', region.value);
+        // fd.append('map_desc', address.value);
+        // fd.append('commercial_reg_number', commercialRegNumber.value);
+        console.log('Submitting Step 2...');
+        console.log(region.value, "fd fd fd fd");
+        const res = await axios.post('provider/auth/complete-account-second-step', fd);
+        
+        console.log('Step 2 Response:', res);
+        
+        if (res.data && res.data.success) {
+            successToast(res.data.message || 'تم حفظ بيانات المرحلة الثانية بنجاح');
+            nextStep();
+        } else {
+            errorToast(res.data?.message || 'حدث خطأ أثناء حفظ بيانات المرحلة الثانية');
+        }
+        
+    } catch (error) {
+        console.error('Step 2 error:', error);
+        errorToast(error.response?.data?.message || 'حدث خطأ أثناء حفظ بيانات المرحلة الثانية');
+    } finally {
+        loading.value = false;
+    }
+};
+
+// API submission for Step 3
+const submitStep3 = async () => {
+    loading.value = true;
+    try {
+        // Create FormData from form reference (this will include all fields with name attribute)
+        const fd = new FormData(step3Form.value);
+        
+        // All fields (bankName, accountNumber, accountHolderName, iban) 
+        // are already included via FormInput name attributes
+        
+        console.log('Submitting Step 3...');
+        
+        const res = await axios.post('provider/auth/complete-account', fd);
+        
+        console.log('Step 3 Response:', res);
+        
+        if (res.data && res.data.success) {
+            successToast(res.data.message || 'تم إكمال التسجيل بنجاح');
+            // Reset form on success
+            resetForm();
+            // Navigate to home or login page
+            setTimeout(() => {
+                navigateTo('/');
+            }, 1500);
+        } else {
+            errorToast(res.data?.message || 'حدث خطأ أثناء حفظ بيانات المرحلة الثالثة');
+        }
+        
+    } catch (error) {
+        console.error('Step 3 error:', error);
+        errorToast(error.response?.data?.message || 'حدث خطأ أثناء حفظ بيانات المرحلة الثالثة');
+    } finally {
+        loading.value = false;
+    }
+};
+
 // Form submission - exactly like login
 const handleSubmit = async () => {
     if (currentStep.value === 1) {
         showValidation.value = true;
-        const imagesValid = imageUploader.value?.validate() || false;
+        const logoValid = logoUploader.value?.validate() || false;
+        const profileImageValid = profileImageUploader.value?.validate() || false;
+        const imagesValid = logoValid && profileImageValid;
         const isValid = isFormValid(formData.value, validations);
         console.log('Is Valid:', isValid);
         
@@ -527,8 +646,8 @@ const handleSubmit = async () => {
             console.log("22222222222");
         } else {
             console.log("11111111111 - Validation Passed");
-            // Move to next step
-            nextStep();
+            // Submit Step 1 API
+            await submitStep1();
         }
     } else if (currentStep.value === 2) {
         showValidation.value = true;
@@ -538,9 +657,11 @@ const handleSubmit = async () => {
         if (!isValid || !isAddressValid) {
             scrollToFirstError(formDataStep2.value, validationsStep2);
             console.log("Step 2 validation failed");
+
         } else {
             console.log("Step 2 validation passed");
-            nextStep();
+            // Submit Step 2 API
+            await submitStep2();
         }
     } else if (currentStep.value === 3) {
         showValidation.value = true;
@@ -551,53 +672,12 @@ const handleSubmit = async () => {
             console.log("Step 3 validation failed");
         } else {
             console.log("Step 3 validation passed");
-            // Final submission
-            await submitCompleteInfo();
+            // Submit Step 3 API
+            await submitStep3();
         }
     }
 };
 
-const submitCompleteInfo = async () => {
-    loading.value = true;
-    try {
-        // Create FormData from the form reference
-        const fd = new FormData(completeInfoForm.value);
-        
-        // Only append elements that don't have name attribute
-        
-        // Step 1 Files - Logo and Profile Images (from image uploaders)
-        fd.append('logo', uploadedImage.value);
-        fd.append('profile_image', uploadedProfileImage.value);
-        
-        // Step 2 Data - Dropdowns (don't have name attribute)
-        fd.append('main_section', mainSection.value || '');
-        fd.append('country', country.value || '');
-        fd.append('region', region.value || '');
-        fd.append('address', address.value || '');
-        
-        console.log('Submitting complete info...', completeInfoForm.value);
-        console.log('FormData contents:', Object.fromEntries(fd));
-        
-        const res = await axios.post('complete-info', fd);
-        
-        console.log('Response:', res);
-        
-        // Handle success response
-        if (res.data && res.data.success) {
-            successToast(res.data.message || 'تم إرسال البيانات بنجاح');
-            // Reset form on success
-            resetForm();
-        } else {
-            errorToast(res.data?.message || 'حدث خطأ أثناء إرسال البيانات');
-        }
-        
-    } catch (error) {
-        console.error('Complete info error:', error);
-        errorToast(error.response?.data?.message || 'حدث خطأ أثناء إرسال البيانات');
-    } finally {
-        loading.value = false;
-    }
-};
 
 // Reset form function
 const resetForm = () => {

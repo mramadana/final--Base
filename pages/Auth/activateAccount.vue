@@ -72,8 +72,9 @@ const verificationCode = async () => {
 
     fd.append('code', bindModal.value);
     fd.append('phone', user.value.phone);
-    fd.append('country_code', user.value.country_code);
-    fd.append('device_id', notificationToken.value);
+    fd.append('country_code', user.value.country_id);
+    // fd.append('device_id', notificationToken.value);
+    fd.append('device_id', 111);
     fd.append('device_type', 'web');
 
     // Get Returned Data From Store
@@ -86,17 +87,27 @@ const verificationCode = async () => {
 // Resend code function
 const resendCode = async () => {
     try {
-        const res = await axios.get(`resend-code?country_code=${user.value.country_code}&phone=${user.value.phone}`);
-        if (response(res) == "success") {
+        const fd = new FormData();
+        fd.append("country_code", user.value.country_id);
+        fd.append("phone", user.value.phone);
+
+        const res = await axios.post("provider/auth/resend-code", fd);
+
+        if (response(res) === "success") {
             successToast(res.data.msg);
         } else {
             errorToast(res.data.msg);
         }
     } catch (err) {
-        console.log(err);
-        errorToast('حدث خطأ أثناء إعادة الإرسال');
+        console.error("Resend Code Error:", err);
+
+        errorToast(
+            err?.response?.data?.msg ||
+            "حدث خطأ أثناء إعادة إرسال الكود"
+        );
     }
-}
+};
+
 
 // Start countdown on mount
 onMounted(() => {

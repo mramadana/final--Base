@@ -222,7 +222,8 @@
         "complete_info" : "استكمال البيانات",
         "category" : "التصنيف",
         "wallet_balance" : "رصيد المحفظة",
-        "charge_balance" : "شحن المحفظة"
+        "charge_balance" : "شحن المحفظة",
+        "search_here" : "ابحث هنا"
     },
 
     "Sidebar": {

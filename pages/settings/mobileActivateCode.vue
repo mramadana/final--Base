@@ -84,7 +84,7 @@ const verificationCode = async () => {
     
     // fd.append('code', bindModal.value);
     // fd.append('phone', newPhone.value);
-    // fd.append('country_code', user.value.country_code);
+    // fd.append('country_code', user.value.country_id);
     
     // try {
     //     const res = await axios.post("change-phone-check-code", fd, config);
@@ -112,7 +112,7 @@ const resendCode = async () => {
     try {
         const fd = new FormData();
         fd.append('phone', newPhone.value);
-        fd.append('country_code', user.value.country_code);
+        fd.append('country_code', user.value.country_id);
         
         const res = await axios.post(`provider/change-phone-resend-code`, fd, config);
         

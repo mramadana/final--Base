@@ -252,18 +252,6 @@ function handleMapUpdate(newLat, newLng, newAddress) {
 </script>
 
 <style lang="scss">
-    .dirmain {
-        .main_input {
-            width: 100%;
-        }
-    }
-
-    .main_input {
-        &.search_here {
-            border: 1px solid #eee;
-            background-color: #eee;
-        }
-    }
 
     .flex-group-me {
         justify-content: center;
@@ -311,5 +299,20 @@ function handleMapUpdate(newLat, newLng, newAddress) {
         position: relative;
         flex-grow: 1;
         padding-inline-end: 10px;
+    }
+</style>
+
+<style lang="scss" scoped>
+
+    .main_input {
+        background-color: transparent !important;
+        border-color: #ddd !important;
+        &.search_here {
+            border: 1px solid #eee;
+            background-color: #eee;
+        }
+        input {
+            color: #000 !important;
+        }
     }
 </style>

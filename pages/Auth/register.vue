@@ -20,18 +20,17 @@
                             <label class="label">
                                 {{ $t("Auth.mobile_number") }}
                             </label>
-                            <div class="with_cun_select" 
-                                 :class="{ 'is-invalid': phoneInputRef?.shouldShowError }">
+                            <div class="with_cun_select" :class="{ 'is-invalid': phoneInputRef?.shouldShowError }">
                                 <FormInput ref="phoneInputRef" v-model:modelValue="phone" name="phone" type="number"
                                     :placeholder="$t('Auth.enter_mobile_number')" :validation-schema="validations.phone"
-                                    :showErrors="showValidation" :moveErrorToParent="true" :hasIcon="true" icon="/_nuxt/assets/images/auth-img/mobile.svg"
-                                    :with_icon="true" />
+                                    :showErrors="showValidation" :moveErrorToParent="true" :hasIcon="true"
+                                    icon="/_nuxt/assets/images/auth-img/mobile.svg" :with_icon="true" />
                                 <GlobalCountryDropdown v-model="selectedCountry"
                                     :placeholder="$t('Auth.select_country')" />
                             </div>
                             <!-- Display validation error message for phone -->
-                            <p v-if="phoneInputRef?.shouldShowError" class="error-message text-danger mt-1" 
-                               :class="phoneInputRef?.localeDir">
+                            <p v-if="phoneInputRef?.shouldShowError" class="error-message text-danger mt-1"
+                                :class="phoneInputRef?.localeDir">
                                 {{ phoneInputRef?.errorMessage }}
                             </p>
                         </div>
@@ -195,6 +194,8 @@ const signUp = async () => {
         console.log("Validation Failed");
     } else {
         console.log("Validation Passed");
+        console.log(selectedCountry.value, "56565665")
+
         loading.value = true;
 
         try {
@@ -204,18 +205,17 @@ const signUp = async () => {
             fd.append("email", email.value);
             fd.append("password", password.value);
             fd.append("password_confirmation", confirmPassword.value);
-            // fd.append("country_code", selectedCountry.value?.key || "");
-            fd.append("country_id", 1);
+            fd.append("country_id", selectedCountry.value?.id || "");
             fd.append("device_id", 111);
             fd.append("device_type", "web");
 
-            // Get Returned Data From Store
             const res = await signUpHandler(fd);
-            console.log(res, "res res res res res");
-            if (response(res) === "success") {
+            console.log(res, "res");
+
+            if (res.status === "success") {
                 successToast(res.msg);
                 successRegister.value = true;
-                // Reset form on success
+
                 name.value = "";
                 phone.value = "";
                 email.value = "";
@@ -224,14 +224,14 @@ const signUp = async () => {
                 selectedCountry.value = null;
                 showValidation.value = false;
             } else {
+                // 👈 هنا الرسالة اللي جاية من الباك
                 errorToast(res.msg);
             }
-        } catch (error) {
-            console.error("Register error:", error);
-            errorToast(t("Auth.registration_failed"));
+
         } finally {
             loading.value = false;
         }
+
     }
 };
 
@@ -253,5 +253,4 @@ definePageMeta({
     border: 1px solid #e74c3c !important;
     box-shadow: 0 0 5px rgba(231, 76, 60, 0.3) !important;
 }
-
 </style>
