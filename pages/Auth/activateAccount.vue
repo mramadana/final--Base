@@ -70,12 +70,24 @@ const verificationCode = async () => {
     loading.value = true;
     const fd = new FormData();
 
+    // Get stored data from localStorage
+    let storedData = {};
+    if (process.client) {
+        const stored = localStorage.getItem('verificationCode');
+        if (stored) {
+            storedData = JSON.parse(stored);
+        }
+    }
+
     fd.append('code', bindModal.value);
     fd.append('phone', user.value.phone);
-    fd.append('country_code', user.value.country_id);
-    // fd.append('device_id', notificationToken.value);
+    fd.append('country_id', user.value.country_id);
     fd.append('device_id', 111);
     fd.append('device_type', 'web');
+    // Append stored data from register
+    if (storedData.name) fd.append('name', storedData.name);
+    if (storedData.email) fd.append('email', storedData.email);
+    if (storedData.password) fd.append('password', storedData.password);
 
     // Get Returned Data From Store
     const res = await verificationHandler(fd);

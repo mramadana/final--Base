@@ -48,7 +48,7 @@
                             icon="/_nuxt/assets/images/auth-img/lock.svg" :with_icon="true" />
 
                         <!-- Confirm Password input -->
-                        <FormInput v-model:modelValue="confirmPassword" name="confirmPassword" type="password"
+                        <FormInput v-model:modelValue="confirmPassword" name="password_confirmation" type="password"
                             :label="$t('Auth.confirm_password_sm')" :placeholder="$t('Auth.please_confirm_password')"
                             :validation-schema="validations.confirmPassword" :showErrors="showValidation"
                             :hasIcon="true" icon="/_nuxt/assets/images/auth-img/lock.svg" :with_icon="true" />
@@ -199,12 +199,8 @@ const signUp = async () => {
         loading.value = true;
 
         try {
-            const fd = new FormData();
-            fd.append("name", name.value);
-            fd.append("phone", phone.value);
-            fd.append("email", email.value);
-            fd.append("password", password.value);
-            fd.append("password_confirmation", confirmPassword.value);
+            const fd = new FormData(signUpForm.value);
+
             fd.append("country_id", selectedCountry.value?.id || "");
             fd.append("device_id", 111);
             fd.append("device_type", "web");
@@ -216,13 +212,17 @@ const signUp = async () => {
                 successToast(res.msg);
                 successRegister.value = true;
 
-                name.value = "";
-                phone.value = "";
-                email.value = "";
-                password.value = "";
-                confirmPassword.value = "";
-                selectedCountry.value = null;
-                showValidation.value = false;
+                // Store name, email, password in localStorage
+                if (process.client) {
+                    localStorage.setItem('verificationCode', JSON.stringify({
+                        name: name.value,
+                        email: email.value,
+                        password: password.value
+                    }));
+                }
+
+                showValidation.value = false; // This will auto-reset touched in all FormInputs
+
             } else {
                 // 👈 هنا الرسالة اللي جاية من الباك
                 errorToast(res.msg);

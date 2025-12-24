@@ -43,7 +43,7 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n';
-import { nextTick } from 'vue';
+import { nextTick, watch } from 'vue';
 
 
 const props = defineProps({
@@ -209,6 +209,11 @@ defineExpose({
   shouldShowError,
   errorMessage,
   localeDir
+});
+
+// Watch for showErrors to reset touched when validation passes
+watch(() => props.showErrors, (newVal) => {
+  if (!newVal) touched.value = false;
 });
 </script>
 
