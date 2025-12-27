@@ -76,7 +76,7 @@ export const useAuthStore = defineStore("auth", {
       if (response(resData) == "success") {
         this.token = resData.data.data.token;
         this.isLoggedIn = true;
-        navigateTo("/");
+        navigateTo("/Auth/completeInfo");
         return { status: "success", msg: resData.data.msg };
       } else {
         return { status: "error", msg: resData.data.msg };

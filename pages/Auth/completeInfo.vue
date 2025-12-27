@@ -143,7 +143,7 @@
                                 :showValidation="showValidation"
                                 :validation-schema="validationsStep2.mainSection"
                             />
-                            <input type="hidden" name="main_section" :value="mainSection || ''" />
+                            <input type="hidden" name="category_id" :value="mainSection || ''" />
 
                             <!-- Country Dropdown -->
                             <GlobalCustomDropdown 
@@ -167,7 +167,7 @@
                                 :showValidation="showValidation"
                                 :validation-schema="validationsStep2.region"
                             />
-                            <input type="hidden" name="region" :value="region || ''" />
+                            <input type="hidden" name="region_id" :value="region || ''" />
 
                             <!-- Location Input -->
                             <div class="position-relative single-input-upload mb-4">
@@ -192,7 +192,7 @@
                             <!-- Commercial Registration Number Input -->
                             <FormInput 
                                 v-model:modelValue="commercialRegNumber" 
-                                name="commercialRegNumber" 
+                                name="project_commercial_number" 
                                 type="text" 
                                 :label="$t('Auth.commercial_reg_number')"
                                 :placeholder="$t('Auth.commercial_reg_number')" 
@@ -233,7 +233,7 @@
                             <FormInput 
                                 v-model:modelValue="accountNumberField" 
                                 name="bank_account_number" 
-                                type="text" 
+                                type="number" 
                                 :label="$t('Auth.account_number')"
                                 :placeholder="$t('Auth.account_number')" 
                                 :validation-schema="validationsStep3.accountNumber"
@@ -388,6 +388,11 @@ const step3Form = ref(null);
 const uploadedImage = ref([]);
 const uploadedProfileImage = ref([]);
 const resetImageTrigger = ref(0);
+
+// config
+const config = computed(() => {
+    return { headers: { Authorization: `Bearer ${token.value}` } }
+});
 // Axios
 const axios = useApi();
 // Validation schemas
@@ -427,24 +432,27 @@ const validationsStep3 = {
 };
 
 // Dropdown options
-const sectionOptions = ref([
-    { name: 'مستلزمات الأطفال', value: 'baby_supplies', id: 1 },
-    { name: 'الأعشاب', value: 'herbs', id: 2 },
-    { name: 'الطبخ', value: 'cuisine', id: 3 },
-    { name: 'الطبخ', value: 'cuisine' }
-]);
+const sectionOptions = ref([]);
 
-const countryOptions = ref([
-    { name: 'السعودية', value: 'saudi', id: 1 },
-    { name: 'الإمارات', value: 'uae', id: 2 },
-    { name: 'مصر', value: 'egypt', id: 3 }
-]);
+const countryOptions = ref([]);
 
-const regionOptions = ref([
-    { name: 'الرياض', value: 'riyadh', id: 1 },
-    { name: 'جدة', value: 'jeddah', id: 2 },
-    { name: 'الدمام', value: 'dammam', id: 3 },
-]);
+// Fetch categories and countries on mount
+onMounted(async () => {
+    const categoriesRes = await axios.get('provider/available-categories', config.value);
+    sectionOptions.value = categoriesRes.data.data || [];
+    
+    const countriesRes = await axios.get('get-countries', config.value);
+    countryOptions.value = countriesRes.data.data || [];
+});
+
+const regionOptions = ref([]);
+
+watch(country, async (countryId) => {
+    if (countryId) {
+        const res = await axios.get(`get-regions?country_id=${countryId}`, config.value);
+        regionOptions.value = res.data.data || [];
+    }
+});
 
 // Progress calculation
 const progressWidth = computed(() => {
@@ -522,6 +530,8 @@ const updateAddress = async () => {
 
     setTimeout(() => {
         address.value = "المنصورة، محافظة الدقهلية";
+        location.value.lat = 31.015635713337954;
+        location.value.lng = 31.56269999573431;
         visible.value = false;
         locationLoading.value = false;
     }, 100);
@@ -539,25 +549,26 @@ const submitStep1 = async () => {
             fd.append('project_logo', uploadedImage.value);
         }
         if (uploadedProfileImage.value) {
-            fd.append('project_logo', uploadedProfileImage.value);
+            fd.append('project_cover', uploadedProfileImage.value);
         }
         
         console.log('Submitting Step 1...');
         
-        const res = await axios.post('provider/auth/complete-account-first-step', fd);
+        const res = await axios.post('provider/auth/complete-account-first-step', fd , config.value);
         
         console.log('Step 1 Response:', res);
         
-        if (res.data && res.data.success) {
-            successToast(res.data.message || 'تم حفظ بيانات المرحلة الأولى بنجاح');
+        if (res.data && res.data.key == "success") {
+            successToast(res.data.msg || 'تم حفظ بيانات المرحلة الأولى بنجاح');
             nextStep();
         } else {
-            errorToast(res.data?.message || 'حدث خطأ أثناء حفظ بيانات المرحلة الأولى');
+            console.log(res.data.msg, "res.data res.data res.data");
+            errorToast(res.data?.msg || 'حدث خطأ أثناء حفظ بيانات المرحلة الأولى');
         }
         
     } catch (error) {
         console.error('Step 1 error:', error);
-        errorToast(error.response?.data?.message || 'حدث خطأ أثناء حفظ بيانات المرحلة الأولى');
+        errorToast(error.response?.data?.msg || 'حدث خطأ أثناء حفظ بيانات المرحلة الأولى');
     } finally {
         loading.value = false;
     }
@@ -575,20 +586,20 @@ const submitStep2 = async () => {
         // fd.append('commercial_reg_number', commercialRegNumber.value);
         console.log('Submitting Step 2...');
         console.log(region.value, "fd fd fd fd");
-        const res = await axios.post('provider/auth/complete-account-second-step', fd);
+        const res = await axios.post('provider/auth/complete-account-second-step', fd, config.value);
         
         console.log('Step 2 Response:', res);
         
-        if (res.data && res.data.success) {
-            successToast(res.data.message || 'تم حفظ بيانات المرحلة الثانية بنجاح');
+        if (res.data && res.data.key == "success") {
+            successToast(res.data.msg || 'تم حفظ بيانات المرحلة الثانية بنجاح');
             nextStep();
         } else {
-            errorToast(res.data?.message || 'حدث خطأ أثناء حفظ بيانات المرحلة الثانية');
+            errorToast(res.data?.msg || 'حدث خطأ أثناء حفظ بيانات المرحلة الثانية');
         }
         
     } catch (error) {
         console.error('Step 2 error:', error);
-        errorToast(error.response?.data?.message || 'حدث خطأ أثناء حفظ بيانات المرحلة الثانية');
+        errorToast(error.response?.data?.msg || 'حدث خطأ أثناء حفظ بيانات المرحلة الثانية');
     } finally {
         loading.value = false;
     }
@@ -606,25 +617,24 @@ const submitStep3 = async () => {
         
         console.log('Submitting Step 3...');
         
-        const res = await axios.post('provider/auth/complete-account', fd);
+        const res = await axios.post('provider/auth/complete-account', fd, config.value);
         
         console.log('Step 3 Response:', res);
         
-        if (res.data && res.data.success) {
-            successToast(res.data.message || 'تم إكمال التسجيل بنجاح');
+        if (res.data && res.data.key == "success") {
+            successToast(res.data.msg || 'تم إكمال التسجيل بنجاح');
             // Reset form on success
-            resetForm();
             // Navigate to home or login page
             setTimeout(() => {
                 navigateTo('/');
-            }, 1500);
+            }, 500);
         } else {
-            errorToast(res.data?.message || 'حدث خطأ أثناء حفظ بيانات المرحلة الثالثة');
+            errorToast(res.data?.msg || 'حدث خطأ أثناء حفظ بيانات المرحلة الثالثة');
         }
         
     } catch (error) {
         console.error('Step 3 error:', error);
-        errorToast(error.response?.data?.message || 'حدث خطأ أثناء حفظ بيانات المرحلة الثالثة');
+        errorToast(error.response?.data?.msg || 'حدث خطأ أثناء حفظ بيانات المرحلة الثالثة');
     } finally {
         loading.value = false;
     }
