@@ -375,7 +375,7 @@ const logoUploader = ref(null);
 const profileImageUploader = ref(null);
 
 // Step management
-const currentStep = ref(3);
+const currentStep = ref(1);
 const loading = ref(false);
 const showValidation = ref(false);
 
@@ -626,7 +626,7 @@ const submitStep3 = async () => {
             // Reset form on success
             // Navigate to home or login page
             setTimeout(() => {
-                navigateTo('/');
+                navigateTo('/Auth/terms');
             }, 500);
         } else {
             errorToast(res.data?.msg || 'حدث خطأ أثناء حفظ بيانات المرحلة الثالثة');

@@ -1,6 +1,5 @@
 <template>
     <div class="w-100">
-
         <img src="@/assets/images/Logo.svg" alt="login-image" class="logo-image d-block mx-auto mb-4" />
 
         <h1 class="main-title text-center md bold mb-4">{{ $t("Auth.complete_payment") }}</h1>
@@ -88,6 +87,14 @@ definePageMeta({
     layout: "auth",
 });
 
+const { token } = storeToRefs(
+    useAuthStore()
+);
+// config
+const config = computed(() => {
+    return { headers: { Authorization: `Bearer ${token.value}` } }
+});
+
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n({ useScope: 'global' });
@@ -95,7 +102,7 @@ const { t } = useI18n({ useScope: 'global' });
 const globalStore = useGlobalStore();
 
 // Reactive data
-const selectedPaymentMethod = ref('');
+const selectedPaymentMethod = ref(true);
 const showSuccessModal = ref(false);
 const loading = ref(false);
 

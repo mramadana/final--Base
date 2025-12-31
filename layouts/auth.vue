@@ -4,7 +4,7 @@
       <div class="container_auth">
         <div class="auth-layout">
           <div class="inner-Auth">
-            <div class="header-Auth">
+            <div v-if="!hideHeader" class="header-Auth">
               <button v-if="showBackLink" @click="handleCustomBack" class="back-link back-button">
                 <i class="fa-solid fa-chevron-right fz-15 ml-1"></i>
                 {{ $t('Auth.back') }}
@@ -37,6 +37,7 @@ const route = useRoute();
 // Get back link configuration from page meta
 const showBackLink = computed(() => route.meta.showBackLink || false);
 const hasCustomHandler = computed(() => route.meta.customBackHandler || false);
+const hideHeader = computed(() => route.meta.hideHeader || false);
 
 // Get reference to the page component
 const pageRef = ref(null);

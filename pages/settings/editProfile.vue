@@ -114,21 +114,21 @@ const validations = {
     accountHolderName: accountHolderName("Auth.account_holder_name")
 };
 
-const config = {
-    headers: { Authorization: `Bearer ${token.value}` }
-};
+const config = computed(() => {
+    return { headers: { Authorization: `Bearer ${token.value}` } };
+});
 
 // Get profile data
 const getProfile = async () => {
     try {
-        const res = await axios.get('provider/show-profile', config);
-        if (response(res) == "success") {
-            name.value = res.data.data.name || '';
-            email.value = res.data.data.email || '';
-            bankNameField.value = res.data.data.bank_name || '';
-            accountNumberField.value = res.data.data.account_number || '';
-            accountHolderNameField.value = res.data.data.account_holder_name || '';
-        }
+        const res = await axios.get('provider/profile', config.value);
+        const profileData = res.data.data;
+        console.log(profileData, 'profileData');
+        name.value = profileData.name || '';
+        email.value = profileData.email || '';
+        bankNameField.value = profileData.bank_information?.bank_name || '';
+        accountNumberField.value = profileData.bank_information?.bank_account_number || '';
+        accountHolderNameField.value = profileData.bank_information?.bank_account_name || '';
     } catch (err) {
         console.log(err);
         errorToast('حدث خطأ أثناء تحميل البيانات');
@@ -152,17 +152,17 @@ const editProfile = async () => {
         loading.value = true;
 
         try {
-            const res = await profileHandler(fd);
+            const res = await axios.post('provider/profile/update-profile-data', fd, config.value);
 
-            if (res.status == "success") {
-                successToast(res.msg);
+            if (response(res) == "success") {
+                successToast(res.data.msg);
                 successfullyChange.value = true;
                 setTimeout(() => {
                     successfullyChange.value = false;
                     navigateTo("/settings");
                 }, 1000);
             } else {
-                errorToast(res.msg);
+                errorToast(res.data.msg);
             }
         } catch (err) {
             console.log(err);

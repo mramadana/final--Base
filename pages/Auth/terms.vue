@@ -1,24 +1,23 @@
 <template>
-    <div>
+    <div class="w-100 mt-4">
 
         <img src="@/assets/images/Logo.svg" alt="login-image" class="logo-image d-block mx-auto mb-4" />
 
-        <h1 class="main-title text-center md bold mb-4">{{ $t("Auth.terms_and_conditions") }}</h1>
+        <h1 class="main-title text-center md bold mb-4">
+            {{ $t("Auth.terms_and_conditions") }}
+        </h1>
 
         <div class="text-layout w-100 mb-4">
 
-
-            <div class="main-title normal mt-3 about_disc" v-if="loading">
-                عند إتمام الحجز سيتم إرسال رسالة تأكيد عبر التطبيق أو البريد الإلكتروني.بعض المطاعم قد تطلب دفع مبلغ
-                مقدم لتأكيد الحجز.في حال التأخير عن الموعد المحدد قد يتم إلغاء الحجز دون استرداد المبلغ المدفوع
+            <!-- loading -->
+            <div v-if="loading" class="text-center">
+                <Skeleton v-for="i in 8" :key="i" height="1rem" width="100%" class="rounded-5 mb-3 mx-auto"></Skeleton>
             </div>
 
-            <!-- <div v-if="loading">
-                <div v-for="i in 8" :key="i">
-                    <Skeleton height=".5rem" width="100%" class="rounded-0 mb-2 mx-auto"></Skeleton>
-                </div>
-            </div> -->
+            <!-- content -->
+            <div v-else-if="termsContent" class="main-title normal mt-3 about_disc" v-html="termsContent"></div>
 
+            <!-- checkbox -->
             <div class="radios form-group check-inner mt-4 mb-4">
                 <div class="d-flex gap-3">
                     <label class="custom-radio custom-check">
@@ -37,15 +36,20 @@
                 </div>
             </div>
 
-            <button class="custom-btn w-100">
-                {{ $t("Auth.create_terms_account") }}
+            <!-- submit -->
+            <button class="custom-btn w-100" @click="submitApproval" :disabled="submitting">
+                <div>{{ $t("Auth.create_terms_account") }}</div>
+                <div v-if="submitting">
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                </div>
             </button>
         </div>
 
         <!-- success modal -->
-        <Dialog v-model:visible="accept_create_acount" modal class="custum_dialog_width without-close" :draggable="false">
+        <Dialog v-model:visible="accept_create_acount" modal class="custum_dialog_width without-close"
+            :draggable="false">
             <div class="text-center">
-                <img src="@/assets/images/check_img.svg" alt="check-img" class="check-img lg" loading="lazy" />
+                <img src="@/assets/images/Success.gif" alt="check-img" class="check-img lg" loading="lazy" />
                 <h1 class="main-title bold mb-3 hint_success">
                     {{ $t("Auth.hint_success") }}
                 </h1>
@@ -57,44 +61,97 @@
 </template>
 
 <script setup>
-
 definePageMeta({
     name: "Auth.terms_and_conditions",
     layout: "auth",
     showBackLink: true,
+    hideHeader: true,
+})
+
+import { useI18n } from "vue-i18n"
+
+const { t } = useI18n({ useScope: "global" })
+
+const globalStore = useGlobalStore()
+const axios = useApi()
+const { response } = responseApi()
+const { successToast, errorToast } = toastMsg()
+const { token } = storeToRefs(
+    useAuthStore()
+);
+
+// config
+const config = computed(() => {
+    return { headers: { Authorization: `Bearer ${token.value}` } }
 });
 
-import { useI18n } from 'vue-i18n';
+const loading = ref(true)
+const submitting = ref(false)
+const terms = ref(false)
+const termsContent = ref("")
+const accept_create_acount = ref(false)
 
-const { t } = useI18n({ useScope: 'global' });
+/**
+ * تنظيف الـ HTML من \r\n و \\r\\n
+ */
+const cleanHtml = (html) => {
+    if (!html) return ""
+    return html
+        .replace(/\\r\\n/g, "") // \\r\\n
+        .replace(/\r\n/g, "")   // \r\n
+        .replace(/\n/g, "")     // \n
+}
 
-const globalStore = useGlobalStore();
-
-const accept_create_acount = ref(false);
-
-const loading = ref(true);
-
-const { response } = responseApi();
-
-const axios = useApi();
-
-const terms = ref('');
-
+/**
+ * Get Terms
+ */
 const getTerms = async () => {
-    loading.value = true;
-    await axios.get(`terms`).then(res => {
-        if (response(res) == "success") {
-            terms.value = res.data.data;
+    loading.value = true
+    try {
+        const res = await axios.get("terms/user")
+        if (response(res) === "success") {
+            termsContent.value = cleanHtml(res.data.data)
         }
-        loading.value = false;
-    }).catch(err => {
-        console.error(err);
-    });
-};
+    } catch (err) {
+        console.error(err)
+    } finally {
+        loading.value = false
+    }
+}
+
+/**
+ * Submit Approval
+ */
+const submitApproval = async () => {
+    // التحقق من موافقة الشروط والأحكام أولاً
+    if (!terms.value) {
+        errorToast(t("validation.conditions"))
+        return
+    }
+
+    submitting.value = true
+    try {
+        const res = await axios.post("provider/auth/temporary-approve-by-admin", {}, config.value)
+        if (response(res) === "success") {
+            accept_create_acount.value = true
+            successToast(res.data.msg)
+            setTimeout(() => {
+                accept_create_acount.value = false
+                navigateTo('/Auth/completePayment')
+            }, 500)
+        } else {
+            errorToast(res.data.msg)
+        }
+    } catch (err) {
+        console.error(err)
+        errorToast("حدث خطأ أثناء الإرسال")
+    } finally {
+        submitting.value = false
+    }
+}
 
 onMounted(() => {
-    getTerms();
-    // globalStore.title = t('Auth.terms_and_conditions');
+    getTerms()
 })
 </script>
 
