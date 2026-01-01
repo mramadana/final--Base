@@ -60,14 +60,6 @@ const { successToast, errorToast } = toastMsg();
 // Axios
 const axios = useApi();
 
-// pinia store
-import { storeToRefs } from 'pinia';
-import { useAuthStore } from '~/stores/auth';
-
-// Store
-const store = useAuthStore();
-const { user } = storeToRefs(store);
-
 // Get phone and country_id from localStorage
 const forgetPasswordPhone = ref('');
 const forgetPasswordCountryId = ref('');
