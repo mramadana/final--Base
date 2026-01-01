@@ -28,16 +28,33 @@ export const useAuthStore = defineStore("auth", {
 
     async signInHandler(formData) {
 
-      const { data, error } = await submitApiForm("sign-in", formData);
+      const { data, error } = await submitApiForm("provider/auth/login", formData);
     
       if (error) {
         console.error("Sign-in error:", error);
         return { status: "error", msg: error.message || "An error occurred" };
       }
+
+      console.log(data, "data");
+      console.log("Data key:", data.key);
   
       if (data.key === "needActive") {
+        console.log("Redirecting to activate account");
         navigateTo("/Auth/activateAccount");
         return { status: "needActive", msg: "Activation required" };
+      }
+
+      if (data.key === "need_active_package") {
+        console.log("Redirecting to complete payment");
+        navigateTo("/Auth/completePayment");
+        return { status: "need_active_package", msg: "Active package required" };
+      }
+      
+      // Debug: Check for any variation of the key
+      if (data.key && data.key.includes("package")) {
+        console.log("Found package-related key:", data.key);
+        navigateTo("/Auth/completePayment");
+        return { status: "need_active_package", msg: "Active package required" };
       }
     
       if (data.key === "success") {

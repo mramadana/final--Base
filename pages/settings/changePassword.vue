@@ -18,7 +18,7 @@
                     <!-- New Password -->
                     <FormInput 
                         v-model:modelValue="password" 
-                        name="password" 
+                        name="new_password" 
                         type="password" 
                         :label="$t('Auth.new_password')"
                         :placeholder="$t('Auth.please_enter_password')" 
@@ -29,7 +29,7 @@
                     <!-- Confirm Password -->
                     <FormInput 
                         v-model:modelValue="confirmPassword" 
-                        name="confirmPassword" 
+                        name="new_password_confirmation" 
                         type="password" 
                         :label="$t('Auth.definitely_new_password')"
                         :placeholder="$t('Auth.please_confirm_password')" 
@@ -46,6 +46,14 @@
                 </div>
             </div>
         </form>
+
+        <!-- Success Dialog -->
+        <Dialog v-model:visible="successfullyChange" modal class="custum_dialog_width without-close" :draggable="false">
+            <div class="text-center">
+                <img src="@/assets/images/Success.gif" alt="check-img" class="check-img">
+                <h3 class="main-title bold mb-4">{{ $t('settings.saved_successfully') }}</h3>
+            </div>
+        </Dialog>
     </div>
 </template>
 
@@ -85,6 +93,7 @@ const formData = computed(() => ({
 const loading = ref(false);
 const showValidation = ref(false);
 const changePasswordForm = ref(null);
+const successfullyChange = ref(false);
 
 // use the composable for the validation
 const { isFormValid, scrollToFirstError } = useFormValidation();
@@ -138,11 +147,15 @@ const changePassword = async () => {
         loading.value = true;
 
         try {
-            const res = await axios.post(`provider/update-password`, fd, config);
+            const res = await axios.post(`provider/profile/update-password`, fd, config);
             
             if (response(res) == "success") {
                 successToast(res.data.msg);
-                navigateTo('/settings');
+                successfullyChange.value = true;
+                setTimeout(() => {
+                    successfullyChange.value = false;
+                    navigateTo('/settings');
+                }, 1000);
             } else {
                 errorToast(res.data.msg);
             }

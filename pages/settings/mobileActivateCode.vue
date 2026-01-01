@@ -78,43 +78,37 @@ const verificationCode = async () => {
         errorToast(t("validation.verification_code"));
         return;
     }
-    navigateTo('/settings/newMobileNumber');
-    // loading.value = true;
-    // const fd = new FormData();
     
-    // fd.append('code', bindModal.value);
-    // fd.append('phone', newPhone.value);
-    // fd.append('country_code', user.value.country_id);
+    loading.value = true;
+    const fd = new FormData();
     
-    // try {
-    //     const res = await axios.post("change-phone-check-code", fd, config);
+    fd.append('code', bindModal.value);
+    
+    try {
+        const res = await axios.post("provider/profile/change-phone/verify-current-phone", fd, config);
         
-    //     if (response(res) == "success") {
-    //         successfullySent.value = true;
-    //         newPhone.value = null;
-    //         setTimeout(() => {
-    //             successfullySent.value = false;
-    //             navigateTo('/settings');
-    //         }, 1000);
-    //     } else {
-    //         errorToast(res.data.msg);
-    //     }
-    // } catch (err) {
-    //     console.log(err);
-    //     errorToast('حدث خطأ أثناء التحقق من الكود');
-    // }
+        if (response(res) == "success") {
+            successToast(res.data.msg);
+            navigateTo('/settings/newMobileNumber');
+        } else {
+            errorToast(res.data.msg);
+        }
+    } catch (err) {
+        console.log(err);
+        errorToast('حدث خطأ أثناء التحقق من الكود');
+    }
     
-    // loading.value = false;
+    loading.value = false;
 }
 
 // Resend code function
 const resendCode = async () => {
     try {
         const fd = new FormData();
-        fd.append('phone', newPhone.value);
+        fd.append('phone', user.value.phone);
         fd.append('country_code', user.value.country_id);
         
-        const res = await axios.post(`provider/change-phone-resend-code`, fd, config);
+        const res = await axios.post(`provider/profile/change-phone/send-code-to-new-phone`, fd, config);
         
         if (response(res) == "success") {
             successToast(res.data.msg);

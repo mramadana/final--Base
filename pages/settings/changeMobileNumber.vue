@@ -7,7 +7,7 @@
                     <!-- Password -->
                     <FormInput 
                         v-model:modelValue="password" 
-                        name="password" 
+                        name="old_password" 
                         type="password" 
                         :label="$t('Auth.password')"
                         :placeholder="$t('Auth.please_enter_password')" 
@@ -88,26 +88,25 @@ const changePhone = async () => {
         console.log("Validation Failed");
     } else {
         console.log("Validation Passed");
-        navigateTo('/settings/mobileActivateCode');
-        // loading.value = true;
+        loading.value = true;
 
-        // const fd = new FormData(changePhoneForm.value);
+        const fd = new FormData(changePhoneForm.value);
 
-        // try {
-        //     const res = await axios.post('provider/update-phone', fd, config);
+        try {
+            const res = await axios.post('provider/profile/change-phone/check-current-password-and-send-code', fd, config);
             
-        //     if (response(res) == "success") {
-        //         successToast(res.data.msg);
-        //         navigateTo('/settings');
-        //     } else {
-        //         errorToast(res.data.msg);
-        //     }
-        // } catch (err) {
-        //     console.log(err);
-        //     errorToast('حدث خطأ أثناء تغيير رقم الجوال');
-        // }
+            if (response(res) == "success") {
+                successToast(res.data.msg);
+                navigateTo('/settings/mobileActivateCode');
+            } else {
+                errorToast(res.data.msg);
+            }
+        } catch (err) {
+            console.log(err);
+            errorToast('حدث خطأ أثناء تغيير رقم الجوال');
+        }
 
-        // loading.value = false;
+        loading.value = false;
     }
 };
 

@@ -306,7 +306,7 @@
         "confirm_code" : "الرجاء ادخال رمز التفعيل المرسل عبر رقم الجوال",
         "save_changes" : "حفظ التغير",
         "calibration_standards" : "المعاير الخاصه بالمكان",
-        "saved_successfully" : "تم حفظ التغير بنجاح"
+        "saved_successfully" : "تم حفظ التعديل بنجاح"
     },
 
     "reservationDetails": {

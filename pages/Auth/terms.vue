@@ -122,6 +122,34 @@ const getTerms = async () => {
 /**
  * Submit Approval
  */
+// const submitApproval = async () => {
+//     // التحقق من موافقة الشروط والأحكام أولاً
+//     if (!terms.value) {
+//         errorToast(t("validation.conditions"))
+//         return
+//     }
+
+//     submitting.value = true
+//     try {
+//         const res = await axios.post("provider/auth/temporary-approve-by-admin", {}, config.value)
+//         if (response(res) === "success") {
+//             accept_create_acount.value = true
+//             successToast(res.data.msg)
+//             setTimeout(() => {
+//                 accept_create_acount.value = false
+//                 navigateTo('/Auth/completePayment')
+//             }, 500)
+//         } else {
+//             errorToast(res.data.msg)
+//         }
+//     } catch (err) {
+//         console.error(err)
+//         errorToast("حدث خطأ أثناء الإرسال")
+//     } finally {
+//         submitting.value = false
+//     }
+// }
+
 const submitApproval = async () => {
     // التحقق من موافقة الشروط والأحكام أولاً
     if (!terms.value) {
@@ -129,25 +157,13 @@ const submitApproval = async () => {
         return
     }
 
-    submitting.value = true
-    try {
-        const res = await axios.post("provider/auth/temporary-approve-by-admin", {}, config.value)
-        if (response(res) === "success") {
-            accept_create_acount.value = true
-            successToast(res.data.msg)
-            setTimeout(() => {
-                accept_create_acount.value = false
-                navigateTo('/Auth/completePayment')
-            }, 500)
-        } else {
-            errorToast(res.data.msg)
-        }
-    } catch (err) {
-        console.error(err)
-        errorToast("حدث خطأ أثناء الإرسال")
-    } finally {
-        submitting.value = false
-    }
+    accept_create_acount.value = true
+    setTimeout(() => {
+        accept_create_acount.value = false
+        setTimeout(() => {
+            navigateTo('/Auth/completePayment')
+        }, 1000)
+    }, 1500)
 }
 
 onMounted(() => {

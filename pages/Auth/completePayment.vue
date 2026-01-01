@@ -21,10 +21,12 @@
                     <div class="price-section d-flex align-items-center justify-content-between mt-3 custom-payment">
                         
                         <div class="country-info d-flex align-items-center gap-2">
-                            <span class="country-text">{{ $t("Auth.subscription_value_country") }}</span>
+                            <Skeleton v-if="!packageData.package_price" width="120px" height="20px" />
+                            <span v-else class="country-text">{{ $t("Auth.subscription_value_country") }} {{ packageData.package_price }} {{ packageData.currency }}</span>
                         </div>
 
-                        <img src="@/assets/images/ksa-img.svg" alt="Saudi Flag" class="country-flag" />
+                        <Skeleton v-if="!packageData.country_flag" width="35px" height="25px" borderRadius="2px" />
+                        <img v-else :src="packageData.country_flag" alt="Country Flag" class="country-flag" />
 
                     </div>
                 </div>
@@ -62,8 +64,8 @@
 
             <!-- Complete Payment Button -->
             <button class="custom-btn w-100" @click="processPayment" :disabled="!selectedPaymentMethod || loading">
-                <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                 {{ $t("Auth.complete_payment_process") }}
+                <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
             </button>
         </div>
 
@@ -105,31 +107,63 @@ const globalStore = useGlobalStore();
 const selectedPaymentMethod = ref(true);
 const showSuccessModal = ref(false);
 const loading = ref(false);
+const packageData = ref({
+    package_price: '',
+    country_flag: '',
+    currency: ''
+});
 
 const { response } = responseApi();
 const axios = useApi();
 const { successToast, errorToast } = toastMsg();
 
+// Fetch available package
+const fetchAvailablePackage = async () => {
+    try {
+        const response = await axios.get('provider/subscription/get-available-package', config.value);
+        
+        if (response.data.key === 'success') {
+            packageData.value = response.data.data;
+            console.log('Package data fetched:', packageData.value);
+        } else {
+            errorToast(response.data.msg || 'Failed to fetch package data');
+        }
+    } catch (error) {
+        console.error('Error fetching package:', error);
+        errorToast('Error loading package information');
+    }
+};
+
 // Process the actual payment
 const processPayment = async () => {
+    if (!selectedPaymentMethod.value) {
+        errorToast('Please select a payment method');
+        return;
+    }
+    
     loading.value = true;
     
     try {
-        // Simulate payment processing
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        const response = await axios.post('provider/subscription', 
+            { package_id: 1 }, 
+            config.value
+        );
         
-        // Here you would make the actual API call
-        // const response = await axios.post('process-payment', paymentData);
-        
-        // Show success modal
-        showSuccessModal.value = true;
-        
-        successToast(t('Auth.payment_completed_successfully'));
-        
-        // Redirect after success
-        setTimeout(() => {
-            navigateTo('/');
-        }, 3000);
+        if (response.data.key === 'success') {
+            // Show success modal
+            showSuccessModal.value = true;
+            successToast(t('Auth.payment_completed_successfully'));
+            
+            // Close modal and redirect after 1 second
+            setTimeout(() => {
+                showSuccessModal.value = false;
+                setTimeout(() => {
+                    navigateTo('/');
+                }, 100);
+            }, 1000);
+        } else {
+            errorToast(response.data.msg || 'Payment failed');
+        }
         
     } catch (error) {
         console.error('Payment error:', error);
@@ -140,8 +174,9 @@ const processPayment = async () => {
 };
 
 onMounted(() => {
-    // Initialize component
+    // Initialize component and fetch package data
     console.log('Complete Payment page mounted');
+    fetchAvailablePackage();
 });
 
 </script>

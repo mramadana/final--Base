@@ -15,19 +15,30 @@
                         :showErrors="showValidation" />
 
                     <!-- اسم البنك -->
-                    <FormInput v-model:modelValue="bankNameField" name="bankName" type="text"
+                    <FormInput v-model:modelValue="bankNameField" name="bank_name" type="text"
                         :label="$t('Auth.bank_name')" :placeholder="$t('Auth.bank_name')"
                         :validation-schema="validations.bankName" :showErrors="showValidation" />
 
                     <!-- رقم الحساب -->
-                    <FormInput v-model:modelValue="accountNumberField" name="accountNumber" type="text"
+                    <FormInput v-model:modelValue="accountNumberField" name="bank_account_number" type="text"
                         :label="$t('Auth.account_number')" :placeholder="$t('Auth.account_number')"
                         :validation-schema="validations.accountNumber" :showErrors="showValidation" />
 
                     <!-- اسم صاحب الحساب -->
-                    <FormInput v-model:modelValue="accountHolderNameField" name="accountHolderName" type="text"
+                    <FormInput v-model:modelValue="accountHolderNameField" name="bank_account_name" type="text"
                         :label="$t('Auth.account_holder_name')" :placeholder="$t('Auth.account_holder_name')"
                         :validation-schema="validations.accountHolderName" :showErrors="showValidation" />
+
+                    <!-- رقم IBAN -->
+                    <FormInput 
+                        v-model:modelValue="ibanField" 
+                        name="bank_iban_number" 
+                        type="text" 
+                        :label="$t('Auth.iban')"
+                        :placeholder="$t('Auth.iban')" 
+                        :validation-schema="validations.iban"
+                        :showErrors="showValidation" 
+                    />
 
                     <!-- Submit button -->
                     <button type="submit" class="custom-btn md" :disabled="loading">
@@ -44,8 +55,8 @@
         <!-- Success Dialog -->
         <Dialog v-model:visible="successfullyChange" modal class="custum_dialog_width without-close" :draggable="false">
             <div class="text-center">
-                <img src="@/assets/images/check.png" alt="check-img" class="check-img">
-                <h3 class="main-title bold mb-4">{{ $t('Global.Saving_changes_success') }}</h3>
+                <img src="@/assets/images/Success.gif" alt="check-img" class="check-img">
+                <h3 class="main-title bold mb-4">{{ $t('settings.saved_successfully') }}</h3>
             </div>
         </Dialog>
     </div>
@@ -79,6 +90,7 @@ const email = ref('');
 const bankNameField = ref('');
 const accountNumberField = ref('');
 const accountHolderNameField = ref('');
+const ibanField = ref('');
 
 // Form data (reactive object for validation)
 const formData = computed(() => ({
@@ -86,7 +98,8 @@ const formData = computed(() => ({
     email: email.value,
     bankName: bankNameField.value,
     accountNumber: accountNumberField.value,
-    accountHolderName: accountHolderNameField.value
+    accountHolderName: accountHolderNameField.value,
+    iban: ibanField.value
 }));
 
 const successfullyChange = ref(false);
@@ -103,7 +116,8 @@ const {
     email: emailValidation,
     bankName,
     accountNumber,
-    accountHolderName
+    accountHolderName,
+    iban
 } = useValidationSchema();
 
 const validations = {
@@ -111,7 +125,8 @@ const validations = {
     email: emailValidation("Auth.email"),
     bankName: bankName("Auth.bank_name"),
     accountNumber: accountNumber("Auth.account_number"),
-    accountHolderName: accountHolderName("Auth.account_holder_name")
+    accountHolderName: accountHolderName("Auth.account_holder_name"),
+    iban: iban("Auth.iban")
 };
 
 const config = computed(() => {
@@ -129,6 +144,7 @@ const getProfile = async () => {
         bankNameField.value = profileData.bank_information?.bank_name || '';
         accountNumberField.value = profileData.bank_information?.bank_account_number || '';
         accountHolderNameField.value = profileData.bank_information?.bank_account_name || '';
+        ibanField.value = profileData.bank_information?.bank_iban_number || '';
     } catch (err) {
         console.log(err);
         errorToast('حدث خطأ أثناء تحميل البيانات');

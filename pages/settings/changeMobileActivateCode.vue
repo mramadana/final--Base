@@ -72,34 +72,32 @@ const verificationCode = async () => {
         return;
     }
 
-    successfullySent.value = true
-
-    // loading.value = true;
-    // const fd = new FormData();
+    loading.value = true;
+    const fd = new FormData();
     
-    // fd.append('code', bindModal.value);
-    // fd.append('phone', newPhone.value);
-    // fd.append('country_code', user.value.country_id);
+    fd.append('code', bindModal.value);
+    fd.append('phone', newPhone.value);
+    fd.append('country_code', user.value.country_id);
     
-    // try {
-    //     const res = await axios.post("change-phone-check-code", fd, config);
+    try {
+        const res = await axios.post("provider/profile/change-phone/verify-new-phone", fd, config);
         
-    //     if (response(res) == "success") {
-    //         successfullySent.value = true;
-    //         newPhone.value = null;
-    //         setTimeout(() => {
-    //             successfullySent.value = false;
-    //             navigateTo('/settings');
-    //         }, 1000);
-    //     } else {
-    //         errorToast(res.data.msg);
-    //     }
-    // } catch (err) {
-    //     console.log(err);
-    //     errorToast('حدث خطأ أثناء التحقق من الكود');
-    // }
+        if (response(res) == "success") {
+            successfullySent.value = true;
+            newPhone.value = null;
+            setTimeout(() => {
+                successfullySent.value = false;
+                navigateTo('/settings');
+            }, 1000);
+        } else {
+            errorToast(res.data.msg);
+        }
+    } catch (err) {
+        console.log(err);
+        errorToast('حدث خطأ أثناء التحقق من الكود');
+    }
     
-    // loading.value = false;
+    loading.value = false;
 }
 
 // Resend code function
@@ -109,7 +107,7 @@ const resendCode = async () => {
         fd.append('phone', newPhone.value);
         fd.append('country_code', user.value.country_id);
         
-        const res = await axios.post(`provider/change-phone-resend-code`, fd, config);
+        const res = await axios.post(`provider/profile/change-phone/send-code-to-new-phone`, fd, config);
         
         if (response(res) == "success") {
             successToast(res.data.msg);

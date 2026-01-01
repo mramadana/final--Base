@@ -131,17 +131,15 @@
             loading.value = true;
             
             try {
-                const fd = new FormData();
-                fd.append('phone_email', phone.value);
-                fd.append('password', password.value);
-                fd.append('country_code', selectedCountry.value?.key || '');
+                const fd = new FormData(loginForm.value);
+                fd.append('country_id', selectedCountry.value?.id || '');
                 fd.append('device_id', 111);
                 fd.append('device_type', 'web');
     
                 // Get Returned Data From Store
                 const res = await signInHandler(fd);
-                
-                if (response(res) === "success") {
+                console.log(res, "reseeeeeeeee");
+                if (res.status === "success") {
                     successToast(res.msg);
                     // Reset form on success
                     phone.value = '';

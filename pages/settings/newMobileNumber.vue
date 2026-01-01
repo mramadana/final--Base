@@ -48,7 +48,7 @@ const { t } = useI18n({ useScope: 'global' });
 
 // Store
 const store = useAuthStore();
-const { token } = storeToRefs(store);
+const { token, newPhone } = storeToRefs(store);
 const { phoneHandler } = store;
 
 // Response & Toast
@@ -99,26 +99,27 @@ const changePhone = async () => {
         console.log("Validation Failed");
     } else {
         console.log("Validation Passed");
-        navigateTo('/settings/changeMobileActivateCode');
-        // loading.value = true;
+        loading.value = true;
 
-        // const fd = new FormData(changePhoneForm.value);
+        const fd = new FormData(changePhoneForm.value);
+        fd.append('country_code', selectedCountry.value.id);
 
-        // try {
-        //     const res = await axios.post('provider/update-phone', fd, config);
+        try {
+            const res = await axios.post('provider/profile/change-phone/send-code-to-new-phone', fd, config);
             
-        //     if (response(res) == "success") {
-        //         successToast(res.data.msg);
-        //         navigateTo('/settings');
-        //     } else {
-        //         errorToast(res.data.msg);
-        //     }
-        // } catch (err) {
-        //     console.log(err);
-        //     errorToast('حدث خطأ أثناء تغيير رقم الجوال');
-        // }
+            if (response(res) == "success") {
+                successToast(res.data.msg);
+                navigateTo('/settings/changeMobileActivateCode');
+                newPhone.value = phone.value;
+            } else {
+                errorToast(res.data.msg);
+            }
+        } catch (err) {
+            console.log(err);
+            errorToast('حدث خطأ أثناء إرسال الكود');
+        }
 
-        // loading.value = false;
+        loading.value = false;
     }
 };
 </script>
