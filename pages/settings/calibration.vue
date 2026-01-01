@@ -5,8 +5,19 @@
 
             <h4 class="main-title md mb-4">{{ $t("settings.calibration_standards") }}</h4>
 
-            <div class="row">
-                <div v-for="(item, index) in calibrationData" :key="index" class="col-lg-4 col-md-6 col-12 mb-3">
+            <!-- Skeleton Loading -->
+            <div v-if="loading" class="row">
+                <div v-for="n in 6" :key="n" class="col-lg-4 col-md-6 col-12 mb-3">
+                    <div class="payment-field skeleton p-2 d-flex align-items-center justify-content-between">
+                        <div class="skeleton-text mb-0"></div>
+                        <div class="skeleton-checkbox"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actual Data -->
+            <div v-else class="row">
+                <div v-for="(item, index) in calibrationData" :key="item.id || index" class="col-lg-4 col-md-6 col-12 mb-3">
                     <div class="d-flex align-items-center justify-content-between payment-field h-100">
 
                         <div class="check-text hint d-flex">
@@ -64,38 +75,96 @@ import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n({ useScope: 'global' });
 
+// Store
+const store = useAuthStore();
+const { token } = storeToRefs(store);
+
+// Response & Toast
+const { response } = responseApi();
+const { successToast, errorToast } = toastMsg();
+
+// Axios
+const axios = useApi();
+
 // Reactive data - This will come from backend
-const calibrationData = ref([
-    { calibration: 'المعايير', selected: false },
-    { calibration: 'المعايير', selected: true },
-    { calibration: 'المعايير', selected: false },
-    { calibration: 'المعايير', selected: true },
-    { calibration: 'المعايير', selected: false },
-    { calibration: 'المعايير', selected: false }
-]);
+const calibrationData = ref([]);
 
 const showSuccessModal = ref(false);
 const loading = ref(false);
 
-const { successToast, errorToast } = toastMsg();
+// Config
+const config = {
+    headers: { Authorization: `Bearer ${token.value}` }
+};
 
 // Save calibration settings
-const saveCalibration = () => {
+const saveCalibration = async () => {
     const selectedItems = calibrationData.value.filter(item => item.selected);
     console.log('Selected calibration items:', selectedItems);
     
-    // Here you would make the actual API call
-    // await axios.post('save-calibration', { items: selectedItems });
+    loading.value = true;
     
-    successToast(t('Settings.calibration_saved_successfully'));
-    showSuccessModal.value = true;
+    try {
+        // Prepare data for API - send as array of IDs
+        const selectedIds = calibrationData.value
+            .filter(item => item.selected)
+            .map(item => item.id)
+            .filter(id => id !== undefined); // Filter out items without IDs
+        
+        const fd = new FormData();
+        selectedIds.forEach((id, index) => {
+            fd.append(`standards[${index}]`, id);
+        });
+        
+        // Make API call to update standards
+        const res = await axios.post('provider/profile/standards/update', fd, config);
+        
+        if (response(res) === "success") {
+            successToast(t('settings.saved_successfully'));
+            showSuccessModal.value = true;
+            
+            // Close modal after 2 seconds
+            setTimeout(() => {
+                showSuccessModal.value = false;
+            }, 2000);
+        } else {
+            errorToast(res.data.msg);
+        }
+        
+    } catch (error) {
+        console.error('Error saving calibration:', error);
+        errorToast(t('settings.update_failed'));
+    } finally {
+        loading.value = false;
+    }
+};
+
+// Load calibration data from API
+const loadCalibrationData = async () => {
+    try {
+        loading.value = true;
+        const res = await axios.get('provider/profile/standards', config);
+        
+        if (response(res) === "success") {
+            const standards = res.data.data;
+            
+            // Transform API data to the format expected by the template
+            calibrationData.value = standards.map(standard => ({
+                calibration: standard.name || standard.title || standard.calibration,
+                selected: standard.selected || standard.is_selected || false,
+                id: standard.id
+            }));
+        }
+    } catch (error) {
+        console.error('Error loading calibration data:', error);
+        errorToast(t('settings.error_loading_data'));
+    } finally {
+        loading.value = false;
+    }
 };
 
 onMounted(() => {
-    // Fetch calibration data from backend
-    // const response = await axios.get('get-calibration-data');
-    // calibrationData.value = response.data;
-    console.log('Calibration page mounted');
+    loadCalibrationData();
 });
 
     const globalStore = useGlobalStore();
@@ -110,6 +179,40 @@ onMounted(() => {
     background-color: #FFFFFF0F;
     border-radius: 10px;
 }
+
+/* Skeleton Loading Styles */
+.skeleton {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    
+    .skeleton-text {
+        height: 20px;
+        width: 70%;
+        background: rgba(137, 137, 137, 30%);
+        border-radius: 4px;
+        margin-bottom: 10px;
+    }
+    
+    .skeleton-checkbox {
+        width: 20px;
+        height: 20px;
+        background: rgba(137, 137, 137, 30%);
+        border-radius: 50%;
+    }
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
 .custom-radio {
     cursor: pointer;
     

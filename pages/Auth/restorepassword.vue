@@ -13,14 +13,20 @@
             <label class="label">
               {{ $t('Auth.mobile_number') }}
             </label>
-            <div class="with_cun_select" :class="{ 'has-error': showValidation && phoneHasError }">
-              <FormInput v-model:modelValue="phone" name="phone" type="number" :placeholder="$t('Auth.mobile_number')"
-                :validation-schema="validations.phone" :showErrors="false" :hasIcon="true"
-                icon="/_nuxt/assets/images/auth-img/mobile.svg" :with_icon="true" />
-              <GlobalCountryDropdown v-model="selectedCountry" :placeholder="$t('Auth.select_country')" />
+            <div class="with_cun_select" 
+                 :class="{ 'is-invalid': phoneInputRef?.shouldShowError }">
+              <FormInput ref="phoneInputRef" v-model:modelValue="phone" name="phone" type="number"
+                :placeholder="$t('Auth.enter_mobile_number')" :validation-schema="validations.phone"
+                :showErrors="showValidation" :moveErrorToParent="true" :hasIcon="true" icon="/_nuxt/assets/images/auth-img/mobile.svg"
+                :with_icon="true" />
+              <GlobalCountryDropdown v-model="selectedCountry"
+                :placeholder="$t('Auth.select_country')" />
             </div>
             <!-- Display validation error message for phone -->
-            <p v-if="showValidation && phoneHasError" class="error-message text-danger mt-1">{{ phoneErrorMessage }}</p>
+            <p v-if="phoneInputRef?.shouldShowError" class="error-message text-danger mt-1" 
+               :class="phoneInputRef?.localeDir">
+              {{ phoneInputRef?.errorMessage }}
+            </p>
           </div>
 
           <button type="submit" class="custom-btn w-100 mr-auto">
@@ -76,9 +82,12 @@ import { useAuthStore } from '~/stores/auth';
 
 // Store
 const store = useAuthStore();
-const { user } = storeToRefs(store);
+const { user, token } = storeToRefs(store);
 
-// success response
+// Config
+const config = {
+    headers: { Authorization: `Bearer ${token.value}` }
+};
 
 const forgetForm = ref(null);
 const phone = ref('');
@@ -86,31 +95,15 @@ const loading = ref(false);
 const errors = ref([]);
 const showValidation = ref(false);
 
+// FormInput ref for phone
+const phoneInputRef = ref(null);
+
 // Form data (reactive object for validation)
 const formData = computed(() => ({
   phone: phone.value
 }));
 
-// Phone validation computed properties
-const phoneHasError = computed(() => {
-  if (!validations.phone) return false;
-  try {
-    validations.phone.validateSync(phone.value);
-    return false;
-  } catch (error) {
-    return true;
-  }
-});
-
-const phoneErrorMessage = computed(() => {
-  if (!phoneHasError.value) return '';
-  try {
-    validations.phone.validateSync(phone.value);
-    return '';
-  } catch (error) {
-    return error.message;
-  }
-});
+// Phone validation computed properties - removed since using FormInput ref
 
 // use the composable for the validation - exactly like your example
 const { isFormValid, scrollToFirstError } = useFormValidation();
@@ -131,35 +124,29 @@ const forgetPassword = async () => {
   if (!isValid) {
     // if the validation fails, scroll to first error
     scrollToFirstError(formData.value, validations);
-    console.log("Validation Failed");
+    console.log("22222222222");
   } else {
-    console.log("Validation Passed");
+    console.log("11111111111 - Validation Passed");
     loading.value = true;
 
     try {
-      const fd = new FormData();
-      fd.append('phone', phone.value);
-      fd.append('country_code', selectedCountry.value?.key || '');
+      const fd = new FormData(forgetForm.value);
+      fd.append('country_id', selectedCountry.value?.id || '');
 
-      const { data, error } = await submitApiForm('forget-password-send-code', fd);
+      const res = await axios.post('provider/auth/forget-password/send-code', fd);
 
-      if (error) {
-        console.error("Forget Password error:", error);
-        errorToast(error.message || "An error occurred");
-        loading.value = false;
-        return;
-      }
-
-      if (data.key === "success") {
-        user.value.phone = phone.value;
-        user.value.country_id = selectedCountry.value.key;
-        successToast(data.msg);
+      if (response(res) === "success") {
+        // Store phone and country_id in localStorage for next page
+        localStorage.setItem('forgetPasswordPhone', phone.value);
+        localStorage.setItem('forgetPasswordCountryId', selectedCountry.value?.id || selectedCountry.value?.key || '');
+        
+        successToast(res.data.msg);
         // Reset form on success
         phone.value = '';
         showValidation.value = false;
         navigateTo('/Auth/restorepassword-check-code');
       } else {
-        errorToast(data.msg);
+        errorToast(res.data.msg);
       }
     } catch (error) {
       console.error('Forget Password error:', error);
@@ -173,8 +160,9 @@ const forgetPassword = async () => {
 </script>
 
 <style scoped>
-.with_cun_select.has-error {
+.with_cun_select.is-invalid {
   border: 1px solid #e74c3c !important;
   box-shadow: 0 0 5px rgba(231, 76, 60, 0.3) !important;
+  border-radius: 8px;
 }
 </style>

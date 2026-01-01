@@ -2,37 +2,37 @@
     <div class="container">
         <div class="custom-width with-auth">
             <h1 class="main-title bold lg mb-4">{{ $t("Auth.restore_password") }}</h1>
-            <form @submit.prevent="submitData" ref="confirmPasswordForm">
+            <form @submit.prevent="resetPassword" ref="confirmPasswordForm">
                 <div class="row">
                     <div class="col-12 col-md-8 mr-auto">
                         <div class="text-center mb-5">
                             <p class="main-title">{{ $t("Auth.confirm_password") }}</p>
                         </div>
-                        <div class="form-group">
-                            <label class="label">
-                                {{ $t('Auth.password') }}
-                            </label>
-                            <div class="main_input with_icon">
-                                <input :type="inputType('definitelyNewPassword')" name="password" v-model="password" class="custum-input-icon validInputs" :placeholder=" $t('Auth.please_enter_password') ">
-                                <button class="static-btn with_eye" type="button" @click="togglePasswordVisibility('definitelyNewPassword')" :class="{ 'active_class': passwordVisible.definitelyNewPassword }">
-                                <i class="far fa-eye icon"></i>
-                                </button>
-                            </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label class="label">
-                                {{ $t('Auth.confirm_password_sm') }}
-                            </label>
-                            <div class="main_input with_icon">
-                                <input :type="inputType('definitelyNewPassword_2')" name="password_confirmation" v-model="confirmPassword" class="custum-input-icon validInputs" :placeholder=" $t('Auth.please_confirm_password') ">
-                                <button class="static-btn with_eye" type="button" @click="togglePasswordVisibility('definitelyNewPassword_2')" :class="{ 'active_class': passwordVisible.definitelyNewPassword_2 }">
-                                <i class="far fa-eye icon"></i>
-                                </button>
-                            </div>
-                        </div>
+                        <!-- Password -->
+                        <FormInput 
+                            v-model:modelValue="password" 
+                            name="password" 
+                            type="password" 
+                            :label="$t('Auth.password')"
+                            :placeholder="$t('Auth.please_enter_password')" 
+                            :validation-schema="validations.password"
+                            :showErrors="showValidation" 
+                        />
 
-                        <button class="custom-btn w-100 mr-auto">
+                        <!-- Confirm Password -->
+                        <FormInput 
+                            v-model:modelValue="confirmPassword" 
+                            name="password_confirmation" 
+                            type="password" 
+                            :label="$t('Auth.confirm_password_sm')"
+                            :placeholder="$t('Auth.please_confirm_password')" 
+                            :validation-schema="validations.confirmPassword"
+                            :showErrors="showValidation" 
+                        />
+
+                        <!-- Submit button -->
+                        <button type="submit" class="custom-btn w-100 mr-auto" :disabled="loading">
                             {{ $t('Auth.confirmation') }}
                             <span class="spinner-border spinner-border-sm" v-if="loading" role="status" aria-hidden="true"></span>
                         </button>
@@ -40,85 +40,131 @@
                     </div>
                 </div>
             </form>
+
+            <!-- Success Dialog -->
+            <Dialog v-model:visible="successfullyChange" modal class="custum_dialog_width without-close" :draggable="false">
+                <div class="text-center">
+                    <img src="@/assets/images/Success.gif" alt="check-img" class="check-img">
+                    <h3 class="main-title bold mb-4">{{ $t('settings.saved_successfully') }}</h3>
+                </div>
+            </Dialog>
         </div>
     </div>
 </template>
 
 <script setup>
-    definePageMeta({
-        name: "Auth.new_password",
-        layout: 'auth'
-    });
+import { useI18n } from 'vue-i18n';
 
-    const { t } = useI18n({ useScope: 'global' });
-    import { useI18n } from 'vue-i18n';
-    const errors = ref([]);
-    const password = ref('');
-    const confirmPassword = ref('');
-    const { successToast, errorToast } = toastMsg();
-    const store = useAuthStore();
-    const { user } = storeToRefs(store);
-    const loading = ref(false);
-    const confirmPasswordForm = ref(null);
-    const passwordVisible = ref({
-        definitelyNewPassword: false,
-        definitelyNewPassword_2: false
-    });
+definePageMeta({
+    name: "Auth.new_password",
+    layout: 'auth'
+});
 
-    // Validation Function
-    function validate() {
-        let allInputs = document.querySelectorAll('.validInputs');
-        for (let i = 0; i < allInputs.length; i++) {
-            if (allInputs[i].value === '') {
-                errors.value.push(t(`validation.${allInputs[i].name}`));
-            }
-        }
+const { t } = useI18n({ useScope: 'global' });
 
-        if (password.value !== confirmPassword.value) {
-            errors.value.push(t(`validation.confirmPassword`));
-            console.log(password.value, "password");
-            console.log(confirmPassword.value, "confirmPassword");
-        }
+// Response & Toast
+const { response } = responseApi();
+const { successToast, errorToast } = toastMsg();
+
+// Axios
+const axios = useApi();
+
+// Get phone and country_id from localStorage
+const forgetPasswordPhone = ref('');
+const forgetPasswordCountryId = ref('');
+
+// Form Data
+const password = ref('');
+const confirmPassword = ref('');
+
+// Form data (reactive object for validation)
+const formData = computed(() => ({
+    password: password.value,
+    confirmPassword: confirmPassword.value
+}));
+
+const loading = ref(false);
+const showValidation = ref(false);
+const confirmPasswordForm = ref(null);
+const successfullyChange = ref(false);
+
+// use the composable for the validation
+const { isFormValid, scrollToFirstError } = useFormValidation();
+
+// Validation schemas
+const {
+    password: passwordValidation,
+} = useValidationSchema();
+
+const validations = {
+    password: passwordValidation("Auth.password"),
+    confirmPassword: passwordValidation("Auth.confirm_password_sm"),
+};
+
+// Custom validation function for confirm password
+const validateConfirmPassword = (formData, validations) => {
+    try {
+        validations.confirmPassword.validateSync(formData.confirmPassword);
+    } catch (error) {
+        return false;
     }
 
-    const inputType = (input) => {
-        return passwordVisible.value[input] ? 'text' : 'password';
-    };
+    if (formData.password !== formData.confirmPassword) {
+        return false;
+    }
 
-    const togglePasswordVisibility = (input) => {
-        passwordVisible.value[input] = !passwordVisible.value[input];
-    };
+    return true;
+};
 
-    const submitData = async () => {
-        const fd = new FormData(confirmPasswordForm.value);
-        fd.append('phone', user.value.phone);
-        fd.append('country_code', user.value.country_id);
-        fd.append('code', localStorage.getItem('newCode'));
+const resetPassword = async () => {
+    showValidation.value = true;
 
-        validate();
+    const fd = new FormData(confirmPasswordForm.value);
 
-        if (errors.value.length) {
-            errorToast(errors.value[0]);
-            loading.value = false;
-            errors.value = [];
-        } else {
-            loading.value = true;
-            const { data, error } = await submitApiForm("reset-password", fd);
+    const isValid = isFormValid(formData.value, validations);
+    const isConfirmPasswordValid = validateConfirmPassword(formData.value, validations);
 
-            if (error) {
-                console.error("Reset Password error:", error);
-                errorToast(error.message || "An error occurred");
-                loading.value = false;
-                return;
-            }
+    if (!isValid) {
+        scrollToFirstError(formData.value, validations);
+        console.log("Validation Failed");
+    } else if (!isConfirmPasswordValid) {
+        errorToast(t("validation.confirmPassword"));
+        console.log("Confirm Password doesn't match");
+    } else {
+        console.log("Validation Passed");
+        loading.value = true;
 
-            if (data.key === "success") {
-                successToast(data.msg);
-                navigateTo('/Auth/login');
+        try {
+            // Add phone and country_id from localStorage
+            fd.append('phone', forgetPasswordPhone.value);
+            fd.append('country_id', forgetPasswordCountryId.value);
+
+            const res = await axios.post(`provider/auth/forget-password/reset-password`, fd);
+            
+            if (response(res) == "success") {
+                successToast(res.data.msg);
+                successfullyChange.value = true;
+                setTimeout(() => {
+                    successfullyChange.value = false;
+                    navigateTo('/Auth/login');
+                }, 2000);
             } else {
-            errorToast(data.msg);
+                errorToast(res.data.msg);
             }
-            loading.value = false;
+        } catch (err) {
+            console.log(err);
+            errorToast(t('Auth.error_occurred'));
         }
-    };
+
+        loading.value = false;
+    }
+};
+
+// Load data from localStorage on mount
+onMounted(() => {
+    // Get phone and country_id from localStorage
+    forgetPasswordPhone.value = localStorage.getItem('forgetPasswordPhone') || '';
+    forgetPasswordCountryId.value = localStorage.getItem('forgetPasswordCountryId') || '';
+});
+
 </script>

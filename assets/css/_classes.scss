@@ -572,7 +572,8 @@ margin: 0;
 .single-input-upload {
   input {
     cursor: pointer;
-    height: 100%;
+    // height: 100%;
+    height: 45px;
     opacity: 0;
     overflow: hidden;
     position: absolute;

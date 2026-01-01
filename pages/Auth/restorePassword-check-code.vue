@@ -68,6 +68,10 @@ import { useAuthStore } from '~/stores/auth';
 const store = useAuthStore();
 const { user } = storeToRefs(store);
 
+// Get phone and country_id from localStorage
+const forgetPasswordPhone = ref('');
+const forgetPasswordCountryId = ref('');
+
 // Variables
 const loading = ref(false);
 const bindModal = ref("");
@@ -83,27 +87,20 @@ const verificationCode = async () => {
   const fd = new FormData();
 
   fd.append('code', bindModal.value);
-  fd.append('phone', user.value.phone);
-  fd.append('country_code', user.value.country_id);
+  fd.append('phone', forgetPasswordPhone.value);
+  fd.append('country_id', forgetPasswordCountryId.value);
 
   try {
-    const { data, error } = await submitApiForm("forget-password-check-code", fd);
+    const res = await axios.post('provider/auth/forget-password/verify-code', fd);
 
-    if (error) {
-      console.error("Verification Code error:", error);
-      errorToast(error.message || "An error occurred");
-      loading.value = false;
-      return;
-    }
-
-    if (data.key === "success") {
-      successToast(data.msg);
+    if (response(res) === "success") {
+      successToast(res.data.msg);
       showSuccessModal.value = true;
       setTimeout(() => {
-        navigateTo('/Auth/login');
+        navigateTo('/Auth/confirmPassword');
       }, 3000);
     } else {
-      errorToast(data.msg);
+      errorToast(res.data.msg);
     }
   } catch (error) {
     console.error('Verification error:', error);
@@ -116,27 +113,34 @@ const verificationCode = async () => {
 // Resend code function
 const resendCode = async () => {
   try {
-    const { data, error } = await fetchApiData(`forget-password-resend-code?country_code=${user.value.country_id}&phone=${user.value.phone}`);
+    const fd = new FormData();
+    fd.append('phone', forgetPasswordPhone.value);
+    fd.append('country_id', forgetPasswordCountryId.value);
+    
+    const res = await axios.post('provider/auth/resend-code', fd);
 
-    if (error) {
-      console.error("Resend Code error:", error);
-      errorToast(error.message || "An error occurred");
-      return;
-    }
-
-    if (data.key === "success") {
-      successToast(data.msg);
+    if (response(res) === "success") {
+      successToast(res.data.msg);
+      // Restart countdown
+      if (otpComponent.value) {
+        otpComponent.value.startCountdown();
+      }
     } else {
-      errorToast(data.msg);
+      errorToast(res.data.msg);
     }
-  } catch (err) {
-    console.log(err);
-    errorToast('حدث خطأ أثناء إعادة الإرسال');
+  } catch (error) {
+    console.error('Resend Code error:', error);
+    errorToast(t('Auth.error_occurred'));
   }
 }
 
-// Start countdown on mount
+// Load data from localStorage on mount
 onMounted(() => {
+  // Get phone and country_id from localStorage
+  forgetPasswordPhone.value = localStorage.getItem('forgetPasswordPhone') || '';
+  forgetPasswordCountryId.value = localStorage.getItem('forgetPasswordCountryId') || '';
+  
+  // Start countdown
   if (otpComponent.value) {
     otpComponent.value.startCountdown();
   }

@@ -260,6 +260,16 @@ export const useValidationSchema = () => {
         .max(3, label + " " + t('tables.max', { field: label, max: 3 }))
         .label(label);
 
+    // reservation duration number (similar to numberOfPeople but with proper translation)
+    const reservationDuration = (labelKey: string) =>
+      yup
+        .string()
+        .trim()
+        .required(t('validation.required_with_label', { field: t(labelKey) }))
+        .matches(/^[1-9][0-9]*$/, t('validation.reservation_duration_digits'))
+        .max(3, t(labelKey) + " " + t('tables.max', { field: t(labelKey), max: 3 }))
+        .label(t(labelKey));
+
     // table booking price
     const bookingPrice = (label: string) =>
       yup
@@ -340,6 +350,7 @@ export const useValidationSchema = () => {
     accountHolderName,
     tableNumber,
     numberOfPeople,
+    reservationDuration,
     bookingPrice,
     Notes,
     menuNameAr,

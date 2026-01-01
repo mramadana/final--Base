@@ -26,6 +26,16 @@
                         :label="$t('Auth.project_desc_en')" :placeholder="$t('Auth.project_desc_en')"
                         :validation-schema="validations.projectDescEn" :showErrors="showValidation" rows="4" />
 
+                    <!-- Project Commercial Number -->
+                    <FormInput v-model:modelValue="projectCommercialNumber" name="projectCommercialNumber" type="text"
+                        :label="$t('Auth.commerciaRumber')" :placeholder="$t('Auth.commerciaRumber')"
+                        :validation-schema="validations.projectCommercialNumber" :showErrors="showValidation" />
+
+                    <!-- Reservation Duration -->
+                    <FormInput v-model:modelValue="reservationDuration" name="reservationDuration" type="number"
+                        :label="$t('Auth.reservation_duration')" :placeholder="$t('Auth.reservation_duration')"
+                        :validation-schema="validations.reservationDuration" :showErrors="showValidation" />
+
                     <!-- Logo Upload -->
                     <div class="position-relative single-input-upload mb-4">
                         <div class="main_input special-input without-edit">
@@ -36,7 +46,7 @@
                         </div>
                         <!-- if you want to remove the validation, you can set the required to false
                         and remove showValidation -->
-                        <GlobalImgUploader ref="imageUploader" acceptedFiles="image/*" :resetTrigger="resetImageTrigger"
+                        <GlobalImgUploader ref="imageUploader" :newImages="project_cover" acceptedFiles="image/*" :resetTrigger="resetImageTrigger"
                             :showValidation="showValidation" :required="true"
                             :errorMessage="t('validation.attach_logo')"
                             @uploaded-images-updated="updateUploadedImages" />
@@ -52,21 +62,29 @@
                         </div>
                         <!-- if you want to remove the validation, you can set the required to false
                         and remove showValidation -->
-                        <GlobalImgUploader ref="profileImageUploader" acceptedFiles="image/*"
+                        <GlobalImgUploader ref="profileImageUploader" :newImages="project_logo" acceptedFiles="image/*"
                             :resetTrigger="resetImageTrigger" :showValidation="showValidation" :required="true"
                             :errorMessage="t('validation.attach_profile_image')"
                             @uploaded-images-updated="updateUploadedProfileImage" />
                     </div>
 
                     <!-- Update Button -->
-                    <button type="submit" class="custom-btn w-100 mr-auto" :disabled="loading">
-                        {{ $t('settings.update') }}
+                    <button type="submit" class="custom-btn md" :disabled="loading">
+                        {{ $t('settings.save_changes') }}
                         <span class="spinner-border spinner-border-sm" v-if="loading" role="status"
                             aria-hidden="true"></span>
                     </button>
                 </div>
             </div>
         </form>
+
+        <!-- Success Dialog -->
+        <Dialog v-model:visible="successfullyChange" modal class="custum_dialog_width without-close" :draggable="false">
+            <div class="text-center">
+                <img src="@/assets/images/Success.gif" alt="check-img" class="check-img">
+                <h3 class="main-title bold mb-4">{{ $t('settings.saved_successfully') }}</h3>
+            </div>
+        </Dialog>
 
     </div>
 </template>
@@ -96,17 +114,21 @@ const axios = useApi();
 const editProviderForm = ref(null);
 const imageUploader = ref(null);
 const profileImageUploader = ref(null);
-
+const project_cover = ref('');
+const project_logo = ref('');
 // Form fields
 const projectNameAr = ref("");
 const projectNameEn = ref("");
 const projectDescAr = ref("");
 const projectDescEn = ref("");
+const projectCommercialNumber = ref("");
+const reservationDuration = ref("");
 
 // Form state
 const loading = ref(false);
 const showValidation = ref(false);
 const resetImageTrigger = ref(0);
+const successfullyChange = ref(false);
 
 // Images
 const uploadedImage = ref([]);
@@ -116,14 +138,18 @@ const uploadedProfileImage = ref([]);
 const {
     customerName,
     projectDescription_ar,
-    projectDescription_en
+    projectDescription_en,
+    numberOfPeople,
+    reservationDuration: reservationDurationValidation
 } = useValidationSchema();
 
 const validations = {
     projectNameAr: customerName('Auth.project_name_ar'),
     projectNameEn: customerName('Auth.project_name_en'),
     projectDescAr: projectDescription_ar('Auth.project_desc_ar'),
-    projectDescEn: projectDescription_en('Auth.project_desc_en')
+    projectDescEn: projectDescription_en('Auth.project_desc_en'),
+    projectCommercialNumber: customerName('Auth.commerciaRumber'),
+    reservationDuration: reservationDurationValidation('Auth.reservation_duration')
 };
 
 // Form data (reactive object for validation)
@@ -131,7 +157,9 @@ const formData = computed(() => ({
     projectNameAr: projectNameAr.value,
     projectNameEn: projectNameEn.value,
     projectDescAr: projectDescAr.value,
-    projectDescEn: projectDescEn.value
+    projectDescEn: projectDescEn.value,
+    projectCommercialNumber: projectCommercialNumber.value,
+    reservationDuration: reservationDuration.value
 }));
 
 // Use the composable for the validation
@@ -160,11 +188,15 @@ const loadProviderData = async () => {
         if (response(res) === "success") {
             const providerData = res.data.data;
 
-            // Fill form with current data
+            // Fill form with current data - matching the API structure
             projectNameAr.value = providerData.project_name_ar || "";
             projectNameEn.value = providerData.project_name_en || "";
-            projectDescAr.value = providerData.project_desc_ar || "";
-            projectDescEn.value = providerData.project_desc_en || "";
+            projectDescAr.value = providerData.project_description_ar || "";
+            projectDescEn.value = providerData.project_description_en || "";
+            projectCommercialNumber.value = providerData.project_commercial_number || "";
+            reservationDuration.value = providerData.reservation_duration || "";
+            project_cover.value = providerData.project_cover || "";
+            project_logo.value = providerData.project_logo || "";
         }
     } catch (error) {
         console.error('Error loading provider data:', error);
@@ -191,25 +223,33 @@ const updateProvider = async () => {
 
         try {
             const fd = new FormData();
-            fd.append('project_name_ar', projectNameAr.value);
-            fd.append('project_name_en', projectNameEn.value);
-            fd.append('project_desc_ar', projectDescAr.value);
-            fd.append('project_desc_en', projectDescEn.value);
+            fd.append('project_name[ar]', projectNameAr.value);
+            fd.append('project_name[en]', projectNameEn.value);
+            fd.append('project_description[ar]', projectDescAr.value);
+            fd.append('project_description[en]', projectDescEn.value);
+            fd.append('project_commercial_number', projectCommercialNumber.value);
+            fd.append('reservation_duration', reservationDuration.value);
 
             // Add logo if uploaded
-            if (uploadedImage.value.length > 0) {
-                fd.append('logo', uploadedImage.value[0]);
-            }
+            fd.append('project_logo', uploadedImage.value);
+            // if (uploadedImage.value.length > 0) {
+            // }
 
             // Add profile image if uploaded
-            if (uploadedProfileImage.value.length > 0) {
-                fd.append('profile_image', uploadedProfileImage.value[0]);
-            }
+            fd.append('project_cover', uploadedProfileImage.value);
+            // if (uploadedProfileImage.value.length > 0) {
+            // }
 
-            const res = await axios.post('provider/update-profile', fd, config);
+            const res = await axios.post('provider/profile/update-project-data', fd, config);
 
             if (response(res) === "success") {
                 successToast(res.data.msg);
+                // Show success dialog
+                successfullyChange.value = true;
+                // Close dialog after 1000ms
+                setTimeout(() => {
+                    successfullyChange.value = false;
+                }, 2000);
                 // Reset validation
                 showValidation.value = false;
             } else {
