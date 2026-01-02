@@ -49,41 +49,41 @@ const route = useRoute();
     loading.value = false;
   });
 
-  const loadGoogleMaps = () => {
-    return new Promise((resolve, reject) => {
-        if (window.google && window.google.maps) {
-            resolve(window.google);
-        } else {
-            const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
-            if (existingScript) {
-                existingScript.addEventListener('load', () => resolve(window.google));
-                existingScript.addEventListener('error', () => reject(new Error('Error loading Google Maps API')));
-                if (window.google && window.google.maps) {
-                    resolve(window.google);
-                }
-            } else {
-                const script = document.createElement('script');
-                script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyBNLoYGrbnQI_GMqHt6m0PSN9yA7Zvq7gA&language=${myLange.value}&libraries=places&callback=initMap&loading=async`;
-                script.async = true;
-                script.defer = true;
-                window.initMap = () => resolve(window.google);
-                script.onerror = () => reject(new Error('Error loading Google Maps API'));
-                document.head.appendChild(script);
-            }
-        }
-    });
-};
+//   const loadGoogleMaps = () => {
+//     return new Promise((resolve, reject) => {
+//         if (window.google && window.google.maps) {
+//             resolve(window.google);
+//         } else {
+//             const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
+//             if (existingScript) {
+//                 existingScript.addEventListener('load', () => resolve(window.google));
+//                 existingScript.addEventListener('error', () => reject(new Error('Error loading Google Maps API')));
+//                 if (window.google && window.google.maps) {
+//                     resolve(window.google);
+//                 }
+//             } else {
+//                 const script = document.createElement('script');
+//                 script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyBNLoYGrbnQI_GMqHt6m0PSN9yA7Zvq7gA&language=${myLange.value}&libraries=places&callback=initMap&loading=async`;
+//                 script.async = true;
+//                 script.defer = true;
+//                 window.initMap = () => resolve(window.google);
+//                 script.onerror = () => reject(new Error('Error loading Google Maps API'));
+//                 document.head.appendChild(script);
+//             }
+//         }
+//     });
+// };
 
 const toggleActive = () => {
   isActive.value = !isActive.value;
 };
 
 onMounted(() => {
-  loadGoogleMaps().then((google) => {
-        console.log('Google Maps API loaded:', google);
-    }).catch((error) => {
-        console.error('Error loading Google Maps API:', error);
-    });
+  // loadGoogleMaps().then((google) => {
+  //       console.log('Google Maps API loaded:', google);
+  //   }).catch((error) => {
+  //       console.error('Error loading Google Maps API:', error);
+  //   });
     myLange.value = localStorage.getItem("locale");
 });
 

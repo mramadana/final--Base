@@ -8,15 +8,15 @@
                         <h3 class="card-title">أحدث التنبيهات</h3>
                     </div>
                     
-                    <div class="notifications-list" v-if="notifications.length > 0">
-                        <div v-for="(notif, index) in notifications" :key="index" class="notification-item">
+                    <div class="notifications-list" v-if="notificationsList.length > 0">
+                        <div v-for="(notif, index) in notificationsList" :key="notif.id || index" class="notification-item">
                             <div class="notif-content">
                                 <div class="notification">
                                     <img src="@/assets/images/notification-img.svg" alt="notification-img">
                                 </div>
                                 <div class="notif-text">
-                                    <p class="notif-message">{{ notif.message }}</p>
-                                    <span class="notif-time">{{ notif.time }}</span>
+                                    <p class="notif-message">{{ notif.body || notif.message }}</p>
+                                    <span class="notif-time">{{ notif.created_at || notif.time }}</span>
                                 </div>
                             </div>
                             <button class="delete-btn" @click="deleteNotification(index)">
@@ -79,20 +79,24 @@
                 <div class="info-card account-card">
                     <div class="card-header-section">
                         <h3 class="card-title">حالة الحساب</h3>
-                        <span class="status-badge inactive">
-                            <img src="@/assets/images/home-img/danger.svg" alt="inactive">
-                            غير مفعل
+                        <span :class="['status-badge', subscription?.is_active ? 'active' : 'inactive']">
+                            <img :src="subscription?.is_active ? '/_nuxt/assets/images/done.svg' : '/_nuxt/assets/images/home-img/danger.svg'" :alt="subscription?.is_active ? 'active' : 'inactive'">
+                            {{ subscription?.is_active ? 'مفعل' : 'غير مفعل' }}
                         </span>
                     </div>
                     
                     <div class="account-content">
-                        <p class="account-message">
+                        <p class="account-message" v-if="!subscription?.is_active">
                             يرجى اعادة الاشتراك لاعادة<br>
                             استخدام الحساب مرة اخرى
                         </p>
+                        <p class="account-message" v-else>
+                            اشتراكك نشط حتى<br>
+                            تاريخ انتهاء الاشتراك
+                        </p>
                         
-                        <div class="subscription-date">
-                            <span class="date-text">٢٥/٨/٢٥</span>
+                        <div class="subscription-date" v-if="subscription?.expiration_date">
+                            <span class="date-text">{{ formatDate(subscription.expiration_date) }}</span>
                         </div>
                     </div>
                     
@@ -106,16 +110,22 @@
 </template>
 
 <script setup>
-const notifications = ref([
-    {
-        message: 'تم إرسال طلب حجز جديد رقم #604',
-        time: 'منذ 1 ساعة'
+const props = defineProps({
+    notifications: {
+        type: Array,
+        default: () => []
     },
-    {
-        message: 'تم إرسال طلب حجز جديد رقم #604',
-        time: 'منذ 1 ساعة'
+    subscription: {
+        type: Object,
+        default: () => null
     }
-]);
+});
+
+const notificationsList = computed(() => {
+    return props.notifications && props.notifications.length > 0 
+        ? props.notifications 
+        : [];
+});
 
 const quickLinks = ref([
     {
@@ -135,7 +145,18 @@ const quickLinks = ref([
 ]);
 
 const deleteNotification = (index) => {
-    notifications.value.splice(index, 1);
+    // This would need to call an API to delete the notification
+    // For now, we'll just remove it from the local list
+    notificationsList.value.splice(index, 1);
+};
+
+const formatDate = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
 };
 </script>
 
@@ -172,6 +193,22 @@ const deleteNotification = (index) => {
         padding: 4px 12px;
         border-radius: 6px;
         font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        
+        &.active {
+            background-color: #4CAF50;
+        }
+        
+        &.inactive {
+            background-color: #F44336;
+        }
+        
+        img {
+            width: 16px;
+            height: 16px;
+        }
     }
 }
 

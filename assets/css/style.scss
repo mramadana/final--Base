@@ -1484,6 +1484,15 @@ input.p-inputtext.p-component {
   width: 500px;
   max-width: 100%;
   margin: 0 20px;
+
+  &.md {
+    width: 600px;
+  }
+
+
+  &.lg {
+    width: 1000px;
+  }
   * {
     font-family: 'main_font', "Font Awesome 6 Free";
   }
@@ -1516,9 +1525,6 @@ input.p-inputtext.p-component {
   }
   @media (max-width: $screen-xs) {
     width: calc(100% - 15px);
-  }
-  &.md {
-    width: 600px;
   }
 }
 

@@ -225,7 +225,8 @@
         "category" : "التصنيف",
         "wallet_balance" : "رصيد المحفظة",
         "charge_balance" : "شحن المحفظة",
-        "search_here" : "ابحث هنا"
+        "search_here" : "ابحث هنا",
+        "standards_title" : "المعايير الخاصة بالمكان"
     },
 
     "Sidebar": {
@@ -289,7 +290,12 @@
         "reservation_details": "تفاصيل الحجز",
         "reservations": "الحجوزات",
         "active_reservations": "استعرض جميع الحجوزات النشطة",
-        "scheduled_reservations": "استعرض جميع الحجوزات المجدولة"
+        "scheduled_reservations": "استعرض جميع الحجوزات المجدولة",
+        "in_progress_reservations": "حجز حتي لان",
+        "pending_reservations": "حجز واردة",
+        "completed_reservations": "حجز مكتمل",
+        "cancelled_reservations": "حجز ملغي حتي لان ",
+        "waiting_list_reservations": "حجز في قائمة االنتظار"
     },
 
     "settings": {

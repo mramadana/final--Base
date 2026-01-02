@@ -27,7 +27,7 @@
         </div>
         
         <!-- Success Modal -->
-        <Dialog v-model:visible="showSuccessModal" modal class="custum_dialog_width without-close" :draggable="false">
+        <!-- <Dialog v-model:visible="showSuccessModal" modal class="custum_dialog_width without-close" :draggable="false">
             <div class="text-center">
                 <img src="@/assets/images/Success.gif" alt="check-img" class="check-img lg" loading="lazy" />
                 <h1 class="main-title bold mb-3 hint_success">
@@ -35,7 +35,7 @@
                 </h1>
                 <p class="desc lg">{{ $t("Auth.password_reset_success_desc") }}</p>
             </div>
-        </Dialog>
+        </Dialog> -->
 
     </div>
 </template>
@@ -68,7 +68,7 @@ const forgetPasswordCountryId = ref('');
 const loading = ref(false);
 const bindModal = ref("");
 const otpComponent = ref(null);
-const showSuccessModal = ref(false);
+// const showSuccessModal = ref(false);
 // Verification function
 const verificationCode = async () => {
   if (!bindModal.value) {
@@ -87,10 +87,9 @@ const verificationCode = async () => {
 
     if (response(res) === "success") {
       successToast(res.data.msg);
-      showSuccessModal.value = true;
-      setTimeout(() => {
-        navigateTo('/Auth/confirmPassword');
-      }, 3000);
+      // Store verification code in localStorage
+      localStorage.setItem('forgetPasswordCode', bindModal.value);
+      navigateTo('/Auth/confirmPassword');
     } else {
       errorToast(res.data.msg);
     }

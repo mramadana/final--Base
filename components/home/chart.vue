@@ -29,6 +29,16 @@
 
 <script setup>
 
+const props = defineProps({
+    occupationPercentage: {
+        type: Object,
+        default: () => ({
+            busy_tables_ratio: "0.00",
+            free_tables_ratio: "0.00"
+        })
+    }
+});
+
 const echarts = await import("echarts/core");
 import { TooltipComponent, LegendComponent } from "echarts/components";
 import { PieChart } from "echarts/charts";
@@ -47,33 +57,38 @@ const chart = ref(null);
 const showOccupied = ref(false);
 const showAvailable = ref(false);
 
-const chartData = [
-  { 
-    value: 60, 
-    name: "نسبة الإشغال",
-    itemStyle: { color: "#E8E8E8" }
-  },
-  { 
-    value: 40, 
-    name: "المتاح",
-    itemStyle: { color: "#666666" }
-  },
-];
+const chartData = computed(() => {
+  const busyRatio = parseFloat(props.occupationPercentage?.busy_tables_ratio || "0.00");
+  const freeRatio = parseFloat(props.occupationPercentage?.free_tables_ratio || "0.00");
+  
+  return [
+    { 
+      value: busyRatio, 
+      name: "نسبة الإشغال",
+      itemStyle: { color: "#E8E8E8" }
+    },
+    { 
+      value: freeRatio, 
+      name: "المتاح",
+      itemStyle: { color: "#666666" }
+    },
+  ];
+});
 
 const getChartData = () => {
   // إذا لم يتم تحديد أي checkbox، نعرض كل البيانات
   if (!showOccupied.value && !showAvailable.value) {
-    return chartData;
+    return chartData.value;
   }
   
   const filteredData = [];
   
   if (showOccupied.value) {
-    filteredData.push(chartData[0]);
+    filteredData.push(chartData.value[0]);
   }
   
   if (showAvailable.value) {
-    filteredData.push(chartData[1]);
+    filteredData.push(chartData.value[1]);
   }
   
   return filteredData;
@@ -124,6 +139,10 @@ const option = ref({
 const updateChart = () => {
   option.value.series[0].data = getChartData();
 };
+
+watch(() => props.occupationPercentage, () => {
+  option.value.series[0].data = getChartData();
+}, { deep: true });
 
 </script>
 

@@ -43,10 +43,13 @@
 
             <!-- Success Dialog -->
             <Dialog v-model:visible="successfullyChange" modal class="custum_dialog_width without-close" :draggable="false">
-                <div class="text-center">
-                    <img src="@/assets/images/Success.gif" alt="check-img" class="check-img">
-                    <h3 class="main-title bold mb-4">{{ $t('settings.saved_successfully') }}</h3>
-                </div>
+            <div class="text-center">
+                <img src="@/assets/images/Success.gif" alt="check-img" class="check-img lg" loading="lazy" />
+                <h1 class="main-title bold mb-3 hint_success">
+                    {{ $t("Auth.password_reset_success") }}
+                </h1>
+                <p class="desc lg">{{ $t("Auth.password_reset_success_desc") }}</p>
+            </div>
             </Dialog>
         </div>
     </div>
@@ -69,9 +72,10 @@ const { successToast, errorToast } = toastMsg();
 // Axios
 const axios = useApi();
 
-// Get phone and country_id from localStorage
+// Get phone, country_id, and code from localStorage
 const forgetPasswordPhone = ref('');
 const forgetPasswordCountryId = ref('');
+const forgetPasswordCode = ref('');
 
 // Form Data
 const password = ref('');
@@ -135,9 +139,10 @@ const resetPassword = async () => {
         loading.value = true;
 
         try {
-            // Add phone and country_id from localStorage
+            // Add phone, country_id, and code from localStorage
             fd.append('phone', forgetPasswordPhone.value);
             fd.append('country_id', forgetPasswordCountryId.value);
+            fd.append('code', forgetPasswordCode.value);
 
             const res = await axios.post(`provider/auth/forget-password/reset-password`, fd);
             
@@ -162,9 +167,10 @@ const resetPassword = async () => {
 
 // Load data from localStorage on mount
 onMounted(() => {
-    // Get phone and country_id from localStorage
+    // Get phone, country_id, and code from localStorage
     forgetPasswordPhone.value = localStorage.getItem('forgetPasswordPhone') || '';
     forgetPasswordCountryId.value = localStorage.getItem('forgetPasswordCountryId') || '';
+    forgetPasswordCode.value = localStorage.getItem('forgetPasswordCode') || '';
 });
 
 </script>
