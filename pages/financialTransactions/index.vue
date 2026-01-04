@@ -14,7 +14,8 @@
             </div>
             
             <!-- Settlement Button -->
-            <button class="custom-btn">
+            <button class="custom-btn" @click="requestSettlement" :disabled="settlementLoading">
+                <span class="spinner-border spinner-border-sm ml-2" v-if="settlementLoading" role="status" aria-hidden="true"></span>
                 {{ $t('financial.settlement') }}
             </button>
         </div>
@@ -68,6 +69,21 @@ import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n({ useScope: 'global' });
 
+// Axios
+const axios = useApi();
+
+// Toast
+const { successToast, errorToast } = toastMsg();
+
+// pinia store
+const store = useAuthStore();
+const { token } = storeToRefs(store);
+
+// config
+const config = computed(() => ({
+    headers: { Authorization: `Bearer ${token.value}` }
+}));
+
 // Page meta
 definePageMeta({
     name: 'sideMenu.due_amount',
@@ -85,78 +101,98 @@ globalStore.subtitle = t('sideMenu.due_amount');
 // Search query
 const searchQuery = ref('');
 const loading = ref(false);
+const settlementLoading = ref(false);
 
 // Statistics data
 const stats = ref({
-    totalReservations: 5500,
-    bookingsCount: 100,
-    vatTax: 100,
-    netDue: 4500
+    totalReservations: '0.00',
+    vatTax: '0.00',
+    netDue: '0.00',
+    currency: 'SAR'
+});
+
+// Pagination data
+const pagination = ref({
+    totalItems: 0,
+    currentPage: 1,
+    perPage: 20,
+    totalPages: 1
 });
 
 // Reservations data
-const reservations = ref([
-    {
-        id: 12548,
-        metaTime: 'م 01:25 - 05/12/2024',
-        title: 'مطعم البيك طاولة رقم T10',
-        dateRange: 'م 09:00 - 05/12/2025',
-        customerName: 'فراس القمطاني',
-        imageSrc: '/_nuxt/assets/images/Logo.svg',
-        status: 'confirmed',
-        statusText: 'حالة الحجز : مؤكد'
-    },
-    {
-        id: 12549,
-        metaTime: 'م 02:30 - 06/12/2024',
-        title: 'مطعم البيك طاولة رقم T15',
-        timeRange: 'م 07:30 - 09:30',
-        customerName: 'سالم العتيبي',
-        imageSrc: '/_nuxt/assets/images/Logo.svg',
-        status: 'pending',
-        statusText: 'حالة الحجز : قيد التأكيد'
-    },
-    {
-        id: 12550,
-        metaTime: 'م 03:15 - 07/12/2024',
-        title: 'مطعم البيك طاولة رقم T20',
-        dateRange: 'م 06:00 - 08:00',
-        customerName: 'أحمد الشمري',
-        imageSrc: '/_nuxt/assets/images/Logo.svg',
-        status: 'confirmed',
-        statusText: 'حالة الحجز : مؤكد'
-    },
-    {
-        id: 12551,
-        metaTime: 'م 04:00 - 08/12/2024',
-        title: 'مطعم البيك طاولة رقم T5',
-        dateRange: 'م 12:00 - 02:00',
-        customerName: 'محمد الدوسري',
-        imageSrc: '/_nuxt/assets/images/Logo.svg',
-        status: 'confirmed',
-        statusText: 'حالة الحجز : مؤكد'
-    },
-    {
-        id: 12552,
-        metaTime: 'م 05:00 - 09/12/2024',
-        title: 'مطعم البيك طاولة رقم T12',
-        dateRange: 'م 03:00 - 05:00',
-        customerName: 'خالد الأحمدي',
-        imageSrc: '/_nuxt/assets/images/Logo.svg',
-        status: 'pending',
-        statusText: 'حالة الحجز : قيد التأكيد'
-    },
-    {
-        id: 12553,
-        metaTime: 'م 06:00 - 10/12/2024',
-        title: 'مطعم البيك طاولة رقم T8',
-        dateRange: 'م 08:00 - 10:00',
-        customerName: 'عبدالله المطيري',
-        imageSrc: '/_nuxt/assets/images/Logo.svg',
-        status: 'confirmed',
-        statusText: 'حالة الحجز : مؤكد'
+const reservations = ref([]);
+
+// Get settlements due data from API
+const getSettlementsDue = async () => {
+    loading.value = true;
+    try {
+        const res = await axios.get('provider/settlements/due', config.value);
+        if (res.data.key === 'success') {
+            const data = res.data.data;
+            
+            // Update statistics
+            stats.value = {
+                totalReservations: data.total_due_amount || '0.00',
+                vatTax: data.vat_amount || '0.00',
+                netDue: data.total_price || '0.00',
+                currency: data.currency || 'SAR'
+            };
+            
+            // Update pagination
+            if (data.reservations?.pagination) {
+                pagination.value = {
+                    totalItems: data.reservations.pagination.total_items || 0,
+                    currentPage: data.reservations.pagination.current_page || 1,
+                    perPage: data.reservations.pagination.per_page || 20,
+                    totalPages: data.reservations.pagination.total_pages || 1
+                };
+            }
+            
+            // Map reservations data to component format
+            if (data.reservations?.data) {
+                reservations.value = data.reservations.data.map(item => ({
+                    id: item.id,
+                    reservationNum: item.reservation_num,
+                    metaTime: `${item.time} - ${item.date}`,
+                    title: item.name,
+                    dateRange: `${item.reservation_time_start} - ${item.reservation_time_end}`,
+                    reservationDate: item.reservation_date,
+                    customerName: item.user_name,
+                    imageSrc: '/_nuxt/assets/images/Logo.svg',
+                    status: item.status,
+                    statusText: item.status_text
+                }));
+            }
+        }
+    } catch (error) {
+        console.error("Get settlements due error:", error);
+        errorToast('حصل خطأ في تحميل البيانات المالية');
+    } finally {
+        loading.value = false;
     }
-]);
+};
+
+// Request Settlement POST method
+const requestSettlement = async () => {
+    settlementLoading.value = true;
+    
+    try {
+        const res = await axios.post('provider/settlements', {}, config.value);
+        
+        if (res.data.key === 'success') {
+            successToast(res.data.msg || 'تم إرسال طلب التسوية بنجاح');
+            // Refresh data after successful settlement request
+            await getSettlementsDue();
+        } else {
+            errorToast(res.data.msg || 'حصل خطأ في إرسال طلب التسوية');
+        }
+    } catch (error) {
+        console.error("Request settlement error:", error);
+        errorToast('حصل خطأ في إرسال طلب التسوية');
+    } finally {
+        settlementLoading.value = false;
+    }
+};
 
 // Filtered reservations based on search
 const filteredReservations = computed(() => {
@@ -166,8 +202,14 @@ const filteredReservations = computed(() => {
     return reservations.value.filter(item => 
         item.id.toString().includes(query) ||
         item.title?.toLowerCase().includes(query) ||
-        item.customerName?.toLowerCase().includes(query)
+        item.customerName?.toLowerCase().includes(query) ||
+        item.reservationNum?.toLowerCase().includes(query)
     );
+});
+
+// Initialize data on mount
+onMounted(async () => {
+    await getSettlementsDue();
 });
 </script>
 

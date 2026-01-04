@@ -1826,8 +1826,6 @@ input.p-inputtext.p-component {
 }
 
 .deleteAll-btn {
-  position: absolute;
-  @include dir-right(0);
   padding: 10px;
   background-color: transparent;
   display: flex;

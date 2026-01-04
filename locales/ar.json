@@ -498,7 +498,10 @@
         "booking_date": "تاريخ الحجز",
         "added_value": "القيمة المضافة",
         "total_amount": "اجمالى المبلغ",
-        "request_status": "حالة الطلب"
+        "request_status": "حالة الطلب",
+        "save": "حفظ",
+        "date": "التاريخ",
+        "time": "الوقت"
     },
 
     "users": {
@@ -533,7 +536,12 @@
         "days": "أيام",
         "view_all_ratings": "عرض جميع التقييمات"
     },
-
+    "notifications": {
+        "delete_all": "حذف كل الاشعارات",
+        "view_all_notifications": "عرض جميع الاشعارات",
+        "delete": "حذف",
+        "notifications": "الاشعارات"
+    },
     "Table": {
         "Loading": "جاري التحميل"
     }

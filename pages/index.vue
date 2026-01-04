@@ -69,6 +69,7 @@
 
     definePageMeta({
         name: "Titles.home",
+        middleware: 'auth'
     });
     const countTextMap = {
         in_progress_reservations: 'reservations.in_progress_reservations',

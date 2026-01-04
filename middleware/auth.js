@@ -21,10 +21,15 @@ export default defineNuxtRouteMiddleware((to, from) => {
     const nuxtApp = useNuxtApp();
     const t = nuxtApp.vueApp.config.globalProperties.$t;
   
-    // if (isLoggedIn.value === false && to.meta.middleware == "auth") {
+  if (!isLoggedIn.value && to.meta.middleware == "auth") {
+      setTimeout(() => {
+        return navigateTo("/auth/login");
+        }, 100);
+    }
 
-    //   errorToast(t("validation.requiresAuth"));
-
-    //   return navigateTo("/")
-    // }
+    if (to.path == from.path && isLoggedIn.value == true && to.meta.middleware == "auth") {
+        setTimeout(() => {
+          return navigateTo(`${from.path}`);
+        }, 100);
+      }
 })

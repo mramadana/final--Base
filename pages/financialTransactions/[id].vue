@@ -10,7 +10,7 @@
                 <div class="stat-row">
                     <div class="stat-label">{{ $t('financial.settlement_status') }}</div>
                     <div class="stat-value">
-                        test
+                        {{ settlementData.status_text }}
                     </div>
                 </div>
 
@@ -58,6 +58,25 @@ import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n({ useScope: 'global' });
 
+// Get route parameter
+const route = useRoute();
+const settlementId = route.params.id;
+
+// Axios
+const axios = useApi();
+
+// Toast
+const { successToast, errorToast } = toastMsg();
+
+// pinia store
+const store = useAuthStore();
+const { token } = storeToRefs(store);
+
+// config
+const config = computed(() => ({
+    headers: { Authorization: `Bearer ${token.value}` }
+}));
+
 // Page meta
 definePageMeta({
     layout: 'default',
@@ -75,82 +94,83 @@ globalStore.subtitle = t('sideMenu.due_amount');
 const searchQuery = ref('');
 const loading = ref(false);
 
+// Settlement data
+const settlementData = ref({});
+
 // Statistics data
-const stats = ref({
-    totalReservations: 5500,
-    bookingsCount: 100,
-    vatTax: 100,
-    netDue: 4500
-});
+const stats = ref({});
 
 // Reservations data
-const reservations = ref([
-    {
-        id: 12548,
-        metaTime: 'م 01:25 - 05/12/2024',
-        title: 'مطعم البيك طاولة رقم T10',
-        dateRange: 'م 09:00 - 05/12/2025',
-        customerName: 'فراس القمطاني',
-        imageSrc: '/_nuxt/assets/images/Logo.svg',
-        status: 'confirmed',
-        statusText: 'حالة الحجز : مؤكد'
-    },
-    {
-        id: 12549,
-        metaTime: 'م 02:30 - 06/12/2024',
-        title: 'مطعم البيك طاولة رقم T15',
-        timeRange: 'م 07:30 - 09:30',
-        customerName: 'سالم العتيبي',
-        imageSrc: '/_nuxt/assets/images/Logo.svg',
-        status: 'pending',
-        statusText: 'حالة الحجز : قيد التأكيد'
-    },
-    {
-        id: 12550,
-        metaTime: 'م 03:15 - 07/12/2024',
-        title: 'مطعم البيك طاولة رقم T20',
-        dateRange: 'م 06:00 - 08:00',
-        customerName: 'أحمد الشمري',
-        imageSrc: '/_nuxt/assets/images/Logo.svg',
-        status: 'confirmed',
-        statusText: 'حالة الحجز : مؤكد'
-    },
-    {
-        id: 12551,
-        metaTime: 'م 04:00 - 08/12/2024',
-        title: 'مطعم البيك طاولة رقم T5',
-        dateRange: 'م 12:00 - 02:00',
-        customerName: 'محمد الدوسري',
-        imageSrc: '/_nuxt/assets/images/Logo.svg',
-        status: 'confirmed',
-        statusText: 'حالة الحجز : مؤكد'
-    },
-    {
-        id: 12552,
-        metaTime: 'م 05:00 - 09/12/2024',
-        title: 'مطعم البيك طاولة رقم T12',
-        dateRange: 'م 03:00 - 05:00',
-        customerName: 'خالد الأحمدي',
-        imageSrc: '/_nuxt/assets/images/Logo.svg',
-        status: 'pending',
-        statusText: 'حالة الحجز : قيد التأكيد'
-    },
-    {
-        id: 12553,
-        metaTime: 'م 06:00 - 10/12/2024',
-        title: 'مطعم البيك طاولة رقم T8',
-        dateRange: 'م 08:00 - 10:00',
-        customerName: 'عبدالله المطيري',
-        imageSrc: '/_nuxt/assets/images/Logo.svg',
-        status: 'confirmed',
-        statusText: 'حالة الحجز : مؤكد'
+const reservations = ref([]);
+
+// Get settlement data by ID from API
+const getSettlementById = async () => {
+    loading.value = true;
+    try {
+        const res = await axios.get(`provider/settlements/${settlementId}`, config.value);
+        if (res.data.key === 'success') {
+            const data = res.data.data;
+            
+            // Update settlement data
+            if (data.settlement) {
+                settlementData.value = {
+                    status_text: data.settlement.status_text || '',
+                    number: data.settlement.number || '',
+                    total_due_amount: data.settlement.total_due_amount || '0.00',
+                    vat_amount: data.settlement.vat_amount || '0.00',
+                    total_price: data.settlement.total_price || '0.00',
+                    currency: data.settlement.currency || 'ريال'
+                };
+            }
+            
+            // Update statistics from settlement data
+            stats.value = {
+                totalReservations: data.price || '0.00',
+                vatTax: data.vat_amount || '0.00',
+                netDue: data.total_price || '0.00',
+                currency: data.currency || 'ريال'
+            };
+            
+            // Map reservations data to component format
+            if (data.reservations && Array.isArray(data.reservations)) {
+                reservations.value = data.reservations.map(item => ({
+                    id: item.id,
+                    reservationNum: item.reservation_num,
+                    metaTime: `منذ يوم - ${new Date().toLocaleDateString('ar-SA')}`,
+                    title: `حجز رقم ${item.reservation_num}`,
+                    dateRange: `${new Date().toLocaleTimeString('ar-SA')} - ${new Date().toLocaleTimeString('ar-SA')}`,
+                    reservationDate: new Date().toLocaleDateString('ar-SA'),
+                    customerName: 'عميل',
+                    imageSrc: '/_nuxt/assets/images/Logo.svg',
+                    status: item.status,
+                    statusText: item.status_text
+                }));
+            }
+        }
+    } catch (error) {
+        console.error("Get settlement by ID error:", error);
+        errorToast('حصل خطأ في تحميل بيانات التسوية');
+    } finally {
+        loading.value = false;
     }
-]);
+};
 
 // Filtered reservations based on search
 const filteredReservations = computed(() => {
     if (!searchQuery.value) return reservations.value;
     
+    const query = searchQuery.value.toLowerCase();
+    return reservations.value.filter(item => 
+        item.id.toString().includes(query) ||
+        item.title?.toLowerCase().includes(query) ||
+        item.customerName?.toLowerCase().includes(query) ||
+        item.reservationNum?.toLowerCase().includes(query)
+    );
+});
+
+// Initialize data on mount
+onMounted(async () => {
+    await getSettlementById();
 });
 </script>
 
