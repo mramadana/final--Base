@@ -241,6 +241,25 @@ export const useValidationSchema = () => {
         .max(500, t('validation.max', { field: t('Auth.project_desc_en'), max: 500 }))
         .label(t('Auth.project_desc_en'));
 
+        
+    const tableDescription_ar = (labelKey: string) =>
+      yup
+        .string()
+        .trim()
+        .required(t('validation.required_with_label', { field: t('Auth.table_desc_ar') }))
+        .min(3, t('validation.min', { field: t('Auth.table_desc_ar'), min: 3 }))
+        .max(500, t('validation.max', { field: t('Auth.table_desc_ar'), max: 500 }))
+        .label(t('Auth.table_desc_ar'));
+
+    const tableDescription_en = (labelKey: string) =>
+      yup
+        .string()
+        .trim()
+        .required(t('validation.required_with_label', { field: t('Auth.table_desc_en') }))
+        .min(3, t('validation.min', { field: t('Auth.table_desc_en'), min: 3 }))
+        .max(500, t('validation.max', { field: t('Auth.table_desc_en'), max: 500 }))
+        .label(t('Auth.table_desc_en'));
+
     // table number
     const tableNumber = (label: string) =>
       yup
@@ -356,6 +375,8 @@ export const useValidationSchema = () => {
     menuNameAr,
     menuNameEn,
     menuDescriptionAr,
-    menuDescriptionEn
+    menuDescriptionEn,
+    tableDescription_ar,
+    tableDescription_en
   }
 }

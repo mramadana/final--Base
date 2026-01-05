@@ -10,91 +10,51 @@
 
                 <!-- Logo Upload -->
                 <div class="label">{{ $t('tables.table_image') }}</div>
-                <div class="position-relative single-input-upload mb-4">
-                    
-                    <div class="main_input special-input without-edit" :class="{ 'is-invalid': showValidation && uploadedImage?.length === 0 }">
-                        <div
-                            class="d-flex align-items-center justify-content-center gap-2 flex-grow-1 gray">
+                <div class="position-relative multible-container mb-4">
+
+                    <div class="main_input special_multible"
+                        :class="{ 'is-invalid': showValidation && uploadedImage?.length === 0 }">
+                        <div class="d-flex align-items-center justify-content-center gap-2 flex-grow-1 gray">
                             <i class="fa-solid fa-upload fz-20"></i>
                         </div>
                     </div>
                     <!-- if you want to remove the validation, you can set the required to false
                     and remove showValidation -->
-                    <GlobalImgUploader 
-                        ref="imageUploader"
-                        acceptedFiles="image/*" 
-                        :resetTrigger="resetImageTrigger"
-                        :showValidation="showValidation"
-                        :required="true"
+                    <GlobalImgUploader ref="imageUploader" acceptedFiles="image/*" :resetTrigger="resetImageTrigger"
+                        :showValidation="showValidation" :required="true" :newImages="attachments" :IsMultible="true"
                         :errorMessage="t('validation.attach_table_image')"
                         @uploaded-images-updated="updateUploadedImages" />
                 </div>
-                
+
                 <div class="row">
                     <div class="col-12 col-md-6">
                         <!-- Table Number -->
-                        <FormInput 
-                            v-model:modelValue="tableNumberRef"
-                            name="tableNumber" 
-                            type="text"
-                            :label="$t('tables.table_symbol')"
-                            :placeholder="$t('tables.table_symbol')"
-                            :validation-schema="validations.tableNumber"
-                            :showErrors="showValidation"
-                            :hasIcon="true"
-                            icon="/_nuxt/assets/images/sidebar/table-img.png"
-                            :with_icon="true"
-                            :disabled="true"
-                        />
+                        <FormInput v-model:modelValue="tableNumberRef" name="tableNumber" type="text"
+                            :label="$t('tables.table_symbol')" :placeholder="$t('tables.table_symbol')"
+                            :validation-schema="validations.tableNumber" :showErrors="showValidation" :hasIcon="true"
+                            icon="/_nuxt/assets/images/sidebar/table-img.png" readonly :with_icon="true" :disabled="true" />
                     </div>
                     <div class="col-12 col-md-6">
                         <!-- Number of People -->
-                        <FormInput 
-                            v-model:modelValue="numberOfPeopleRef"
-                            name="numberOfPeople" 
-                            type="number"
-                            :label="$t('tables.number_of_people')"
-                            :placeholder="$t('tables.number_of_people')"
-                            :validation-schema="validations.numberOfPeople"
-                            :showErrors="showValidation"
-                            :hasIcon="true"
-                            icon="/_nuxt/assets/images/auth-img/user.svg"
-                            :with_icon="true"
-                            :disabled="true"
-                        />
+                        <FormInput v-model:modelValue="numberOfPeopleRef" name="numberOfPeople" type="number"
+                            :label="$t('tables.number_of_people')" :placeholder="$t('tables.number_of_people')"
+                            :validation-schema="validations.numberOfPeople" :showErrors="showValidation" :hasIcon="true"
+                            icon="/_nuxt/assets/images/auth-img/user.svg" readonly :with_icon="true" :disabled="true" />
                     </div>
 
                     <!-- Booking Price -->
-                    <FormInput 
-                        v-model:modelValue="bookingPriceRef"
-                        name="bookingPrice" 
-                        type="number"
-                        min="0"
-                        step="1"
-                        :label="$t('tables.booking_price_table')"
-                        :placeholder="$t('tables.booking_price_table')"
-                        :validation-schema="validations.bookingPrice"
-                        :showErrors="showValidation"
-                        :hasIcon="true"
-                        icon="/_nuxt/assets/images/money.svg"
-                        :with_icon="true"
-                        :disabled="true"
-                    />
+                    <FormInput v-model:modelValue="bookingPriceRef" name="bookingPrice" type="number" min="0" step="1"
+                        :label="$t('tables.booking_price_table')" readonly :placeholder="$t('tables.booking_price_table')"
+                        :validation-schema="validations.bookingPrice" :showErrors="showValidation" :hasIcon="true"
+                        icon="/_nuxt/assets/images/money.svg" :with_icon="true" :disabled="true" />
 
                     <!-- Description in Arabic -->
                     <div class="form-group">
-                        <label class="label">{{ $t('Auth.project_desc_ar') }}</label>
+                        <label class="label">{{ $t('Auth.table_desc_ar') }}</label>
                         <div class="position-relative with_icon">
-                            <textarea 
-                                v-model="descriptionAr"
-                                @input="descriptionArTouched = true"
-                                name="descriptionAr"
-                                class="main_input main_area"
-                                :class="{ 'is-invalid': descriptionArError }"
-                                :placeholder="$t('Auth.project_desc_ar')"
-                                rows="4"
-                                disabled
-                            ></textarea>
+                            <textarea v-model="descriptionAr" @input="descriptionArTouched = true" name="descriptionAr"
+                                class="main_input main_area" :class="{ 'is-invalid': descriptionArError }"
+                                :placeholder="$t('Auth.table_desc_ar')" rows="4" disabled></textarea>
                             <img src="@/assets/images/file-img.svg" alt="icon" class="input-icon with-area" />
                         </div>
                         <p v-if="descriptionArError" class="error-message text-danger mt-1">
@@ -104,18 +64,11 @@
 
                     <!-- Description in English -->
                     <div class="form-group">
-                        <label class="label">{{ $t('Auth.project_desc_en') }}</label>
+                        <label class="label">{{ $t('Auth.table_desc_en') }}</label>
                         <div class="position-relative with_icon">
-                            <textarea 
-                                v-model="descriptionEn"
-                                @input="descriptionEnTouched = true"
-                                name="descriptionEn" 
-                                class="main_input main_area"
-                                :class="{ 'is-invalid': descriptionEnError }"
-                                :placeholder="$t('Auth.project_desc_en')"
-                                rows="4"
-                                disabled
-                            ></textarea>
+                            <textarea v-model="descriptionEn" @input="descriptionEnTouched = true" name="descriptionEn"
+                                class="main_input main_area" :class="{ 'is-invalid': descriptionEnError }"
+                                :placeholder="$t('Auth.table_desc_en')" rows="4" disabled></textarea>
                             <img src="@/assets/images/file-img.svg" alt="icon" class="input-icon with-area" />
                         </div>
                         <p v-if="descriptionEnError" class="error-message text-danger mt-1">
@@ -158,6 +111,18 @@ const tableId = ref(route.query.id || null);
 // Axios
 const axios = useApi();
 
+// pinia store
+const store = useAuthStore();
+const { token } = storeToRefs(store);
+
+// config
+const config = computed(() => ({
+    headers: { Authorization: `Bearer ${token.value}` }
+}));
+
+// Toast
+const { successToast, errorToast } = toastMsg();
+
 const globalStore = useGlobalStore();
 // Set global store
 const pageHeadTitle = ref(t("Sidebar.tables"));
@@ -180,12 +145,9 @@ const validations = {
     tableNumber: tableNumber(t('tables.table_symbol')),
     numberOfPeople: numberOfPeople(t('tables.number_of_people')),
     bookingPrice: bookingPrice(t('tables.booking_price_table')),
-    descriptionAr: projectDescription_ar(t('Auth.project_desc_ar')),
-    descriptionEn: projectDescription_en(t('Auth.project_desc_en')),
+    descriptionAr: projectDescription_ar(t('Auth.table_desc_ar')),
+    descriptionEn: projectDescription_en(t('Auth.table_desc_en')),
 };
-
-// Toast
-const { successToast, errorToast } = toastMsg();
 
 // Form state
 const loading = ref(false);
@@ -197,7 +159,7 @@ const addTableForm = ref(null);
 const imageUploader = ref(null);
 const uploadedImage = ref([]);
 const resetImageTrigger = ref(0);
-
+const attachments = ref([])
 // Form fields as separate refs
 const tableNumberRef = ref('');
 const numberOfPeopleRef = ref('');
@@ -233,11 +195,11 @@ const getValidationError = (field, value, touched) => {
 };
 
 // Computed error messages
-const descriptionArError = computed(() => 
+const descriptionArError = computed(() =>
     getValidationError('descriptionAr', descriptionAr.value, descriptionArTouched.value)
 );
 
-const descriptionEnError = computed(() => 
+const descriptionEnError = computed(() =>
     getValidationError('descriptionEn', descriptionEn.value, descriptionEnTouched.value)
 );
 
@@ -249,7 +211,7 @@ const updateUploadedImages = (images) => {
 // Fetch table data
 const fetchTableData = async () => {
     if (!tableId.value) {
-        errorToast('Table ID not found');
+        errorToast('لم يتم العثور على معرف الطاولة');
         navigateTo('/tables');
         return;
     }
@@ -257,16 +219,22 @@ const fetchTableData = async () => {
     loading.value = true;
     try {
         // API call to get table data
-        // const res = await axios.get(`tables/${tableId.value}`);
-        // Populate form fields with fetched data
-        // tableNumberRef.value = res.data.tableNumber;
-        // numberOfPeopleRef.value = res.data.numberOfPeople;
-        // bookingPriceRef.value = res.data.bookingPrice;
-        // descriptionAr.value = res.data.descriptionAr;
-        // descriptionEn.value = res.data.descriptionEn;
-        // uploadedImage.value = res.data.image;
-        
-        console.log('Fetching table data for ID:', tableId.value);
+        const res = await axios.get(`provider/tables/${tableId.value}`, config.value);
+
+        if (res.data.key === 'success') {
+            const data = res.data.data;
+
+            // Populate form fields with fetched data
+            tableNumberRef.value = data.code || '';
+            numberOfPeopleRef.value = data.people_number || '';
+            bookingPriceRef.value = data.price || '';
+            descriptionAr.value = data.description_ar || '';
+            descriptionEn.value = data.description_en || '';
+
+            // Handle image
+            attachments.value = data?.image?.file_name || null;
+
+        }
     } catch (error) {
         console.error('Error fetching table data:', error);
         errorToast('حدث خطأ أثناء جلب بيانات الطاولة');
@@ -331,6 +299,7 @@ const submitTable = async () => {
         height: 70px !important;
         padding: 0 !important;
     }
+
     :deep(input) {
         width: 70px !important;
         height: 70px !important;
@@ -343,6 +312,7 @@ const submitTable = async () => {
         position: absolute !important;
         inset-inline-start: 0 !important;
         top: 0;
+
         img {
             background-color: #252525;
         }

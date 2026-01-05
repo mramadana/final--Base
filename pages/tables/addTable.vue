@@ -9,30 +9,26 @@
             <form @submit.prevent="submitTable" ref="addTableForm">
 
                 <!-- Logo Upload -->
-                <div class="label">{{ $t('tables.table_image') }}</div>
+                <div class="label">{{ $t('tables.table_image_2') }}</div>
 
-                <div class="position-relative single-input-upload mb-4">
-                    
-                    <div class="main_input special-input without-edit" :class="{ 'is-invalid': showValidation && uploadedImage?.length === 0 }">
-                        <div
-                            class="d-flex align-items-center justify-content-center gap-2 flex-grow-1 gray">
+                <div class="position-relative multible-container mb-4">
+
+                    <div class="main_input special_multible"
+                        :class="{ 'is-invalid': showValidation && uploadedImage?.length === 0 }">
+                        <div class="d-flex align-items-center justify-content-center gap-2 flex-grow-1 gray">
                             <i class="fa-solid fa-upload fz-20"></i>
                         </div>
                     </div>
                     <!-- if you want to remove the validation, you can set the required to false
                     and remove showValidation -->
-                    <GlobalImgUploader 
-                        ref="imageUploader"
-                        acceptedFiles="image/*" 
-                        :resetTrigger="resetImageTrigger"
-                        :showValidation="showValidation"
-                        :required="true"
-                        :errorMessage="t('validation.attach_table_image')"
+                    <GlobalImgUploader ref="imageUploader" acceptedFiles="image/*" :resetTrigger="resetImageTrigger"
+                        :showValidation="showValidation" :required="true" :IsMultible="true"
+                        :errorMessage="t('validation.attach_table_image_2')"
                         @uploaded-images-updated="updateUploadedImages" />
                 </div>
 
                 <!-- Main Section Dropdown -->
-                <GlobalCustomDropdown 
+                <!-- <GlobalCustomDropdown 
                     v-model="mainSection" 
                     :options="sectionOptions"
                     option-value="value"
@@ -40,67 +36,37 @@
                     :label="$t('Auth.main_section')"
                     :showValidation="showValidation"
                     :validation-schema="validations.mainSection"
-                />
-                
+                /> -->
+
                 <div class="row">
                     <div class="col-12 col-md-6">
                         <!-- Table Number -->
-                        <FormInput 
-                            v-model:modelValue="tableNumberRef"
-                            name="tableNumber" 
-                            type="text"
-                            :label="$t('tables.table_symbol')"
-                            :placeholder="$t('tables.table_symbol')"
-                            :validation-schema="validations.tableNumber"
-                            :showErrors="showValidation"
-                            :hasIcon="true"
-                            icon="/_nuxt/assets/images/sidebar/table-img.png"
-                            :with_icon="true"
-                        />
+                        <FormInput v-model:modelValue="tableNumberRef" name="code" type="number"
+                            :label="$t('tables.table_symbol')" :placeholder="$t('tables.table_symbol')"
+                            :validation-schema="validations.tableNumber" :showErrors="showValidation" :hasIcon="true"
+                            icon="/_nuxt/assets/images/sidebar/table-img.png" :with_icon="true" />
                     </div>
                     <div class="col-12 col-md-6">
                         <!-- Number of People -->
-                        <FormInput 
-                            v-model:modelValue="numberOfPeopleRef"
-                            name="numberOfPeople" 
-                            type="number"
-                            :label="$t('tables.number_of_people')"
-                            :placeholder="$t('tables.number_of_people')"
-                            :validation-schema="validations.numberOfPeople"
-                            :showErrors="showValidation"
-                            :hasIcon="true"
-                            icon="/_nuxt/assets/images/auth-img/user.svg"
-                            :with_icon="true"
-                        />
+                        <FormInput v-model:modelValue="numberOfPeopleRef" name="people_number" type="number"
+                            :label="$t('tables.number_of_people')" :placeholder="$t('tables.number_of_people')"
+                            :validation-schema="validations.numberOfPeople" :showErrors="showValidation" :hasIcon="true"
+                            icon="/_nuxt/assets/images/auth-img/user.svg" :with_icon="true" />
                     </div>
 
                     <!-- Booking Price -->
-                    <FormInput 
-                        v-model:modelValue="bookingPriceRef"
-                        name="bookingPrice" 
-                        type="number"
-                        min="0"
-                        step="1"
-                        :label="$t('tables.booking_price_table')"
-                        :placeholder="$t('tables.booking_price_table')"
-                        :validation-schema="validations.bookingPrice"
-                        :showErrors="showValidation"
-                        :hasIcon="true"
-                        icon="/_nuxt/assets/images/money.svg"
-                        :with_icon="true"
-                    />
+                    <FormInput v-model:modelValue="bookingPriceRef" name="price" type="number" min="0" step="1"
+                        :label="$t('tables.booking_price_table')" :placeholder="$t('tables.booking_price_table')"
+                        :validation-schema="validations.bookingPrice" :showErrors="showValidation" :hasIcon="true"
+                        icon="/_nuxt/assets/images/money.svg" :with_icon="true" />
 
                     <!-- Description in Arabic -->
                     <div class="form-group">
-                        <label class="label">{{ $t('Auth.project_desc_ar') }}</label>
+                        <label class="label">{{ $t('Auth.table_desc_ar') }}</label>
                         <div class="position-relative with_icon">
-                            <textarea 
-                                v-model="descriptionAr"
-                                @input="descriptionArTouched = true"
-                                name="descriptionAr"
-                                class="main_input main_area"
-                                :class="{ 'is-invalid': descriptionArError }"
-                                :placeholder="$t('Auth.project_desc_ar')"
+                            <textarea v-model="descriptionAr" @input="descriptionArTouched = true"
+                                name="description[ar]" class="main_input main_area"
+                                :class="{ 'is-invalid': descriptionArError }" :placeholder="$t('Auth.table_desc_ar')"
                                 rows="4">
                             </textarea>
                             <img src="@/assets/images/file-img.svg" alt="icon" class="input-icon with-area" />
@@ -112,17 +78,12 @@
 
                     <!-- Description in English -->
                     <div class="form-group">
-                        <label class="label">{{ $t('Auth.project_desc_en') }}</label>
+                        <label class="label">{{ $t('Auth.table_desc_en') }}</label>
                         <div class="position-relative with_icon">
-                            <textarea 
-                                v-model="descriptionEn"
-                                @input="descriptionEnTouched = true"
-                                name="descriptionEn" 
-                                class="main_input main_area"
-                                :class="{ 'is-invalid': descriptionEnError }"
-                                :placeholder="$t('Auth.project_desc_en')"
-                                rows="4"
-                            ></textarea>
+                            <textarea v-model="descriptionEn" @input="descriptionEnTouched = true"
+                                name="description[en]" class="main_input main_area"
+                                :class="{ 'is-invalid': descriptionEnError }" :placeholder="$t('Auth.table_desc_en')"
+                                rows="4"></textarea>
                             <img src="@/assets/images/file-img.svg" alt="icon" class="input-icon with-area" />
                         </div>
                         <p v-if="descriptionEnError" class="error-message text-danger mt-1">
@@ -134,7 +95,8 @@
                 <!-- Submit Button -->
                 <button type="submit" class="custom-btn md" :disabled="loading">
                     {{ $t('tables.add_table') }}
-                    <span class="spinner-border spinner-border-sm" v-if="loading" role="status" aria-hidden="true"></span>
+                    <span class="spinner-border spinner-border-sm" v-if="loading" role="status"
+                        aria-hidden="true"></span>
                 </button>
             </form>
         </div>
@@ -172,8 +134,8 @@ const {
     tableNumber,
     numberOfPeople,
     bookingPrice,
-    projectDescription_ar,
-    projectDescription_en
+    tableDescription_ar,
+    tableDescription_en
 } = useValidationSchema();
 
 // Validation schemas
@@ -181,8 +143,8 @@ const validations = {
     tableNumber: tableNumber(t('tables.table_symbol')),
     numberOfPeople: numberOfPeople(t('tables.number_of_people')),
     bookingPrice: bookingPrice(t('tables.booking_price_table')),
-    descriptionAr: projectDescription_ar(t('Auth.project_desc_ar')),
-    descriptionEn: projectDescription_en(t('Auth.project_desc_en')),
+    descriptionAr: tableDescription_ar(t('Auth.table_desc_ar')),
+    descriptionEn: tableDescription_en(t('Auth.table_desc_en')),
 };
 
 // Toast
@@ -234,30 +196,30 @@ const sectionOptions = ref([]);
 const loadingCategories = ref(false);
 
 // Fetch available categories from API
-const fetchAvailableCategories = async () => {
-    loadingCategories.value = true;
-    try {
-        const res = await axios.get('provider/available-categories', config.value);
-        if (res.data.key === 'success') {
-            // Map API response to dropdown format
-            sectionOptions.value = res.data.data.map(category => ({
-                name: category.name || category.title, // Adjust based on API response
-                value: category.id || category.value   // Adjust based on API response
-            }));
-        }
-    } catch (error) {
-        console.error('Fetch categories error:', error);
-        errorToast('حصل خطأ في تحميل الأقسام');
-        // Fallback to default options if API fails
-        sectionOptions.value = [
-            { name: 'مستلزمات الأطفال', value: 'baby_supplies' },
-            { name: 'الأعشاب', value: 'herbs' },
-            { name: 'الطبخ', value: 'cuisine' }
-        ];
-    } finally {
-        loadingCategories.value = false;
-    }
-};
+// const fetchAvailableCategories = async () => {
+//     loadingCategories.value = true;
+//     try {
+//         const res = await axios.get('provider/available-categories', config.value);
+//         if (res.data.key === 'success') {
+//             // Map API response to dropdown format
+//             sectionOptions.value = res.data.data.map(category => ({
+//                 name: category.name || category.title, // Adjust based on API response
+//                 value: category.id || category.value   // Adjust based on API response
+//             }));
+//         }
+//     } catch (error) {
+//         console.error('Fetch categories error:', error);
+//         errorToast('حصل خطأ في تحميل الأقسام');
+//         // Fallback to default options if API fails
+//         sectionOptions.value = [
+//             { name: 'مستلزمات الأطفال', value: 'baby_supplies' },
+//             { name: 'الأعشاب', value: 'herbs' },
+//             { name: 'الطبخ', value: 'cuisine' }
+//         ];
+//     } finally {
+//         loadingCategories.value = false;
+//     }
+// };
 
 // Use the composable for validation
 const { isFormValid, scrollToFirstError } = useFormValidation();
@@ -274,11 +236,11 @@ const getValidationError = (field, value, touched) => {
 };
 
 // Computed error messages
-const descriptionArError = computed(() => 
+const descriptionArError = computed(() =>
     getValidationError('descriptionAr', descriptionAr.value, descriptionArTouched.value)
 );
 
-const descriptionEnError = computed(() => 
+const descriptionEnError = computed(() =>
     getValidationError('descriptionEn', descriptionEn.value, descriptionEnTouched.value)
 );
 
@@ -303,8 +265,13 @@ const submitTable = async () => {
         try {
             const fd = new FormData(addTableForm.value);
             // Override the attachments to ensure it's sent correctly
-            fd.append('attachments', uploadedImage.value);
-            
+            // fd.append('attachments', uploadedImage.value);
+            if (uploadedImage.value.length > 0) {
+                uploadedImage.value.forEach((file, index) => {
+                    fd.append(`attachments[]`, file);
+                });
+            }
+
             const res = await axios.post('provider/tables/store', fd, config.value);
             // Simulate API call
             // await new Promise(resolve => setTimeout(resolve, 1500));
@@ -335,7 +302,7 @@ definePageMeta({
 
 // Fetch categories on mount
 onMounted(async () => {
-    await fetchAvailableCategories();
+    // await fetchAvailableCategories();
 });
 </script>
 
@@ -350,6 +317,7 @@ onMounted(async () => {
         height: 70px !important;
         padding: 0 !important;
     }
+
     :deep(input) {
         width: 70px !important;
         height: 70px !important;
@@ -362,6 +330,7 @@ onMounted(async () => {
         position: absolute !important;
         inset-inline-start: 0 !important;
         top: 0;
+
         img {
             background-color: #252525;
         }

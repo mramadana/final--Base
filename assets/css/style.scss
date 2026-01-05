@@ -1,7 +1,7 @@
 @import "variables", "dir-mixins", "settings", "classes", "all_6.css";
 
 :root {
-    --main: rgba(226, 24, 118, 1);
+    --main: #3a3a3a;
     --main-bg: rgba(255, 255, 255, 0.05);
     --main-2: rgba(255, 255, 255, 0.06);
     --main-3: #f9f7f6;
@@ -625,6 +625,11 @@
   &::placeholder {
     font-size: 12px;
     color: #9f9f9f;
+  }
+
+  &.special_multible {
+    width: 100px;
+    height: 100px !important;
   }
 
   &.with_icon {
@@ -2152,4 +2157,11 @@ input.p-inputtext.p-component {
 }
 .special-input {
   border: 1.5px dashed #C7C7C7;
+}
+
+.multible-container {
+  .multiple-input {
+    width: 100px;
+    height: 100px;
+  }
 }

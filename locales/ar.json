@@ -58,6 +58,7 @@
         "attach_logo" : "قم باضافه صورة الشعار",
         "attach_profile_image" : "قم باضافه صورة البروفيل",
         "attach_table_image" : "قم باضافه صورة الطاولة",
+        "attach_table_image_2" : "قم باضافه صور الطاولة",
         "attach_menu_image" : "قم باضافه صورة المنيو",
         "attach_meal_image" : "قم باضافه صورة الوجبة",
         "select_location" : "يرجى تحديد العنوان",
@@ -116,6 +117,8 @@
         "project_name_en" : "اسم المشروع باللغة الانجليزية",
         "project_desc_ar" : "وصف المشروع باللغة العربية",
         "project_desc_en" : "وصف المشروع باللغة الانجليزية",
+        "table_desc_ar" : "وصف الطاولة بالعربية",
+        "table_desc_en" : "وصف الطاولة بالانجليزية",
         "add_logo" : "قم بإضافة صورة الشعار",
         "add_profile_image" : "قم بإضافة صورة البروفايل",
         "next" : "التالي",
@@ -337,6 +340,7 @@
     "tables": {
         "add_new_table": "إضافة طاولة جديدة",
         "table_image": "صورة الطاولة",
+        "table_image_2": "صور الطاولة",
         "menu_image": "صورة المنيو",
         "table_number": "رقم الطاولة",
         "number_of_people": "عدد افراد الطاولة",
@@ -365,7 +369,11 @@
         "add_table" : "اضافة طاولة",
         "edit_table" : "تعديل الطاولة",
         "edittable_info" : "تعديل بيانات الطاولة",
-        "table_info" : " بيانات الطاولة"
+        "table_info" : " بيانات الطاولة",
+        "table_id_not_found": "لم يتم العثور على معرف الطاولة",
+        "error_loading_table_data": "حدث خطأ أثناء جلب بيانات الطاولة",
+        "table_updated_successfully": "تم تحديث الطاولة بنجاح",
+        "error_updating_table": "حدث خطأ أثناء تحديث الطاولة"
     },
 
     "workingTime": {

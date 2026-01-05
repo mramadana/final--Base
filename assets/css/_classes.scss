@@ -82,9 +82,10 @@ body {
 
 .special-custom {
   .p-dropdown-label, .p-multiselect-label {
-    padding: 10px;
+    // padding: 10px;
     text-align: start;
     font-family: 'main_font';
+    color: #9f9f9f;
   }
 }
 
@@ -586,7 +587,7 @@ margin: 0;
 .with_cun_select,
 .dropdown_card,
 .dropdown_card .p-dropdown {
-  background-color: #262626 !important;
+  background-color: rgba(255, 255, 255, 0.06)
 }
 
 

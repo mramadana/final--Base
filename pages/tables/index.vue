@@ -153,10 +153,20 @@
   // Tables data - reactive for API
   const tables = ref([]);
   
-  // Handle filter events
+  // Handle filter events with debounce
+  let searchTimeout = null;
+  
   const handleSearch = (value) => {
-    filterValues.value.search = value;
-    getData(1); // Refetch data with filters
+    // Clear previous timeout if user is still typing
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+    
+    // Set new timeout for 3 seconds
+    searchTimeout = setTimeout(() => {
+      filterValues.value.search = value;
+      getData(1); // Refetch data with filters
+    }, 1000);
   };
   
   const handleSelectChange = (value) => {
