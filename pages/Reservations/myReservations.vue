@@ -60,7 +60,11 @@ const pagination = ref({
 const getReservations = async (page = 1) => {
     loading.value = true;
     try {
-        const res = await axios.get(`provider/reservations?page=${page}`, config.value);
+        // Build query string from filters
+        const queryString = context.buildApiQuery();
+        const apiUrl = queryString ? `provider/reservations?${queryString}&page=${page}` : `provider/reservations?page=${page}`;
+        
+        const res = await axios.get(apiUrl, config.value);
         if (res.data.key === 'success') {
             const data = res.data.data;
             
@@ -97,9 +101,14 @@ const getReservations = async (page = 1) => {
     }
 };
 
+// Watch for filter changes and refetch data
+watch(() => context.filterValues, () => {
+    getReservations(1); // Reset to first page when filters change
+}, { deep: true });
+
 // استخدام الـ function من الصفحة الرئيسية - مكتوبة مرة واحدة! 
 const filteredReservations = computed(() => {
-  return context.applyFilters(reservations.value);
+  return reservations.value; // API already filtered the data
 });
 
 </script>

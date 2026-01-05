@@ -261,7 +261,7 @@ const confirmReject = async () => {
   loading.value = true;
   try {
     const formData = new FormData();
-    formData.append('reason', rejectReason.value);
+    formData.append('reject_reason', rejectReason.value);
 
     const res = await axios.post(`provider/reservations/${reservationId}/reject`, formData, config.value);
     if (res.data.key === 'success') {

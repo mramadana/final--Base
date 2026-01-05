@@ -5,7 +5,7 @@
   
       <!-- Filter Component -->
       <ReservationFilter 
-        v-if="!loading && tables?.length > 0" 
+        v-if="!loading" 
         v-model="filterValues" 
         :show-search="true" 
         :show-select="true" 
@@ -95,6 +95,21 @@
   import { useI18n } from 'vue-i18n';
   const { t } = useI18n({ useScope: 'global' });
 
+  // Axios
+  const axios = useApi();
+
+  // Toast
+  const { successToast, errorToast } = toastMsg();
+
+  // pinia store
+  const store = useAuthStore();
+  const { token } = storeToRefs(store);
+
+  // config
+  const config = computed(() => ({
+    headers: { Authorization: `Bearer ${token.value}` }
+  }));
+
   const globalStore = useGlobalStore();
 
   const pageHeadTitle = ref(t("Sidebar.tables"));
@@ -118,8 +133,7 @@
   const statusOptions = ref([
     { id: 1, name: t('tables.all') },
     { id: 2, name: t('tables.available') },
-    { id: 3, name: t('tables.reserved') },
-    { id: 4, name: t('tables.closed') }
+    { id: 3, name: t('tables.reserved') }
   ]);
 
   // Table Columns (من اليمين لليسار حسب الصورة)
@@ -136,140 +150,28 @@
   // Skeleton products for loading state
   const SkeletonProducts = new Array(tableColumns.value.length);
   
-  // Fake Data for Tables
-  const tables = ref([
-    {
-      id: '1',
-      image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&q=80',
-      tableNumber: '١٠',
-      numberOfPeople: '٥ أفراد',
-      bookingPrice: '١٠ ر.س',
-      bookingDate: '١١/٢/٢٠٢٥',
-      reservations: 'الحجوزات',
-      status: 'متاحة',
-      statusBadge: 'available'
-    },
-    {
-      id: '2',
-      image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&q=80',
-      tableNumber: '١٠',
-      numberOfPeople: '٥ أفراد',
-      bookingPrice: '١٠ ر.س',
-      bookingDate: '١١/٢/٢٠٢٥',
-      reservations: 'الحجوزات',
-      status: 'متاحة',
-      statusBadge: 'available'
-    },
-    {
-      id: '3',
-      image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&q=80',
-      tableNumber: '١٠',
-      numberOfPeople: '٥ أفراد',
-      bookingPrice: '١٠ ر.س',
-      bookingDate: '١١/٢/٢٠٢٥',
-      reservations: 'الحجوزات',
-      status: 'محجوزة',
-      statusBadge: 'reserved'
-    },
-    {
-      id: '4',
-      image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&q=80',
-      tableNumber: '١٠',
-      numberOfPeople: '٥ أفراد',
-      bookingPrice: '١٠ ر.س',
-      bookingDate: '١١/٢/٢٠٢٥',
-      reservations: 'الحجوزات',
-      status: 'محجوزة',
-      statusBadge: 'reserved'
-    },
-    {
-      id: '5',
-      image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&q=80',
-      tableNumber: '١٠',
-      numberOfPeople: '٥ أفراد',
-      bookingPrice: '١٠ ر.س',
-      bookingDate: '١١/٢/٢٠٢٥',
-      reservations: 'الحجوزات',
-      status: 'متاحة',
-      statusBadge: 'available'
-    },
-    {
-      id: '6',
-      image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&q=80',
-      tableNumber: '١٠',
-      numberOfPeople: '٥ أفراد',
-      bookingPrice: '١٠ ر.س',
-      bookingDate: '١١/٢/٢٠٢٥',
-      reservations: 'الحجوزات',
-      status: 'متاحة',
-      statusBadge: 'available'
-    },
-    {
-      id: '7',
-      image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&q=80',
-      tableNumber: '١٠',
-      numberOfPeople: '٥ أفراد',
-      bookingPrice: '١٠ ر.س',
-      bookingDate: '١١/٢/٢٠٢٥',
-      reservations: 'الحجوزات',
-      status: 'محجوزة',
-      statusBadge: 'reserved'
-    },
-    {
-      id: '8',
-      image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&q=80',
-      tableNumber: '١٠',
-      numberOfPeople: '٥ أفراد',
-      bookingPrice: '١٠ ر.س',
-      bookingDate: '١١/٢/٢٠٢٥',
-      reservations: 'الحجوزات',
-      status: 'محجوزة',
-      statusBadge: 'reserved'
-    }
-  ]);
+  // Tables data - reactive for API
+  const tables = ref([]);
   
   // Handle filter events
   const handleSearch = (value) => {
     filterValues.value.search = value;
+    getData(1); // Refetch data with filters
   };
   
   const handleSelectChange = (value) => {
     filterValues.value.select = value;
+    getData(1); // Refetch data with filters
   };
   
   const handleDateChange = (value) => {
     filterValues.value.date = value;
+    getData(1); // Refetch data with filters
   };
 
-  // Computed: Filtered Tables
+  // Computed: Filtered Tables (API handles filtering)
   const filteredTables = computed(() => {
-    let filtered = tables.value;
-
-    // Filter by search (table number)
-    if (filterValues.value.search) {
-      filtered = filtered.filter(item =>
-        item.tableNumber?.includes(filterValues.value.search)
-      );
-    }
-
-    // Filter by status
-    if (filterValues.value.select && filterValues.value.select !== 1) {
-      const statusMap = {
-        2: 'available',
-        3: 'reserved',
-        4: 'closed'
-      };
-      filtered = filtered.filter(item =>
-        item.statusBadge === statusMap[filterValues.value.select]
-      );
-    }
-
-    // Filter by date (if needed)
-    if (filterValues.value.date) {
-      // Add date filtering logic here
-    }
-
-    return filtered;
+    return tables.value; // API already filtered the data
   });
   
   // Paginator
@@ -291,24 +193,65 @@
   });
 
   // Get Data Function (API Call)
-  const getData = async () => {
+  const getData = async (page = 1) => {
     loading.value = true;
     
     try {
-      // استبدل هذا بـ API call الحقيقي
-      // const axios = useApi();
-      // const config = { headers: { Authorization: `Bearer ${token}` } };
-      // const res = await axios.get(`tables?page=${currentPage.value}`, config);
-      // tables.value = res.data.data.tables;
-      // totalPage.value = res.data.data.pagination.total_items;
-      // pageLimit.value = res.data.data.pagination.per_page;
+      // Build query string from filters
+      const params = new URLSearchParams();
+      params.append('page', page);
       
-      // محاكاة API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      if (filterValues.value.search) {
+        params.append('table_code', filterValues.value.search); // Search by table code
+      }
       
-      loading.value = false;
+      if (filterValues.value.select && filterValues.value.select !== 1) {
+        const statusMap = {
+          2: 'available',
+          3: 'reserved'
+        };
+        params.append('status', statusMap[filterValues.value.select]);
+      }
+      
+      if (filterValues.value.date) {
+        params.append('date_at', filterValues.value.date);
+      }
+      
+      const apiUrl = `provider/tables?${params.toString()}`;
+      
+      const res = await axios.get(apiUrl, config.value);
+      
+      if (res.data.key === 'success') {
+        const data = res.data.data;
+        
+        // Update pagination
+        if (data.pagination) {
+          totalPage.value = data.pagination.total_items || 0;
+          pageLimit.value = data.pagination.per_page || 20;
+        }
+        
+        // Map tables data to component format
+        if (data.data && Array.isArray(data.data)) {
+          tables.value = data.data.map(item => ({
+            id: item.id,
+            image: item.image?.file_name || '/_nuxt/assets/images/Logo.svg',
+            tableNumber: item.code,
+            numberOfPeople: `${item.people_number} أفراد`,
+            bookingPrice: `${item.price} ${item.currency}`,
+            bookingDate: item.created_at || '-',
+            reservations: 'الحجوزات', // You might need to get this from API
+            status: item.status === 'available' ? 'متاحة' : item.status === 'reserved' ? 'محجوزة' : 'مغلقة',
+            statusBadge: item.status,
+            // Keep original data for reference
+            originalData: item
+          }));
+        }
+      }
+      
     } catch (err) {
-      console.log(err);
+      console.error('Get tables error:', err);
+      errorToast('حصل خطأ في تحميل الطاولات');
+    } finally {
       loading.value = false;
     }
   };

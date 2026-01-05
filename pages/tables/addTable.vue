@@ -188,6 +188,15 @@ const validations = {
 // Toast
 const { successToast, errorToast } = toastMsg();
 
+// pinia store
+const store = useAuthStore();
+const { token } = storeToRefs(store);
+
+// config
+const config = computed(() => ({
+    headers: { Authorization: `Bearer ${token.value}` }
+}));
+
 // Form state
 const loading = ref(false);
 const mainSection = ref(null);
@@ -221,11 +230,34 @@ const formData = computed(() => ({
 }));
 
 // Dropdown options
-const sectionOptions = ref([
-    { name: 'مستلزمات الأطفال', value: 'baby_supplies' },
-    { name: 'الأعشاب', value: 'herbs' },
-    { name: 'الطبخ', value: 'cuisine' }
-]);
+const sectionOptions = ref([]);
+const loadingCategories = ref(false);
+
+// Fetch available categories from API
+const fetchAvailableCategories = async () => {
+    loadingCategories.value = true;
+    try {
+        const res = await axios.get('provider/available-categories', config.value);
+        if (res.data.key === 'success') {
+            // Map API response to dropdown format
+            sectionOptions.value = res.data.data.map(category => ({
+                name: category.name || category.title, // Adjust based on API response
+                value: category.id || category.value   // Adjust based on API response
+            }));
+        }
+    } catch (error) {
+        console.error('Fetch categories error:', error);
+        errorToast('حصل خطأ في تحميل الأقسام');
+        // Fallback to default options if API fails
+        sectionOptions.value = [
+            { name: 'مستلزمات الأطفال', value: 'baby_supplies' },
+            { name: 'الأعشاب', value: 'herbs' },
+            { name: 'الطبخ', value: 'cuisine' }
+        ];
+    } finally {
+        loadingCategories.value = false;
+    }
+};
 
 // Use the composable for validation
 const { isFormValid, scrollToFirstError } = useFormValidation();
@@ -270,10 +302,12 @@ const submitTable = async () => {
 
         try {
             const fd = new FormData(addTableForm.value);
-            fd.append('logo', uploadedImage.value);
-            const res = await axios.post('tables', fd);
+            // Override the attachments to ensure it's sent correctly
+            fd.append('attachments', uploadedImage.value);
+            
+            const res = await axios.post('provider/tables/store', fd, config.value);
             // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            // await new Promise(resolve => setTimeout(resolve, 1500));
 
             successDialog.value = true;
             successToast(t('tables.success_add_table'));
@@ -297,6 +331,11 @@ const submitTable = async () => {
 definePageMeta({
     name: "tables.add_new_table",
     layout: "default",
+});
+
+// Fetch categories on mount
+onMounted(async () => {
+    await fetchAvailableCategories();
 });
 </script>
 

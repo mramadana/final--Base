@@ -47,23 +47,30 @@
   
   // Status options for select
   const statusOptions = ref([
-    { id: 1, name: 'الكل' },
-    { id: 2, name: 'مؤكد' },
-    { id: 3, name: 'قيد التأكيد' },
-    { id: 4, name: 'ملغي' }
+    { id: 'all', name: 'الكل' },
+    { id: 'waiting_list', name: 'قائمة الانتظار' },
+    { id: 'pending', name: 'قيد الانتظار' },
+    { id: 'pending_user_confirmation', name: 'في انتظار تأكيد المستخدم' },
+    { id: 'scheduled', name: 'مجدول' },
+    { id: 'in_progress', name: 'قيد التنفيذ' },
+    { id: 'completed', name: 'مكتمل' },
+    { id: 'cancelled', name: 'ملغي' }
   ]);
   
   // Handle filter events
   const handleSearch = (value) => {
-    console.log('Search:', value);
+    filterValues.value.search = value;
+    fetchFilteredReservations();
   };
   
   const handleSelectChange = (value) => {
-    console.log('Select changed:', value);
+    filterValues.value.select = value;
+    fetchFilteredReservations();
   };
   
   const handleDateChange = (value) => {
-    console.log('Date changed:', value);
+    filterValues.value.date = value;
+    fetchFilteredReservations();
   };
   
   // Dummy data to show filter
@@ -77,31 +84,34 @@
     pageTitle.value = title;
   };
 
-  // Filtering function - مكتوب مرة واحدة بس هنا! 🎯
-  const applyFilters = (data) => {
-    let filtered = data;
+  // Fetch filtered reservations from API
+  const fetchFilteredReservations = async () => {
+    // This will be called by child pages
+    // The actual API call will be in child pages with their axios instance
+  };
 
-    // Filter by search
+  // Build API query string based on filters
+  const buildApiQuery = () => {
+    const params = new URLSearchParams();
+    
     if (filterValues.value.search) {
-      filtered = filtered.filter(item =>
-        item.title?.includes(filterValues.value.search) ||
-        item.customerName?.includes(filterValues.value.search)
-      );
+      params.append('table_code', filterValues.value.search);
     }
-
-    // Filter by status
-    if (filterValues.value.select && filterValues.value.select !== 1) {
-      const statusMap = {
-        2: 'confirmed',
-        3: 'pending',
-        4: 'canceled'
-      };
-      filtered = filtered.filter(item =>
-        item.status === statusMap[filterValues.value.select]
-      );
+    
+    if (filterValues.value.select && filterValues.value.select !== 'all') {
+      params.append('status', filterValues.value.select);
     }
+    
+    if (filterValues.value.date) {
+      params.append('date_at', filterValues.value.date);
+    }
+    
+    return params.toString();
+  };
 
-    return filtered;
+  // Filtering function - now just returns data (API handles filtering)
+  const applyFilters = (data) => {
+    return data; // API already filtered the data
   };
   
   // Paginator
@@ -127,8 +137,9 @@
     handleSearch,
     handleSelectChange,
     handleDateChange,
-    applyFilters,  // الـ function بس، مش البيانات!
-    setPageTitle,  // لتغيير الـ title
+    applyFilters,
+    buildApiQuery, // New function to build API query
+    setPageTitle,
     currentPage,
     pageLimit,
     totalPage,

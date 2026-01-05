@@ -175,10 +175,10 @@ const removenotifation = async (index) => {
 // Toggle Notification Status
 const toggleNotify = async () => {
     const fd = new FormData()
-    fd.append('new_offers_notify', isSelected.value)
+    // fd.append('new_offers_notify', isSelected.value)
 
     try {
-        const res = await axios.patch('captain/notifications/change-status', fd, config)
+        const res = await axios.patch('provider/notifications/change-status', fd, config)
         if (res.data.key === 'success') {
             successToast(res.data.msg)
             localStorage.setItem('new_offers_notify', isSelected.value)
