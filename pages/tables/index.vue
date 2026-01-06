@@ -284,28 +284,26 @@
     isDeleting.value = true;
     
     try {
-      // API Call - replace with your actual endpoint
-      const response = await $fetch(`/api/tables/${itemToDelete.value}`, {
-        method: 'DELETE'
-      });
+      // API Call to delete table
+      const res = await axios.delete(`provider/tables/${itemToDelete.value}`, config.value);
       
-      // Success - remove from local array
-      const index = tables.value.findIndex(item => item.id === itemToDelete.value);
-      if (index > -1) {
-        tables.value.splice(index, 1);
+      if (res.data.key === 'success') {
+        // Success - remove from local array
+        const index = tables.value.findIndex(item => item.id === itemToDelete.value);
+        if (index > -1) {
+          tables.value.splice(index, 1);
+        }
+        
+        // Close dialog and reset
+        showDeleteDialog.value = false;
+        itemToDelete.value = null;
+        
+        successToast('تم حذف الطاولة بنجاح');
       }
-      
-      // Close dialog and reset
-      showDeleteDialog.value = false;
-      itemToDelete.value = null;
-      
-      // Optional: Show success message
-      // useToast().success('تم حذف الطاولة بنجاح');
       
     } catch (error) {
       console.error('Delete error:', error);
-      // Optional: Show error message
-      // useToast().error('حدث خطأ أثناء حذف الطاولة');
+      errorToast('حدث خطأ أثناء حذف الطاولة');
     } finally {
       isDeleting.value = false;
     }

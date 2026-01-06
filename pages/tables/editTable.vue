@@ -233,7 +233,9 @@ const fetchTableData = async () => {
             descriptionEn.value = data.description_en || '';
 
             // Handle image
-            attachments.value = data?.image?.file_name || null;
+            attachments.value = Array.isArray(data?.images)
+            ? data.images.map(img => img.file_name)
+            : [];
         }
     } catch (error) {
         console.error('Error fetching table data:', error);
@@ -264,6 +266,11 @@ const submitTable = async () => {
         try {
             const fd = new FormData(addTableForm.value);
             // fd.append('_method', 'PUT');
+            if (uploadedImage.value.length > 0) {
+                uploadedImage.value.forEach((file, index) => {
+                    fd.append(`attachments[]`, file);
+                });
+            }
 
             const res = await axios.post(`provider/tables/${tableId.value}`, fd, config.value);
 
