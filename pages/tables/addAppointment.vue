@@ -131,6 +131,14 @@ import { Arabic } from "flatpickr/dist/l10n/ar";
 const { t } = useI18n({ useScope: "global" });
 
 const globalStore = useGlobalStore();
+const store = useAuthStore();
+const { token } = storeToRefs(store);
+
+// config
+const config = computed(() => ({
+    headers: { Authorization: `Bearer ${token.value}` }
+}));
+
 const pageHeadTitle = ref(t("Sidebar.tables"));
 // Set global store
 globalStore.title = pageHeadTitle.value;
@@ -253,32 +261,39 @@ const submitAppointment = async () => {
     loading.value = true;
 
     try {
-        const appointmentData = {
-            tableId: tableId.value,
-            date: dateValue.value,
-            time: timeValue.value,
-            customerName: customerNameRef.value,
-            phoneNumber: phoneNumberRef.value,
-            numberOfPeople: numberOfPeopleRef.value,
-            notes: notes.value
-        };
+
+        const fd = new FormData(appointmentForm.value);
+        fd.append('available_date', dateValue.value);
+        fd.append('available_time', timeValue.value);
+        const res = await axios.post('provider/appointments/store', fd, config.value);
+        if (res.data.status === 200) {
+            successToast(res.data.message);
+            // router.push('/tables');
+        }
+        // const appointmentData = {
+        //     tableId: tableId.value,
+        //     date: dateValue.value,
+        //     time: timeValue.value,
+        //     customerName: customerNameRef.value,
+        //     phoneNumber: phoneNumberRef.value,
+        //     numberOfPeople: numberOfPeopleRef.value,
+        //     notes: notes.value
+        // };
 
         console.log('Appointment Data:', appointmentData);
 
         // API call
         // const res = await axios.post('appointments', appointmentData);
         
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500));
 
-        successDialog.value = true;
-        successToast(t('workingTime.appointment_saved_success'));
+        // successDialog.value = true;
+        // successToast(t('workingTime.appointment_saved_success'));
 
         // Reset form and redirect
-        setTimeout(() => {
-            successDialog.value = false;
-            navigateTo('/tables');
-        }, 2000);
+        // setTimeout(() => {
+        //     successDialog.value = false;
+        //     navigateTo('/tables');
+        // }, 2000);
 
     } catch (error) {
         console.error("Add appointment error:", error);
