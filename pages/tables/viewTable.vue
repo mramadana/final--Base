@@ -9,8 +9,8 @@
             <form @submit.prevent="submitTable" ref="addTableForm">
 
                 <!-- Logo Upload -->
-                <div class="label">{{ $t('tables.table_image') }}</div>
-                <div class="position-relative multible-container mb-4">
+                <div class="label">{{ $t('tables.table_image_2') }}</div>
+                <div class="position-relative multible-container with_out_edit mb-4">
 
                     <div class="main_input special_multible"
                         :class="{ 'is-invalid': showValidation && uploadedImage?.length === 0 }">
@@ -232,7 +232,9 @@ const fetchTableData = async () => {
             descriptionEn.value = data.description_en || '';
 
             // Handle image
-            attachments.value = data?.image?.file_name || null;
+            attachments.value = Array.isArray(data?.images)
+            ? data.images.map(img => img.file_name)
+            : [];
 
         }
     } catch (error) {
@@ -289,6 +291,16 @@ const submitTable = async () => {
 </script>
 
 <style lang="scss" scoped>
+
+.with_out_edit {
+    :deep(.multiple-input) {
+        pointer-events: none;
+    }
+
+    :deep(.remove-btn) {
+        display: none;
+    }
+}
 .with-area {
     top: 20px;
 }

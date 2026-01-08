@@ -2165,3 +2165,7 @@ input.p-inputtext.p-component {
     height: 100px;
   }
 }
+
+.p-component-overlay-enter {
+  z-index: 999999 !important;
+}

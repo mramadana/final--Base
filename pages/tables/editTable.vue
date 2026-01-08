@@ -9,7 +9,7 @@
             <form @submit.prevent="submitTable" ref="addTableForm">
 
                 <!-- Logo Upload -->
-                <div class="label">{{ $t('tables.table_image') }}</div>
+                <div class="label">{{ $t('tables.table_image_2') }}</div>
                 <div class="position-relative multible-container mb-4">
 
                     <div class="main_input special_multible"
@@ -23,7 +23,8 @@
                     <GlobalImgUploader ref="imageUploader" acceptedFiles="image/*" :resetTrigger="resetImageTrigger"
                         :showValidation="showValidation" :required="true" :newImages="attachments" :IsMultible="true"
                         :errorMessage="t('validation.attach_table_image')"
-                        @uploaded-images-updated="updateUploadedImages" />
+                        @uploaded-images-updated="updateUploadedImages"
+                        @remove-image="handleRemoveImage" />
                 </div>
 
                 <div class="row">
@@ -209,6 +210,24 @@ const updateUploadedImages = (images) => {
     uploadedImage.value = images;
 };
 
+// Handle remove image - call API to delete attachment
+const handleRemoveImage = async (imageId) => {
+    if (!imageId || !tableId.value) return;
+    
+    try {
+        const res = await axios.delete(`provider/tables/${tableId.value}/delete-attachment/${imageId}`, config.value);
+        
+        if (res.data.key === 'success') {
+            successToast(res.data.msg || t('tables.image_deleted_successfully'));
+        } else {
+            errorToast(res.data.msg || t('tables.error_deleting_image'));
+        }
+    } catch (error) {
+        console.error('Error deleting image:', error);
+        errorToast(t('tables.error_deleting_image'));
+    }
+};
+
 // Fetch table data
 const fetchTableData = async () => {
     if (!tableId.value) {
@@ -232,9 +251,12 @@ const fetchTableData = async () => {
             descriptionAr.value = data.description_ar || '';
             descriptionEn.value = data.description_en || '';
 
-            // Handle image
+            // Handle images with id
             attachments.value = Array.isArray(data?.images)
-            ? data.images.map(img => img.file_name)
+            ? data.images.map(img => ({
+                url: img.file_name,
+                id: img.id
+            }))
             : [];
         }
     } catch (error) {
@@ -267,10 +289,13 @@ const submitTable = async () => {
             const fd = new FormData(addTableForm.value);
             // fd.append('_method', 'PUT');
             if (uploadedImage.value.length > 0) {
-                uploadedImage.value.forEach((file, index) => {
-                    fd.append(`attachments[]`, file);
+            uploadedImage.value
+                .filter(file => file instanceof File) // 👈 أهم سطر
+                .forEach(file => {
+                fd.append('attachments[]', file);
                 });
             }
+
 
             const res = await axios.post(`provider/tables/${tableId.value}`, fd, config.value);
 

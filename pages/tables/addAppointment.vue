@@ -6,19 +6,14 @@
 
         <div class="layout-form">
             <form @submit.prevent="submitAppointment" ref="appointmentForm">
-                
+
                 <div class="row">
                     <!-- Available Date -->
                     <div class="col-12 col-md-6 mb-4">
                         <label class="label">{{ $t('workingTime.available_date') }}</label>
                         <div class="main_input" :class="{ 'is-invalid': showValidation && !dateValue }">
-                            <flat-pickr
-                                v-model="dateValue"
-                                :config="flatpickrConfig"
-                                class="custom-date"
-                                :placeholder="$t('workingTime.choose_date')"
-                                @on-change="handleDateChange"
-                            />
+                            <flat-pickr v-model="dateValue" :config="flatpickrConfig" class="custom-date"
+                                :placeholder="$t('workingTime.choose_date')" @on-change="handleDateChange" />
                             <i class="far fa-calendar calendar-icon"></i>
                         </div>
                         <p v-if="showValidation && !dateValue" class="error-message text-danger mt-1">
@@ -28,72 +23,47 @@
 
                     <!-- Available Time -->
                     <div class="col-12 col-md-6 mb-4">
-                        <label class="label">{{ $t('workingTime.available_time') }}</label>
-                        <div class="main_input" :class="{ 'is-invalid': showValidation && !timeValue }">
-                            <flat-pickr
-                                v-model="timeValue"
-                                :config="timePickrConfig"
-                                class="custom-time"
-                                :placeholder="$t('workingTime.choose_time')"
-                            />
-                            <i class="far fa-clock time-icon"></i>
+                        <div class="special_sppiner position-relative">
+                            <GlobalCustomDropdown v-model="timeValue" :options="availableTimeOptions"
+                                option-value="time_value" option-label="time_text"
+                                :placeholder="$t('workingTime.choose_time')" :label="$t('workingTime.available_time')"
+                                :showValidation="showValidation" :validationSchema="validations.time"
+                                :disabled="!dateValue || loadingTimeOptions" />
+
+                                <div v-if="loadingTimeOptions"
+                                    class="d-flex align-items-center gap-2 text-muted mt-2 dropdown-loader">
+                                    <span class="spinner-border spinner-border-sm"></span>
+                                    <small>{{ $t('workingTime.loading_times') }}</small>
+                                </div>
                         </div>
-                        <p v-if="showValidation && !timeValue" class="error-message text-danger mt-1">
-                            {{ $t('workingTime.time_required') }}
-                        </p>
                     </div>
+
+                    <!-- Number of People -->
+                    <FormInput v-model:modelValue="numberOfPeopleRef" name="people_number" type="number" min="1"
+                        :label="$t('tables.number_of_people')" :placeholder="$t('tables.number_of_people')"
+                        :validation-schema="validations.numberOfPeople" :showErrors="showValidation" />
 
                     <!-- Customer Name -->
                     <div class="col-12 col-md-6">
-                        <FormInput 
-                            v-model:modelValue="customerNameRef"
-                            name="customerName" 
-                            type="text"
-                            :label="$t('workingTime.customer_name')"
-                            :placeholder="$t('workingTime.customer_name')"
-                            :validation-schema="validations.customerName"
-                            :showErrors="showValidation"
-                        />
+                        <FormInput v-model:modelValue="customerNameRef" name="name" type="text"
+                            :label="$t('workingTime.customer_name')" :placeholder="$t('workingTime.customer_name')"
+                            :validation-schema="validations.customerName" :showErrors="showValidation" />
                     </div>
 
                     <!-- Mobile Number -->
                     <div class="col-12 col-md-6">
-                        <FormInput 
-                            v-model:modelValue="phoneNumberRef"
-                            name="phoneNumber" 
-                            type="tel"
-                            :label="$t('workingTime.phone_number')"
-                            :placeholder="$t('workingTime.phone_number')"
-                            :validation-schema="validations.phoneNumber"
-                            :showErrors="showValidation"
-                        />
+                        <FormInput v-model:modelValue="phoneNumberRef" name="phone" type="tel"
+                            :label="$t('workingTime.phone_number')" :placeholder="$t('workingTime.phone_number')"
+                            :validation-schema="validations.phoneNumber" :showErrors="showValidation" />
                     </div>
-
-                    <!-- Number of People -->
-                    <FormInput 
-                        v-model:modelValue="numberOfPeopleRef"
-                        name="numberOfPeople" 
-                        type="number"
-                        min="1"
-                        :label="$t('tables.number_of_people')"
-                        :placeholder="$t('tables.number_of_people')"
-                        :validation-schema="validations.numberOfPeople"
-                        :showErrors="showValidation"
-                    />
 
                     <!-- Notes -->
                     <div class="form-group">
                         <label class="label">{{ $t('workingTime.notes') }}</label>
                         <div class="position-relative with_icon">
-                            <textarea 
-                                v-model="notes"
-                                @input="notesTouched = true"
-                                name="notes"
-                                class="main_input main_area"
-                                :class="{ 'is-invalid': notesError }"
-                                :placeholder="$t('workingTime.notes')"
-                                rows="4"
-                            ></textarea>
+                            <textarea v-model="notes" @input="notesTouched = true" name="notes"
+                                class="main_input main_area" :class="{ 'is-invalid': notesError }"
+                                :placeholder="$t('workingTime.notes')" rows="4"></textarea>
                             <img src="@/assets/images/file-img.svg" alt="icon" class="input-icon with-area" />
                         </div>
                         <p v-if="notesError" class="error-message text-danger mt-1">
@@ -105,7 +75,8 @@
                 <!-- Submit Button -->
                 <button type="submit" class="custom-btn md" :disabled="loading">
                     {{ $t('workingTime.save_appointment') }}
-                    <span class="spinner-border spinner-border-sm" v-if="loading" role="status" aria-hidden="true"></span>
+                    <span class="spinner-border spinner-border-sm" v-if="loading" role="status"
+                        aria-hidden="true"></span>
                 </button>
             </form>
         </div>
@@ -158,11 +129,15 @@ const {
     customerName,
     phoneNumber,
     numberOfPeople,
-    Notes
+    Notes,
+    date,
+    time,
 } = useValidationSchema();
 
 // Validation schemas object
 const validations = {
+    date: date(t('workingTime.available_date')),
+    time: time(t('workingTime.available_time')),
     customerName: customerName(t('workingTime.customer_name')),
     phoneNumber: phoneNumber(t('workingTime.phone_number')),
     numberOfPeople: numberOfPeople(t('tables.number_of_people')),
@@ -189,13 +164,25 @@ const notes = ref('');
 // Touched states
 const notesTouched = ref(false);
 
+// Time options state
+const availableTimeOptions = ref([]);
+const loadingTimeOptions = ref(false);
+
 // Form data computed
 const formData = computed(() => ({
+    date: dateValue.value || '',
+    time: typeof timeValue.value === 'object'
+        ? timeValue.value.value
+        : timeValue.value,
     customerName: customerNameRef.value,
     phoneNumber: phoneNumberRef.value,
     numberOfPeople: numberOfPeopleRef.value,
     notes: notes.value
 }));
+
+
+
+
 
 // Use validation composable
 const { isFormValid, scrollToFirstError } = useFormValidation();
@@ -212,7 +199,7 @@ const getValidationError = (field, value, touched) => {
 };
 
 // Computed error messages
-const notesError = computed(() => 
+const notesError = computed(() =>
     getValidationError('notes', notes.value, notesTouched.value)
 );
 
@@ -224,19 +211,47 @@ const flatpickrConfig = computed(() => ({
     locale: import.meta.client ? (localStorage.getItem("locale") === "en" ? "default" : Arabic) : Arabic,
 }));
 
-// Flatpickr config for time picker
-const timePickrConfig = computed(() => ({
-    enableTime: true,
-    noCalendar: true,
-    dateFormat: "H:i",
-    time_24hr: false,
-    disableMobile: true,
-    locale: import.meta.client ? (localStorage.getItem("locale") === "en" ? "default" : Arabic) : Arabic,
-}));
-
 // Handle date change
-const handleDateChange = (selectedDates, dateStr) => {
+const handleDateChange = async (selectedDates, dateStr) => {
     dateValue.value = dateStr;
+    console.log("5656656565656565", dateStr)
+    if (dateStr) {
+        console.log("3333333333333333")
+        await fetchAvailableTimeSlots(dateStr);
+    } else {
+        availableTimeOptions.value = [];
+        timeValue.value = null;
+    }
+};
+
+// Fetch available time slots from API
+const fetchAvailableTimeSlots = async (date) => {
+    if (!date || !tableId.value) return;
+
+    loadingTimeOptions.value = true;
+    availableTimeOptions.value = [];
+    timeValue.value = null;
+
+    try {
+        const res = await axios.get(`provider/tables/${tableId.value}/get-available-hours-at-date?date=${date}`, config.value);
+
+        if (res.data.key === 'success') {
+            // Filter only available times
+            availableTimeOptions.value = res?.data?.data.available_hours
+                .filter(slot => slot.availability === 'available')
+                .map(slot => ({
+                    ...slot,
+                    name: slot.time_text,        // للعرض
+                    value: slot.time_value       // للقيمة اللي هتتحفظ
+                }));
+        }
+        loadingTimeOptions.value = false;
+    } catch (error) {
+        console.error('Fetch time slots error:', error);
+        errorToast('حصل خطأ في تحميل الأوقات المتاحة');
+    } finally {
+        loadingTimeOptions.value = false;
+    }
 };
 
 // Submit appointment
@@ -245,12 +260,6 @@ const submitAppointment = async () => {
 
     // Validate form fields
     const isValid = isFormValid(formData.value, validations);
-
-    // // Validate date and time
-    // if (!dateValue.value || !timeValue.value) {
-    //     errorToast("يرجى إدخال التاريخ والموعد المتاح");
-    //     return;
-    // }
 
     if (!isValid) {
         scrollToFirstError(formData.value, validations);
@@ -263,28 +272,34 @@ const submitAppointment = async () => {
     try {
 
         const fd = new FormData(appointmentForm.value);
-        fd.append('available_date', dateValue.value);
-        fd.append('available_time', timeValue.value);
-        const res = await axios.post('provider/appointments/store', fd, config.value);
-        if (res.data.status === 200) {
-            successToast(res.data.message);
-            // router.push('/tables');
-        }
-        // const appointmentData = {
-        //     tableId: tableId.value,
-        //     date: dateValue.value,
-        //     time: timeValue.value,
-        //     customerName: customerNameRef.value,
-        //     phoneNumber: phoneNumberRef.value,
-        //     numberOfPeople: numberOfPeopleRef.value,
-        //     notes: notes.value
-        // };
+        fd.append('date', dateValue.value);
+        const rawTime =
+            typeof timeValue.value === 'object'
+                ? timeValue.value.value
+                : timeValue.value;
 
-        console.log('Appointment Data:', appointmentData);
+        // "15:00:00" → "15:00"
+        const formattedTime = rawTime?.slice(0, 5);
+
+        fd.append('time', formattedTime);
+
+        const res = await axios.post(`provider/tables/${tableId.value}/reservations/external`, fd, config.value);
+        if (res.data.key === 'success') {
+            successToast(res.data.msg);
+            successDialog.value = true;
+            // Reset form and redirect
+            setTimeout(() => {
+                successDialog.value = false;
+                navigateTo('/tables');
+            }, 2000);
+        } else {
+            errorToast(res.data.msg);
+            console.log(res.data.msg, "65656565");
+        }
 
         // API call
         // const res = await axios.post('appointments', appointmentData);
-        
+
 
         // successDialog.value = true;
         // successToast(t('workingTime.appointment_saved_success'));
@@ -297,7 +312,7 @@ const submitAppointment = async () => {
 
     } catch (error) {
         console.error("Add appointment error:", error);
-        errorToast(t('workingTime.messages.save_error'));
+        // errorToast(t('workingTime.messages.save_error'));
     } finally {
         loading.value = false;
     }
@@ -377,5 +392,17 @@ definePageMeta({
         font-size: 13px;
         margin-top: 5px;
     }
+}
+
+.dropdown-loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 45px;
+    transform: translateY(27px);
+    box-shadow: 0px 0px 2px #D9D9D9;
+    background-color: #787878;
+    border-radius: 10px;
 }
 </style>

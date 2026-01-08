@@ -244,14 +244,15 @@
         if (data.data && Array.isArray(data.data)) {
           tables.value = data.data.map(item => ({
             id: item.id,
-            image: item.image?.file_name || '/_nuxt/assets/images/Logo.svg',
+            image: item.image || '/_nuxt/assets/images/Logo.svg',
             tableNumber: item.code,
             numberOfPeople: `${item.people_number} أفراد`,
             bookingPrice: `${item.price} ${item.currency}`,
             bookingDate: item.created_at || '-',
             reservations: 'الحجوزات', // You might need to get this from API
-            status: item.status === 'available' ? 'متاحة' : item.status === 'reserved' ? 'محجوزة' : 'مغلقة',
-            statusBadge: item.status,
+            // status: item.status === 'available' ? 'متاحة' : item.status === 'reserved' ? 'محجوزة' : 'مغلقة',
+            status: item.is_reserved == true ? 'محجوزة' : item.is_reserved == false ? 'متاحة' : 'مغلقة',
+            statusBadge: item.is_reserved,
             // Keep original data for reference
             originalData: item
           }));
@@ -340,6 +341,17 @@
   </script>
 
   <style scoped lang="scss">
+
+  :deep(.status-false) {
+    background: rgba(255, 255, 255, 0.25);
+    color: white !important;
+  }
+
+  :deep(.status-true) {
+    background: #305539;
+    color: white !important;
+  }
+  
   .no-data-message {
     text-align: center;
     padding: 40px;

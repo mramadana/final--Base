@@ -340,6 +340,13 @@ export const useValidationSchema = () => {
         .max(500, t('Auth.menu_description_en') + " " + t('validation.max', { field: label, max: 500 }))
         .label(label);
 
+        const date = (label: string) =>
+          yup.string().required(`${label} مطلوب`);
+
+        const time = (label: string) =>
+          yup.string().required(`${label} مطلوب`);
+
+
   
   return {
     required,
@@ -377,6 +384,8 @@ export const useValidationSchema = () => {
     menuDescriptionAr,
     menuDescriptionEn,
     tableDescription_ar,
-    tableDescription_en
+    tableDescription_en,
+    date, 
+    time
   }
 }
