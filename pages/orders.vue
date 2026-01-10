@@ -74,31 +74,33 @@
     pageTitle.value = title;
   };
 
-  // Filtering function - مكتوب مرة واحدة بس هنا! 🎯
-  const applyFilters = (data) => {
-    let filtered = data;
-
-    // Filter by search
+  // Build API query string based on filters
+  const buildApiQuery = () => {
+    const params = new URLSearchParams();
+    
     if (filterValues.value.search) {
-      filtered = filtered.filter(item =>
-        item.title?.includes(filterValues.value.search) ||
-        item.customerName?.includes(filterValues.value.search)
-      );
+      params.append('search', filterValues.value.search);
     }
-
-    // Filter by status
+    
     if (filterValues.value.select && filterValues.value.select !== 1) {
       const statusMap = {
         2: 'confirmed',
         3: 'pending',
         4: 'canceled'
       };
-      filtered = filtered.filter(item =>
-        item.status === statusMap[filterValues.value.select]
-      );
+      params.append('status', statusMap[filterValues.value.select]);
     }
+    
+    if (filterValues.value.date) {
+      params.append('date_at', filterValues.value.date);
+    }
+    
+    return params.toString();
+  };
 
-    return filtered;
+  // Filtering function - now just returns data (API handles filtering)
+  const applyFilters = (data) => {
+    return data; // API already filtered the data
   };
   
   // Paginator
@@ -125,6 +127,7 @@
     handleSelectChange,
     handleDateChange,
     applyFilters,  // الـ function بس، مش البيانات!
+    buildApiQuery, // New function to build API query
     setPageTitle,  // لتغيير الـ title
     currentPage,
     pageLimit,

@@ -52,7 +52,7 @@
 
                     <!-- Mobile Number -->
                     <div class="col-12 col-md-6">
-                        <FormInput v-model:modelValue="phoneNumberRef" name="phone" type="tel"
+                        <FormInput v-model:modelValue="phoneNumberRef" name="phone" type="number"
                             :label="$t('workingTime.phone_number')" :placeholder="$t('workingTime.phone_number')"
                             :validation-schema="validations.phoneNumber" :showErrors="showValidation" />
                     </div>

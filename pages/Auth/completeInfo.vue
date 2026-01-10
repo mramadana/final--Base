@@ -75,7 +75,7 @@
                             <!-- Logo Upload -->
                             <div class="position-relative single-input-upload mb-4">
                                 
-                                <div class="main_input special-input without-edit">
+                                <div class="main_input special-input">
                                     <div
                                         class="d-flex align-items-center justify-content-center gap-2 flex-grow-1 gray">
                                         <i class="fa-solid fa-camera fz-20 ml-1"></i>
@@ -96,7 +96,7 @@
 
                             <!-- Profile Image Upload -->
                             <div class="position-relative single-input-upload mb-4">
-                                <div class="main_input special-input without-edit">
+                                <div class="main_input special-input">
                                     <div
                                         class="d-flex align-items-center justify-content-center gap-2 flex-grow-1 gray">
                                         <i class="fa-solid fa-camera fz-20 ml-1"></i>
@@ -744,6 +744,13 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss" scoped>
+
+    .single-input-upload {
+        :deep(input) {
+            width: 100%;
+            height: 45px;
+        }
+    }
 .handle-border-error {
     border-color: #e74c3c !important;
 }

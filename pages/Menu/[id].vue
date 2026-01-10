@@ -1,24 +1,27 @@
 <template>
-    <div class="layout-form">
-  
+  <div class="layout-form">
+    <!-- Loading State -->
+    <div v-if="loading" class="loading-state">
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <p>{{ $t('menu.loading_meals') }}</p>
+    </div>
+
+    <div v-else>
       <h1 class="main-title md mb-4">{{ menuTitle }}</h1>
-  
+
       <!-- Filter Component -->
       <ReservationFilter 
-        v-if="meals?.length > 0" 
+        v-if="!loading && showFilter" 
         v-model="filterValues" 
         :show-search="true" 
-        :show-select="true" 
         :show-calendar="true"
+        :show-select="false" 
         :search-placeholder="$t('menu.search_meal')" 
-        :select-options="categoryOptions"
-        :select-placeholder="$t('Global.category')" 
-        option-label="name" 
-        option-value="id"
         :calendar-placeholder="$t('menu.menu_date')" 
         calendar-mode="single" 
         @search="handleSearch"
-        @select-change="handleSelectChange" 
         @date-change="handleDateChange"
       />
         
@@ -50,11 +53,16 @@
       </DatatableTable>
 
 
-      <!-- No Data -->
-      <div v-else class="no-data-message">
-        <p>{{ $t('menu.no_meals') }}</p>
-      </div>
+        <!-- No Data -->
+        <div v-else class="no-data-message">
+          <p>{{ $t('menu.no_meals') }}</p>
+        </div>
+    </div>
 
+      <!--***** Paginator *****-->
+      <div class="paginate-parent mt-4" v-if="showPaginate">
+        <Paginator :rows="pageLimit" @page="onPaginate" :totalRecords="totalPage" dir="ltr" />
+      </div>
 
       <!-- Delete Confirmation Dialog -->
       <Dialog v-model:visible="showDeleteDialog" modal :draggable="false" class="custum_dialog_width without-close" :style="{ width: '500px' }">
@@ -92,6 +100,24 @@ const id = route.params.id;
 
 const globalStore = useGlobalStore();
 
+// Pinia store for authentication
+const store = useAuthStore();
+const { token } = storeToRefs(store);
+
+// Axios config with authentication
+const config = computed(() => ({
+    headers: { Authorization: `Bearer ${token.value}` }
+}));
+
+// Axios
+const axios = useApi(config);
+
+// Toast
+const { successToast, errorToast } = toastMsg();
+
+// Loading state
+const loading = ref(false);
+
 // Menu Title
 const menuTitle = ref(t("Sidebar.menu_list"));
   
@@ -107,13 +133,15 @@ const filterValues = ref({
   date: null
 });
   
-// Category options for select
-const categoryOptions = ref([
-  { id: 1, name: t('menu.all') },
-  { id: 2, name: t('menu.meals') },
-  { id: 3, name: t('menu.drinks') },
-  { id: 4, name: t('menu.desserts') }
-]);
+const hasFiltersActive = computed(() => {
+  return !!filterValues.value.search || !!filterValues.value.date; // (+ select لو بتستخدمه)
+});
+
+const showFilter = computed(() => {
+  // totalPage عندك هو total_items من الـ API
+  return !loading.value && (totalPage.value > 0 || hasFiltersActive.value);
+});
+
 
 
 // Meal Columns (من اليمين لليسار حسب الصورة)
@@ -126,123 +154,36 @@ const mealColumns = ref([
   { field: 'price', header: t('menu.price') }
 ]);
   
-// Fake Data for Meals
-const meals = ref([
-  {
-    id: '1',
-    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80',
-    type: 'وجبات',
-    nameAr: 'شاورما دجاج',
-    nameEn: 'Chicken Shawarma',
-    category: 'مشويات',
-    price: '15 ر.س'
-  },
-  {
-    id: '2',
-    image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80',
-    type: 'وجبات',
-    nameAr: 'كبسة لحم',
-    nameEn: 'Lamb Kabsa',
-    category: 'مشويات',
-    price: '30 ر.س'
-  },
-  {
-    id: '3',
-    image: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=400&q=80',
-    type: 'وجبات',
-    nameAr: 'شوربة عدس',
-    nameEn: 'Lentil Soup',
-    category: 'مشويات',
-    price: '8 ر.س'
-  },
-  {
-    id: '4',
-    image: 'https://images.unsplash.com/photo-1529042410759-befb1204b468?w=400&q=80',
-    type: 'وجبات',
-    nameAr: 'كباب لحم',
-    nameEn: 'Beef Kebab',
-    category: 'مشويات',
-    price: '25 ر.س'
-  },
-  {
-    id: '5',
-    image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=400&q=80',
-    type: 'وجبات',
-    nameAr: 'برجر لحم',
-    nameEn: 'Beef Burger',
-    category: 'مشويات',
-    price: '20 ر.س'
-  },
-  {
-    id: '6',
-    image: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=400&q=80',
-    type: 'وجبات',
-    nameAr: 'باستا كريمة',
-    nameEn: 'Creamy Pasta',
-    category: 'مشويات',
-    price: '18 ر.س'
-  },
-  {
-    id: '7',
-    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80',
-    type: 'وجبات',
-    nameAr: 'شاورما دجاج',
-    nameEn: 'Chicken Shawarma',
-    category: 'مشويات',
-    price: '15 ر.س'
-  },
-  {
-    id: '8',
-    image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&q=80',
-    type: 'وجبات',
-    nameAr: 'بيتزا مارجريتا',
-    nameEn: 'Margherita Pizza',
-    category: 'مشويات',
-    price: '22 ر.س'
-  }
-]);
+// Meals data from API
+const meals = ref([]);
+const pagination = ref({});
+const currency = ref('SAR');
   
-// Handle filter events
+// Handle filter events with debounce
+let searchTimeout = null;
+
 const handleSearch = (value) => {
-  filterValues.value.search = value;
-};
+  // Clear previous timeout if user is still typing
+  if (searchTimeout) {
+    clearTimeout(searchTimeout);
+  }
   
-const handleSelectChange = (value) => {
-  filterValues.value.select = value;
+  // Set new timeout for 1 second
+  searchTimeout = setTimeout(() => {
+    filterValues.value.search = value;
+    fetchMealsData(); // Refetch data with filters
+  }, 1000);
 };
   
 const handleDateChange = (value) => {
   filterValues.value.date = value;
+  fetchMealsData(); // Refetch data with filters
 };
 
 
-// Computed: Filtered Meals
+// Computed: Filtered Meals (API handles filtering)
 const filteredMeals = computed(() => {
-  let filtered = meals.value;
-
-
-  // Filter by search (meal name)
-  if (filterValues.value.search) {
-    filtered = filtered.filter(item =>
-      item.nameAr?.includes(filterValues.value.search) ||
-      item.nameEn?.toLowerCase().includes(filterValues.value.search.toLowerCase())
-    );
-  }
-
-
-  // Filter by category
-  if (filterValues.value.select && filterValues.value.select !== 1) {
-    // Add category filtering logic here
-  }
-
-
-  // Filter by date (if needed)
-  if (filterValues.value.date) {
-    // Add date filtering logic here
-  }
-
-
-  return filtered;
+  return meals.value; // API already filtered the data
 });
   
 // Paginator
@@ -252,8 +193,10 @@ const totalPage = ref(0);
   
 // Paginate Function
 const onPaginate = (e) => {
+  loading.value = true;
   currentPage.value = e.page + 1;
   window.scrollTo(0, 0);
+  fetchMealsData(currentPage.value);
 };
   
 /******************* Computed *******************/
@@ -262,18 +205,49 @@ let showPaginate = computed(() => {
 });
 
 
-// Fetch Meals Data (API Call)
-const fetchMealsData = async () => {
+// Fetch Meals Data from API
+const fetchMealsData = async (page = 1) => {
   try {
-    // Replace with your actual API endpoint
-    // const axios = useApi();
-    // const response = await axios.get(`menus/${id.value}/meals`);
-    // meals.value = response.data;
+    loading.value = true;
     
-    // For now, using static data - refresh will keep current data
-    console.log('Refreshing meals data...');
+    // Build query string from filters
+    const params = new URLSearchParams();
+    params.append('page', page);
+    
+    if (filterValues.value.search) {
+      params.append('search', filterValues.value.search); // Search by meal name
+    }
+    
+    if (filterValues.value.date) {
+      params.append('date', filterValues.value.date);
+    }
+    
+    const apiUrl = `provider/menus/${id}/meals?${params.toString()}`;
+    const response = await axios.get(apiUrl, config.value);
+    
+    if (response.data.key === 'success') {
+      // Map API response to table format
+      meals.value = response.data.data.data.map(meal => ({
+        id: meal.id,
+        image: meal.image,
+        type: meal.menu_type,
+        nameAr: meal.name_ar,
+        nameEn: meal.name_en,
+        category: meal.menu_name,
+        price: `${meal.price} ${response.data.data.currency}`
+      }));
+      
+      pagination.value = response.data.data.pagination;
+      currency.value = response.data.data.currency;
+      totalPage.value = response.data.data.pagination.total_items;
+      pageLimit.value = response.data.data.pagination.per_page;
+      
+    }
   } catch (error) {
     console.error('Error fetching meals:', error);
+    errorToast(t('menu.error_loading_meals'));
+  } finally {
+    loading.value = false;
   }
 };
 
@@ -292,27 +266,28 @@ const confirmDelete = async () => {
   isDeleting.value = true;
   
   try {
-    // API Call - replace with your actual endpoint
-    // const axios = useApi();
-    // const response = await axios.delete(`menus/${id.value}/meals/${itemToDelete.value}`);
+    // API Call to delete meal
+    const response = await axios.delete(`provider/meals/${itemToDelete.value}/destroy`, config.value);
     
-    // Success - remove from local array
-    const index = meals.value.findIndex(item => item.id === itemToDelete.value);
-    if (index > -1) {
-      meals.value.splice(index, 1);
+    if (response.data.key === 'success') {
+      // Success - remove from local array
+      const index = meals.value.findIndex(item => item.id === itemToDelete.value);
+      if (index > -1) {
+        meals.value.splice(index, 1);
+      }
+      
+      // Close dialog and reset
+      showDeleteDialog.value = false;
+      itemToDelete.value = null;
+      
+      successToast(t('menu.meal_deleted_successfully'));
+    } else {
+      errorToast(response.data.msg || t('menu.error_deleting_meal'));
     }
-    
-    // Close dialog and reset
-    showDeleteDialog.value = false;
-    itemToDelete.value = null;
-    
-    // Optional: Show success message
-    // useToast().success('تم حذف الوجبة بنجاح');
     
   } catch (error) {
     console.error('Delete error:', error);
-    // Optional: Show error message
-    // useToast().error('حدث خطأ أثناء حذف الوجبة');
+    errorToast(t('menu.error_deleting_meal'));
   } finally {
     isDeleting.value = false;
   }
@@ -339,6 +314,11 @@ const handleViewItem = (mealId) => {
 };
 
 
+// Fetch data on component mount
+onMounted(() => {
+  fetchMealsData();
+});
+
 // Set global store
 globalStore.title = menuTitle.value;
 globalStore.titleIcon = 'fa-solid fa-angle-left';
@@ -350,6 +330,36 @@ globalStore.subSubTitle = t('menu.meals_menu');
 
 
 <style scoped lang="scss">
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  
+  .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 1rem;
+    border: 0.25em solid #f3f3f3;
+    border-top: 0.25em solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  p {
+    color: #666;
+    font-size: 16px;
+    margin: 0;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 .no-data-message {
   text-align: center;
   padding: 40px;

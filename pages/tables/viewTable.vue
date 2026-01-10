@@ -292,15 +292,15 @@ const submitTable = async () => {
 
 <style lang="scss" scoped>
 
-.with_out_edit {
-    :deep(.multiple-input) {
-        pointer-events: none;
-    }
+// .with_out_edit {
+//     :deep(.multiple-input) {
+//         pointer-events: none;
+//     }
 
-    :deep(.remove-btn) {
-        display: none;
-    }
-}
+//     :deep(.remove-btn) {
+//         display: none;
+//     }
+// }
 .with-area {
     top: 20px;
 }

@@ -10,7 +10,7 @@
                 <!-- Logo Upload -->
                 <div class="label">{{ $t('menu.meal_image') }}</div>
 
-                <div class="position-relative single-input-upload mb-4">
+                <div class="position-relative single-input-upload box-img mb-4">
                     
                     <div class="main_input special-input without-edit" :class="{ 'is-invalid': showValidation && uploadedImage?.length === 0 }">
                         <div
@@ -47,7 +47,7 @@
                         <!-- Table Number -->
                         <FormInput 
                             v-model:modelValue="tableNumberRef"
-                            name="tableNumber" 
+                            name="name_ar" 
                             type="text"
                             :label="$t('menu.meal_name_ar')"
                             :placeholder="$t('menu.meal_name_ar')"
@@ -60,7 +60,7 @@
                         <!-- Number of People -->
                         <FormInput 
                             v-model:modelValue="numberOfPeopleRef"
-                            name="nameEn" 
+                            name="name_en" 
                             type="text"
                             :label="$t('menu.meal_name_en')"
                             :placeholder="$t('menu.meal_name_en')"
@@ -72,7 +72,7 @@
                     <div class="col-12">
                         <FormInput 
                             v-model:modelValue="bookingPriceRef"
-                            name="bookingPrice" 
+                            name="price" 
                             type="number"
                             min="0"
                             step="1"
@@ -90,7 +90,7 @@
                             <textarea 
                                 v-model="descriptionAr"
                                 @input="descriptionArTouched = true"
-                                name="descriptionAr"
+                                name="description_ar"
                                 class="main_input main_area"
                                 :class="{ 'is-invalid': descriptionArError }"
                                 :placeholder="$t('menu.meal_description_ar')"
@@ -109,7 +109,7 @@
                             <textarea 
                                 v-model="descriptionEn"
                                 @input="descriptionEnTouched = true"
-                                name="descriptionEn" 
+                                name="description_en" 
                                 class="main_input main_area"
                                 :class="{ 'is-invalid': descriptionEnError }"
                                 :placeholder="$t('menu.meal_description_en')"
@@ -156,12 +156,22 @@ globalStore.titleIcon = 'fa-solid fa-angle-left';
 globalStore.titleLink = '/Menu';
 globalStore.subtitle = t('menu.add_new_meal');
 
+// Pinia store for authentication
+const store = useAuthStore();
+const { token } = storeToRefs(store);
+
+// Axios config with authentication
+const config = computed(() => ({
+    headers: { Authorization: `Bearer ${token.value}` }
+}));
+
 // Axios
-const axios = useApi();
+const axios = useApi(config);
 
 // Validation schemas
 const {
     tableNumber,
+    required,
 } = useValidationSchema();
 
 // Validation schemas
@@ -171,6 +181,7 @@ const validations = {
     descriptionAr: tableNumber(t('menu.meal_description_ar')),
     descriptionEn: tableNumber(t('menu.meal_description_en')),
     bookingPrice: tableNumber(t('menu.meal_price')),
+    mainSection: required('menu.select_menu'),
 };
 
 // Toast
@@ -198,18 +209,15 @@ const descriptionEn = ref('');
 const descriptionArTouched = ref(false);
 const descriptionEnTouched = ref(false);
 const mainSection = ref(null);
-const sectionOptions = ref([
-    { name: 'مستلزمات الأطفال', value: 'baby_supplies' },
-    { name: 'الأعشاب', value: 'herbs' },
-    { name: 'الطبخ', value: 'cuisine' }
-]);
+const sectionOptions = ref([]);
 // Form data (reactive object for validation)
 const formData = computed(() => ({
     tableNumber: tableNumberRef.value,
     numberOfPeople: numberOfPeopleRef.value,
     bookingPrice: bookingPriceRef.value,
     descriptionAr: descriptionAr.value,
-    descriptionEn: descriptionEn.value
+    descriptionEn: descriptionEn.value,
+    mainSection: mainSection.value,
 }));
 
 // Use the composable for validation
@@ -230,7 +238,6 @@ const getValidationError = (field, value, touched) => {
 const descriptionArError = computed(() => 
     getValidationError('descriptionAr', descriptionAr.value, descriptionArTouched.value)
 );
-
 const descriptionEnError = computed(() => 
     getValidationError('descriptionEn', descriptionEn.value, descriptionEnTouched.value)
 );
@@ -238,6 +245,24 @@ const descriptionEnError = computed(() =>
 // simple function to update the images
 const updateUploadedImages = (images) => {
     uploadedImage.value = images;
+};
+
+// Fetch menu options from API
+const fetchMenuOptions = async () => {
+    try {
+        const response = await axios.get('provider/menus', config.value);
+        
+        if (response.data.key === 'success') {
+            // Map API response to dropdown format
+            sectionOptions.value = response.data.data.data.map(menu => ({
+                name: menu.name,
+                value: menu.id
+            }));
+        }
+    } catch (error) {
+        console.error('Error fetching menu options:', error);
+        errorToast(t('menu.error_loading_menus'));
+    }
 };
 
 // Submit table function
@@ -255,62 +280,47 @@ const submitTable = async () => {
 
         try {
             const fd = new FormData(addTableForm.value);
-            fd.append('logo', uploadedImage.value);
-            const res = await axios.post('tables', fd);
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            fd.append('image', uploadedImage.value);
+            fd.append('menu_id', mainSection.value);
+            
+            const res = await axios.post('provider/meals/store', fd, config.value);
 
-            successDialog.value = true;
-            successToast(t('tables.success_add_table'));
+            if (res.data.key === 'success') {
+                successDialog.value = true;
+                successToast(res.data.msg || t('menu.meal_added_successfully'));
 
-            // Reset form on success
-            setTimeout(() => {
-                successDialog.value = false;
-                navigateTo('/tables');
-            }, 2000);
+                // Reset form on success
+                setTimeout(() => {
+                    successDialog.value = false;
+                    navigateTo('/Menu');
+                }, 1500);
+            } else {
+                errorToast(res.data.msg);
+            }
 
         } catch (error) {
-            console.error("Add table error:", error);
-            errorToast("حدث خطأ أثناء إضافة الطاولة");
+            console.error("Add meal error:", error);
+            errorToast(t('menu.error_adding_meal'));
         } finally {
             loading.value = false;
         }
     }
 };
 
+// Fetch menu options on component mount
+onMounted(() => {
+    fetchMenuOptions();
+});
+
 // Page meta
 definePageMeta({
     name: "menu.add_new_meal",
-    layout: "default",
+    layout: "default"
 });
 </script>
 
 <style lang="scss" scoped>
-.with-area {
-    top: 20px;
-}
-
-.single-input-upload {
-    .without-edit {
-        width: 70px !important;
-        height: 70px !important;
-        padding: 0 !important;
+    .with-area {
+        top: 20px;
     }
-    :deep(input) {
-        width: 70px !important;
-        height: 70px !important;
-    }
-
-    :deep(.uploaded-block) {
-        width: 70px !important;
-        height: 70px !important;
-        margin-top: 0 !important;
-        position: absolute !important;
-        inset-inline-start: 0 !important;
-        top: 0;
-        img {
-            background-color: #252525;
-        }
-    }
-}
 </style>

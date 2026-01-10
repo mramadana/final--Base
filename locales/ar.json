@@ -373,8 +373,10 @@
         "table_info" : " بيانات الطاولة",
         "table_id_not_found": "لم يتم العثور على معرف الطاولة",
         "error_loading_table_data": "حدث خطأ أثناء جلب بيانات الطاولة",
-        "table_updated_successfully": "تم تحديث الطاولة بنجاح",
-        "error_updating_table": "حدث خطأ أثناء تحديث الطاولة"
+        "meal_updated_successfully": "تم تحديث الوجبة بنجاح",
+        "error_updating_meal": "حدث خطأ أثناء تحديث الوجبة",
+        "meal_deleted_successfully": "تم حذف الوجبة بنجاح",
+        "error_deleting_meal": "حدث خطأ أثناء حذف الوجبة"
     },
 
     "workingTime": {
@@ -425,10 +427,11 @@
     "menu": {
         "my_menus": "منيوهاتي",
         "add_new_menu": "إضافة منيو جديد",
+        "add_menu": "إضافة المنيو",
         "view_details": "عرض التفاصيل",
         "add_new_meal" : "اضافة وجبه جديدة",
         "add_meal" : "اضافه الوجبه",
-        "meal_name_ar" : "اسم بالغة العربية",
+        "meal_name_ar" : "اسم باللغة العربية",
         "meal_name_en" : "اسم باللغة الإنجليزية",
         "meal_description_ar" : "وصف باللغة العربية",
         "meal_description_en" : "وصف باللغة الإنجليزية",
@@ -453,7 +456,18 @@
         "edit_meal" : "تعديل الوجبة",
         "select_menu" : "تحديد المنيو",
         "meal_price" : "سعر الوجبة",
-        "meal_details" : "عرض تفاصيل الوجبة"
+        "meal_details" : "عرض تفاصيل الوجبة",
+        "menus_loaded_successfully": "تم تحميل المنيوهات بنجاح",
+        "error_loading_menus": "حدث خطأ أثناء تحميل المنيوهات",
+        "no_menus": "لا توجد منيوهات حالياً",
+        "no_menus_description": "لم يتم إنشاء أي منيوهات بعد. ابدأ بإضافة منيو جديد لعرض وجباتك ومشروباتك للعملاء",
+        "menu_added_successfully": "تم إضافة المنيو بنجاح",
+        "error_adding_menu": "حدث خطأ أثناء إضافة المنيو",
+        "meal_added_successfully": "تم إضافة الوجبة بنجاح",
+        "error_adding_meal": "حدث خطأ أثناء إضافة الوجبة",
+        "loading_meals": "جاري تحميل الوجبات...",
+        "meals_loaded_successfully": "تم تحميل الوجبات بنجاح",
+        "error_loading_meals": "حدث خطأ أثناء تحميل الوجبات"
     },
 
     "noData" : {
