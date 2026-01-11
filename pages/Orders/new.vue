@@ -64,7 +64,7 @@ const getNewOrders = async (page = 1) => {
     try {
         // Build query string from filters + status=new
         const queryString = context.buildApiQuery();
-        const baseUrl = `provider/orders?status=new`;
+        const baseUrl = `provider/reservations?status=pending`;
         const apiUrl = queryString ? `${baseUrl}&${queryString}&page=${page}` : `${baseUrl}&page=${page}`;
         
         const res = await axios.get(apiUrl, config.value);
@@ -105,9 +105,13 @@ const getNewOrders = async (page = 1) => {
 };
 
 // Watch for filter changes and refetch data
-watch(() => context.filterValues, () => {
-    getNewOrders(1); // Reset to first page when filters change
-}, { deep: true });
+watch(
+  () => context.filtersTrigger.value,
+  () => {
+    getNewOrders(1);
+  }
+);
+
 
 // استخدام الـ function من الصفحة الرئيسية - مكتوبة مرة واحدة! 
 const filteredReservations = computed(() => {

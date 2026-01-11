@@ -62,7 +62,7 @@ const getWaitingOrders = async (page = 1) => {
     try {
         // Build query string from filters + status=waiting
         const queryString = context.buildApiQuery();
-        const baseUrl = `provider/orders?status=waiting`;
+        const baseUrl = `provider/reservations?status=waiting_list`;
         const apiUrl = queryString ? `${baseUrl}&${queryString}&page=${page}` : `${baseUrl}&page=${page}`;
         
         const res = await axios.get(apiUrl, config.value);
@@ -85,7 +85,7 @@ const getWaitingOrders = async (page = 1) => {
                     id: item.id,
                     orderNum: item.order_num,
                     metaTime: item.created_at,
-                    title: item.restaurant_name || 'طلب في قائمة الانتظار',
+                    title: item.name || 'طلب في قائمة الانتظار',
                     dateRange: item.date,
                     customerName: item.customer_name,
                     imageSrc: '/_nuxt/assets/images/Logo.svg',
@@ -103,9 +103,12 @@ const getWaitingOrders = async (page = 1) => {
 };
 
 // Watch for filter changes and refetch data
-watch(() => context.filterValues, () => {
-    getWaitingOrders(1); // Reset to first page when filters change
-}, { deep: true });
+watch(
+  () => context.filtersTrigger.value,
+  () => {
+    getWaitingOrders(1);
+  }
+);
 
 // استخدام الـ function من الصفحة الرئيسية - مكتوبة مرة واحدة! 
 const filteredReservations = computed(() => {

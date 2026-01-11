@@ -62,7 +62,7 @@ const getPaymentPendingOrders = async (page = 1) => {
     try {
         // Build query string from filters + status=payment_pending
         const queryString = context.buildApiQuery();
-        const baseUrl = `provider/orders?status=payment_pending`;
+        const baseUrl = `provider/reservations?status=pending_user_confirmation`;
         const apiUrl = queryString ? `${baseUrl}&${queryString}&page=${page}` : `${baseUrl}&page=${page}`;
         
         const res = await axios.get(apiUrl, config.value);

@@ -215,7 +215,7 @@ const fetchMealsData = async (page = 1) => {
     params.append('page', page);
     
     if (filterValues.value.search) {
-      params.append('search', filterValues.value.search); // Search by meal name
+      params.append('table_code', filterValues.value.search); // Search by meal name
     }
     
     if (filterValues.value.date) {

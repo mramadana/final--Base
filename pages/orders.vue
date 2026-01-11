@@ -44,6 +44,25 @@
     select: null,
     date: null
   });
+
+  const debouncedSearch = ref('');
+  let searchTimer = null;
+
+  watch(
+    () => filterValues.value.search,
+    (val) => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => {
+        debouncedSearch.value = (val || '').trim();
+        currentPage.value = 1; // يرجع لأول صفحة لما السيرش يثبت
+      }, 1000);
+    }
+  );
+
+  onBeforeUnmount(() => {
+    clearTimeout(searchTimer);
+  });
+
   
   // Status options for select
   const statusOptions = ref([
@@ -78,9 +97,10 @@
   const buildApiQuery = () => {
     const params = new URLSearchParams();
     
-    if (filterValues.value.search) {
-      params.append('search', filterValues.value.search);
-    }
+  if (debouncedSearch.value) {
+    params.append('table_code', debouncedSearch.value);
+  }
+
     
     if (filterValues.value.select && filterValues.value.select !== 1) {
       const statusMap = {
@@ -97,6 +117,15 @@
     
     return params.toString();
   };
+
+  const filtersTrigger = computed(() => {
+  return JSON.stringify({
+    search: debouncedSearch.value,
+    select: filterValues.value.select,
+    date: filterValues.value.date
+  });
+});
+
 
   // Filtering function - now just returns data (API handles filtering)
   const applyFilters = (data) => {
@@ -128,6 +157,7 @@
     handleDateChange,
     applyFilters,  // الـ function بس، مش البيانات!
     buildApiQuery, // New function to build API query
+    filtersTrigger,
     setPageTitle,  // لتغيير الـ title
     currentPage,
     pageLimit,
