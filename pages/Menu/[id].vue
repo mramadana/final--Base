@@ -215,11 +215,11 @@ const fetchMealsData = async (page = 1) => {
     params.append('page', page);
     
     if (filterValues.value.search) {
-      params.append('table_code', filterValues.value.search); // Search by meal name
+      params.append('name', filterValues.value.search); // Search by meal name
     }
     
     if (filterValues.value.date) {
-      params.append('date', filterValues.value.date);
+      params.append('created_at', filterValues.value.date);
     }
     
     const apiUrl = `provider/menus/${id}/meals?${params.toString()}`;

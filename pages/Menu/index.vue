@@ -41,10 +41,6 @@
                 <i class="fas fa-utensils no-data-icon"></i>
                 <h3 class="no-data-title">{{ $t('menu.no_menus') }}</h3>
                 <p class="no-data-text">{{ $t('menu.no_menus_description') }}</p>
-                <NuxtLink to="/Menu/addMenu" class="custom-btn">
-                    <i class="fas fa-plus"></i>
-                    {{ $t('menu.add_new_menu') }}
-                </NuxtLink>
             </div>
         </div>
 
