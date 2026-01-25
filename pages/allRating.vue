@@ -26,12 +26,17 @@
                     <div class="d-flex align-items-center justify-content-between mb-2">
                         <h4 class="reviewer-name">{{ review.name }}</h4>
                         <div class="d-flex justify-content-start rate-parent sm-rate">
-                            <Rating v-model="review.rating" readonly :cancel="false" :dir="'ltr'"/>
+                            <StarRating :rating="review.rating" :read-only="true" :increment="0.5" :max-rating="5" :star-size="22" :rounded-corners="true" :border-width="2"/>
                         </div>
                     </div>
-                    <p class="review-date">{{ $t('ratings.since') }} {{ review.daysAgo }} {{ $t('ratings.day') }}</p>
-                    <p class="review-text">{{ review.comment }} 👌</p>
+                    <p class="review-date">{{ review.date }}</p>
+                    <p class="review-text">{{ review.comment }}</p>
                 </div>
+            </div>
+
+            <!-- Paginator -->
+            <div v-if="showPaginate" class="paginate-parent">
+                <Paginator :rows="pageLimit" @page="onPaginate" :totalRecords="totalPage" class="mt-5" dir="ltr" />
             </div>
         </div>
     </div>
@@ -39,71 +44,66 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n';
+import StarRating from 'vue-star-rating';
+import { useAuthStore } from '~/stores/auth';
 
 const { t } = useI18n({ useScope: 'global' });
 
+// success response
+const { response } = responseApi();
+
+// Axios
+const axios = useApi();
+
 definePageMeta({
-    layout: 'default'
+    name: 'ratings.ratings',
 });
 
 const globalStore = useGlobalStore();
 
+// Store
+const store = useAuthStore();
+const { token } = storeToRefs(store);
+
 // Loading state
 const loading = ref(true);
 
-const rating = ref(0);
-
-// Rating Statistics
-const ratingStats = ref({
-    average: 4.7,
-    breakdown: [
-        { stars: 5, percentage: 80 },
-        { stars: 4, percentage: 10 },
-        { stars: 3, percentage: 5 },
-        { stars: 2, percentage: 7 },
-        { stars: 1, percentage: 3 }
-    ]
-});
-
 // Reviews List
-const reviews = ref([
-    {
-        id: 1,
-        name: 'نوح العتيبي',
-        daysAgo: 20,
-        rating: 3,
-        comment: 'المكان فخم والخدمة ممتازة'
-    },
-    {
-        id: 2,
-        name: 'نوح العتيبي',
-        daysAgo: 20,
-        rating: 2,
-        comment: 'المكان فخم والخدمة ممتازة'
-    },
-    {
-        id: 3,
-        name: 'نوح العتيبي',
-        daysAgo: 20,
-        rating: 1,
-        comment: 'المكان فخم والخدمة ممتازة'
-    },
-]);
+const reviews = ref([]);
+
+// Paginator
+const currentPage = ref(1);
+const pageLimit = ref();
+const totalPage = ref();
+
+// config
+const config = {
+    headers: { Authorization: `Bearer ${token.value}` }
+};
 
 // Get Data Function (API Call)
 const getData = async () => {
     loading.value = true;
     
     try {
-        // استبدل هذا بـ API call الحقيقي
-        // const axios = useApi();
-        // const config = { headers: { Authorization: `Bearer ${token}` } };
-        // const res = await axios.get('ratings', config);
-        // ratingStats.value = res.data.data.stats;
-        // reviews.value = res.data.data.reviews;
+        const res = await axios.get(`provider/profile/rates?page=${currentPage.value}`, config);
         
-        // محاكاة API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        if (response(res) == "success") {
+            const ratesData = res.data.data.data || [];
+            
+            // Transform API data to reviews format
+            reviews.value = ratesData.map(rate => ({
+                id: rate.id,
+                name: rate.name || '',
+                date: rate.date,
+                rating: parseFloat(rate.rate) || 0,
+                comment: rate.comment || ''
+            }));
+            
+            // Set pagination data
+            totalPage.value = res.data.data.pagination.total_items;
+            pageLimit.value = res.data.data.pagination.per_page;
+        }
         
         loading.value = false;
     } catch (err) {
@@ -112,11 +112,18 @@ const getData = async () => {
     }
 };
 
-// View All Reviews
-const viewAllReviews = () => {
-    console.log('View all reviews...');
-    // navigateTo('/ratings/all');
+// Paginate Function
+const onPaginate = (e) => {
+    loading.value = true;
+    currentPage.value = e.page + 1;
+    window.scrollTo(0, 0);
+    getData();
 };
+
+// Computed
+const showPaginate = computed(() => {
+    return totalPage.value > pageLimit.value;
+});
 
 // Set global store
 globalStore.title = t('Sidebar.ratings');
@@ -130,6 +137,19 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="scss">
+
+:deep(.vue-star-rating) {
+    direction: ltr;
+}
+
+:deep(.vue-star-rating-rating-text) {
+    display: none;
+}
+
+.paginate-parent {
+    margin-top: 24px;
+}
+
 // Left Section: Reviews List
 .reviews-list {
     background: linear-gradient(135deg, #2a2a2a 0%, #1e1e1e 100%);

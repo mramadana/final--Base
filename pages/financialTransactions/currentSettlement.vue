@@ -85,9 +85,9 @@ const settlementColumns = ref([
   { field: 'total_due_amount', header: t('financial.drinks_value') },
   { field: 'vat_amount', header: t('financial.added_value') },
   { field: 'total_price', header: t('financial.total_amount') },
-  { field: 'status_text', header: t('financial.request_status') },
   { field: 'date', header: t('financial.date') },
-  { field: 'time', header: t('financial.time') }
+  { field: 'time', header: t('financial.time') },
+  { field: 'status_text', header: t('financial.request_status') },
 ]);
 
 // Skeleton products for loading state

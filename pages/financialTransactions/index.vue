@@ -2,7 +2,7 @@
     <div class="financial-transactions-page layout-form">
         
         <!-- Search and Settlement Button -->
-        <div class="header-section mb-4">
+        <div class="header-section mb-4" v-if="reservations?.length > 0">
             <div class="main_input">
                 <input 
                     type="text" 

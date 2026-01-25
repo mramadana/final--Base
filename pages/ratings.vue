@@ -30,7 +30,7 @@
                             <div class="d-flex align-items-center justify-content-between">
                                 <span class="percentage">{{ item.percentage }} %</span>
                                 <div class="d-flex justify-content-start rate-parent mt-2 mb-2 sm-rate">
-                                    <Rating v-model="item.stars" readonly :cancel="false" :dir="'ltr'"/>
+                                    <StarRating :rating="item.stars" :read-only="true" :increment="0.5" :max-rating="5" :star-size="20" :rounded-corners="true" :border-width="2"/>
                                 </div>
                             </div>
                             <div class="progress-bar">
@@ -51,11 +51,11 @@
                             <div class="d-flex align-items-center justify-content-between mb-2">
                                 <h4 class="reviewer-name">{{ review.name }}</h4>
                                 <div class="d-flex justify-content-start rate-parent sm-rate">
-                                    <Rating v-model="review.rating" readonly :cancel="false" :dir="'ltr'"/>
+                                    <StarRating :rating="review.rating" :read-only="true" :increment="0.5" :max-rating="5" :star-size="22" :rounded-corners="true" :border-width="2"/>
                                 </div>
                             </div>
-                            <p class="review-date">{{ $t('ratings.since') }} {{ review.daysAgo }} {{ $t('ratings.day') }}</p>
-                            <p class="review-text">{{ review.comment }} 👌</p>
+                            <p class="review-date">{{ review.date }}</p>
+                            <p class="review-text">{{ review.comment }}</p>
                         </div>
                     </div>
     
@@ -74,6 +74,7 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n';
+import StarRating from 'vue-star-rating';
 
 const { t } = useI18n({ useScope: 'global' });
 
@@ -83,6 +84,8 @@ definePageMeta({
 });
 
 const globalStore = useGlobalStore();
+const authStore = useAuthStore();
+const axios = useApi();
 
 // Loading state
 const loading = ref(true);
@@ -91,55 +94,80 @@ const rating = ref(0);
 
 // Rating Statistics
 const ratingStats = ref({
-    average: 4.7,
+    average: 0,
     breakdown: [
-        { stars: 5, percentage: 80 },
-        { stars: 4, percentage: 10 },
-        { stars: 3, percentage: 5 },
-        { stars: 2, percentage: 7 },
-        { stars: 1, percentage: 3 }
+        { stars: 5, percentage: 0 },
+        { stars: 5, percentage: 0 },
+        { stars: 5, percentage: 0 },
+        { stars: 5, percentage: 0 },
+        { stars: 5, percentage: 0 }
     ]
 });
 
 // Reviews List
-const reviews = ref([
-    {
-        id: 1,
-        name: 'نوح العتيبي',
-        daysAgo: 20,
-        rating: 3,
-        comment: 'المكان فخم والخدمة ممتازة'
-    },
-    {
-        id: 2,
-        name: 'نوح العتيبي',
-        daysAgo: 20,
-        rating: 2,
-        comment: 'المكان فخم والخدمة ممتازة'
-    },
-    {
-        id: 3,
-        name: 'نوح العتيبي',
-        daysAgo: 20,
-        rating: 1,
-        comment: 'المكان فخم والخدمة ممتازة'
-    },
-]);
+const reviews = ref([]);
 
 // Get Data Function (API Call)
 const getData = async () => {
     loading.value = true;
     
     try {
-        // استبدل هذا بـ API call الحقيقي
-        // const axios = useApi();
-        // const config = { headers: { Authorization: `Bearer ${token}` } };
-        // const res = await axios.get('ratings', config);
-        // ratingStats.value = res.data.data.stats;
-        // reviews.value = res.data.data.reviews;
+        const token = authStore.token;
+        const config = { headers: { Authorization: `Bearer ${token}` } };
         
-        // محاكاة API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // Get ratings details from single API
+        const res = await axios.get('provider/profile/rates/details', config);
+        
+        if (res.data.key === 'success') {
+            const data = res.data.data;
+            
+            // Set average rating
+            ratingStats.value.average = parseFloat(data.rates_avg) || 0;
+            
+            // Calculate total ratings count
+            const totalCount = 
+                (parseInt(data.rates_5_count) || 0) +
+                (parseInt(data.rates_4_count) || 0) +
+                (parseInt(data.rates_3_count) || 0) +
+                (parseInt(data.rates_2_count) || 0) +
+                (parseInt(data.rates_1_count) || 0);
+            
+            // Calculate percentages for breakdown
+            if (totalCount > 0) {
+                ratingStats.value.breakdown = [
+                    { 
+                        stars: 5, 
+                        percentage: Math.round(((parseInt(data.rates_5_count) || 0) / totalCount) * 100) 
+                    },
+                    { 
+                        stars: 4, 
+                        percentage: Math.round(((parseInt(data.rates_4_count) || 0) / totalCount) * 100) 
+                    },
+                    { 
+                        stars: 3, 
+                        percentage: Math.round(((parseInt(data.rates_3_count) || 0) / totalCount) * 100) 
+                    },
+                    { 
+                        stars: 2, 
+                        percentage: Math.round(((parseInt(data.rates_2_count) || 0) / totalCount) * 100) 
+                    },
+                    { 
+                        stars: 1, 
+                        percentage: Math.round(((parseInt(data.rates_1_count) || 0) / totalCount) * 100) 
+                    }
+                ];
+            }
+            
+            // Transform last_rates to reviews format
+            const lastRates = data.last_rates || [];
+            reviews.value = lastRates.map(rate => ({
+                id: rate.id,
+                name: rate.name || '',
+                date: rate.date,
+                rating: parseFloat(rate.rate) || 0,
+                comment: rate.comment || ''
+            }));
+        }
         
         loading.value = false;
     } catch (err) {
@@ -160,6 +188,14 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="scss">
+
+:deep(.vue-star-rating) {
+    direction: ltr;
+}
+
+:deep(.vue-star-rating-rating-text) {
+    display: none;
+}
 
 // Right Section: Rating Statistics
 .rating-stats {
