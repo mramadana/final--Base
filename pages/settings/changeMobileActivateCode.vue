@@ -2,7 +2,7 @@
     <div>
         <form @submit.prevent="verificationCode">
             <div class="row">
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-md-6 mx-auto">
 
                     <FormOtpVerification 
                         v-model="bindModal"
@@ -12,10 +12,13 @@
                         ref="otpComponent"
                     />
 
-                    <button type="submit" class="custom-btn md" :disabled="loading">
-                        {{ $t('Auth.confirmation') }}
-                        <span class="spinner-border spinner-border-sm" v-if="loading" role="status" aria-hidden="true"></span>
-                    </button>
+                    <div class="d-flex justify-content-center">
+                        <button type="submit" class="custom-btn md" :disabled="loading">
+                            {{ $t('Auth.confirmation') }}
+                            <span class="spinner-border spinner-border-sm" v-if="loading" role="status" aria-hidden="true"></span>
+                        </button>
+                    </div>
+
 
                 </div>
             </div>

@@ -306,6 +306,7 @@
         "edit_account": "تعديل بيانات الحساب",
         "change_password": "تغيير كلمة المرور",
         "change_mobile": "تغيير رقم الجوال",
+        "change_mobile_title": "تغيير رقم الجوال",
         "provider_info": "بيانات مقدم الخدمة",
         "calibration": "المعايير",
         "delete_account": "حذف حسابي",

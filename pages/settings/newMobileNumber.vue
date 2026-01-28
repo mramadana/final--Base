@@ -40,7 +40,7 @@
 import { useI18n } from 'vue-i18n';
 
 definePageMeta({
-    // name: "settings.change_mobile",
+    name: "settings.change_mobile_title",
     middleware: 'auth'
 });
 
@@ -125,10 +125,20 @@ const changePhone = async () => {
 </script>
 
 <style scoped>
+  .main_input,
+  .with_cun_select,
+  .dropdown_card,
+  .dropdown_card .p-dropdown {
+    background-color: #262626 !important;
+  }
 .with_cun_select.is-invalid {
     border: 1px solid #e74c3c !important;
     box-shadow: 0 0 5px rgba(231, 76, 60, 0.3) !important;
     border-radius: 8px;
+}
+
+.dropdown_card :deep(.p-dropdown) {
+    background-color: transparent;
 }
 
 </style>

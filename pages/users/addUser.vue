@@ -295,4 +295,15 @@ definePageMeta({
         }
     }
 }
+
+  .main_input,
+  .with_cun_select,
+  .dropdown_card,
+  .dropdown_card .p-dropdown {
+    background-color: #262626 !important;
+  }
+
+  .dropdown_card :deep(.p-dropdown) {
+    background-color: transparent;
+}
 </style>
