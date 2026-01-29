@@ -1,12 +1,14 @@
 <template>
     <div>
         <div class="layout-form">
-            <h1 class="main-title md bold mb-4">{{ $t('users.contact_admin') }}</h1>
+            <h1 class="main-title md bold mb-4">
+                {{ $t("users.contact_admin") }}
+            </h1>
             <form @submit.prevent="addInquiry" ref="addInquiryForm">
                 <!-- Number of People -->
-                <FormInput 
+                <FormInput
                     v-model:modelValue="name"
-                    name="message" 
+                    name="subject"
                     type="text"
                     :label="$t('users.message_title')"
                     :placeholder="$t('users.message_title')"
@@ -15,29 +17,59 @@
                 />
 
                 <div class="form-group">
-                    <label class="label">{{ $t('users.message_content') }}</label>
+                    <label class="label">{{
+                        $t("users.message_content")
+                    }}</label>
                     <div class="position-relative">
-                        <textarea 
+                        <textarea
                             v-model="descriptionAr"
                             @input="descriptionArTouched = true"
-                            name="descriptionAr"
+                            name="message"
                             class="main_input main_area"
                             :class="{ 'is-invalid': descriptionArError }"
                             :placeholder="$t('users.message_content')"
-                            rows="4">
+                            rows="4"
+                        >
                         </textarea>
                     </div>
-                    <p v-if="descriptionArError" class="error-message text-danger mt-1">
+                    <p
+                        v-if="descriptionArError"
+                        class="error-message text-danger mt-1"
+                    >
                         {{ descriptionArError }}
                     </p>
                 </div>
 
                 <button type="submit" class="custom-btn md" :disabled="loading">
-                    {{ $t('Global.send') }}
-                    <span class="spinner-border spinner-border-sm" v-if="loading" role="status" aria-hidden="true"></span>
+                    {{ $t("Global.send") }}
+                    <span
+                        class="spinner-border spinner-border-sm"
+                        v-if="loading"
+                        role="status"
+                        aria-hidden="true"
+                    ></span>
                 </button>
             </form>
         </div>
+        <!-- Success Modal -->
+        <Dialog
+            v-model:visible="showInquirySuccessModal"
+            modal
+            class="custum_dialog_width without-close"
+            :draggable="false"
+        >
+            <div class="text-center">
+                <img
+                    src="@/assets/images/Success.gif"
+                    alt="check-img"
+                    class="check-img lg"
+                    loading="lazy"
+                />
+                <h1 class="main-title bold mb-3 hint_success">
+                    {{ $t("users.inquiry_sent_successfully") }}
+                </h1>
+            </div>
+        </Dialog>
     </div>
 </template>
 
@@ -57,37 +89,50 @@ const axios = useApi();
 
 const { successToast, errorToast } = toastMsg();
 
-const name = ref('');
-const descriptionAr = ref('');
+// success response
+const { response } = responseApi();
+
+const authStore = useAuthStore();
+const { token } = storeToRefs(authStore);
+const config = computed(() => ({
+    headers: { Authorization: `Bearer ${token.value}` },
+}));
+
+const name = ref("");
+const descriptionAr = ref("");
 const descriptionArTouched = ref(false);
 const showValidation = ref(false);
 const loading = ref(false);
 const addInquiryForm = ref(null);
+const showInquirySuccessModal = ref(false);
+
 // Validation schemas
-const {
-    tableNumber,
-} = useValidationSchema();
+const { tableNumber } = useValidationSchema();
 
 const validations = {
-    numberOfPeople: tableNumber(t('users.message_title')),
-    descriptionAr: tableNumber(t('users.message_content')),
+    numberOfPeople: tableNumber(t("users.message_title")),
+    descriptionAr: tableNumber(t("users.message_content")),
 };
 
 const { isFormValid, scrollToFirstError } = useFormValidation();
 
 const getValidationError = (field, value, touched) => {
-    if (!showValidation.value && !touched) return '';
+    if (!showValidation.value && !touched) return "";
     try {
         validations[field].validateSync(value);
-        return '';
+        return "";
     } catch (error) {
         return error.message;
     }
 };
 
 // Computed error messages
-const descriptionArError = computed(() => 
-    getValidationError('descriptionAr', descriptionAr.value, descriptionArTouched.value)
+const descriptionArError = computed(() =>
+    getValidationError(
+        "descriptionAr",
+        descriptionAr.value,
+        descriptionArTouched.value,
+    ),
 );
 
 const addInquiry = async () => {
@@ -96,7 +141,7 @@ const addInquiry = async () => {
     // إنشاء object يحتوي على القيم الفعلية للحقول
     const formData = {
         numberOfPeople: name.value,
-        descriptionAr: descriptionAr.value
+        descriptionAr: descriptionAr.value,
     };
 
     const isValid = isFormValid(formData, validations);
@@ -110,11 +155,16 @@ const addInquiry = async () => {
 
         try {
             const fd = new FormData(addInquiryForm.value);
-            const res = await axios.post("inquiry", fd);
+            const res = await axios.post("send-help-message", fd, config.value);
             if (response(res) === "success") {
-                successToast(res.msg);
+                showInquirySuccessModal.value = true;
+                setTimeout(() => {
+                    showInquirySuccessModal.value = false;
+                    navigateTo("/");
+                }, 2000);
+                successToast(res?.data?.msg);
             } else {
-                errorToast(res.msg);
+                errorToast(res?.data?.msg);
             }
         } catch (error) {
             console.error("Register error:", error);
@@ -126,6 +176,5 @@ const addInquiry = async () => {
 };
 
 const globalStore = useGlobalStore();
-globalStore.title = t('Sidebar.booking_form');
-
+globalStore.title = t("Sidebar.booking_form");
 </script>

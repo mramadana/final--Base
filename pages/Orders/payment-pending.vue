@@ -1,17 +1,20 @@
 <template>
-  <div>
-    <OrdersCardReservation :items="filteredReservations" :loading="loading" link-to="/reservation" />
-  </div>
+    <div>
+        <OrdersCardReservation
+            :items="filteredReservations"
+            :loading="loading"
+            link-to="/reservation"
+        />
+    </div>
 </template>
 
 <script setup>
-
 definePageMeta({
-    name: 'orders.payment_pending'
-})
+    name: "orders.payment_pending",
+});
 
-import { useI18n } from 'vue-i18n';
-const { t } = useI18n({ useScope: 'global' });
+import { useI18n } from "vue-i18n";
+const { t } = useI18n({ useScope: "global" });
 
 // Axios
 const axios = useApi();
@@ -25,7 +28,7 @@ const { token } = storeToRefs(store);
 
 // config
 const config = computed(() => ({
-    headers: { Authorization: `Bearer ${token.value}` }
+    headers: { Authorization: `Bearer ${token.value}` },
 }));
 
 const globalStore = useGlobalStore();
@@ -34,82 +37,84 @@ const pageHeadTitle = ref(t("Sidebar.pending_payment"));
 globalStore.title = pageHeadTitle.value;
 
 // Inject context from parent
-const context = inject('reservationContext');
+const context = inject("reservationContext", null);
 
 // Loading state
 const loading = ref(false);
 
 // Set page title and load data
 onMounted(async () => {
-  context.setPageTitle('orders.payment_pending_orders');
-  await getPaymentPendingOrders();
+    if (context) {
+        context.setPageTitle("orders.payment_pending_orders");
+        // Register fetch callback for pagination
+        context.fetchDataCallback.value = getPaymentPendingOrders;
+        // Reset pagination when entering this page
+        context.totalPage.value = 0;
+        context.pageLimit.value = 10;
+    }
+    await getPaymentPendingOrders();
 });
 
 // Orders data - reactive for API
 const reservations = ref([]);
-
-// Pagination data
-const pagination = ref({
-    totalItems: 0,
-    currentPage: 1,
-    perPage: 20,
-    totalPages: 1
-});
 
 // Get payment pending orders from API
 const getPaymentPendingOrders = async (page = 1) => {
     loading.value = true;
     try {
         // Build query string from filters + status=payment_pending
-        const queryString = context.buildApiQuery();
+        const queryString = context?.buildApiQuery() || '';
         const baseUrl = `provider/reservations?status=pending_user_confirmation`;
-        const apiUrl = queryString ? `${baseUrl}&${queryString}&page=${page}` : `${baseUrl}&page=${page}`;
-        
+        const apiUrl = queryString
+            ? `${baseUrl}&${queryString}&page=${page}`
+            : `${baseUrl}&page=${page}`;
+
         const res = await axios.get(apiUrl, config.value);
-        if (res.data.key === 'success') {
+        if (res.data.key === "success") {
             const data = res.data.data;
-            
-            // Update pagination
-            if (data.pagination) {
-                pagination.value = {
-                    totalItems: data.pagination.total_items || 0,
-                    currentPage: data.pagination.current_page || 1,
-                    perPage: data.pagination.per_page || 20,
-                    totalPages: data.pagination.total_pages || 1
-                };
+
+            // Update parent context for paginator from API response
+            if (data.pagination && context) {
+                context.totalPage.value = data.pagination.total_items;
+                context.pageLimit.value = data.pagination.per_page;
             }
-            
+
             // Map orders data to component format
             if (data.data && Array.isArray(data.data)) {
-                reservations.value = data.data.map(item => ({
+                reservations.value = data.data.map((item) => ({
                     id: item.id,
                     orderNum: item.order_num,
                     metaTime: item.created_at,
-                    title: item.restaurant_name || 'طلب في انتظار الدفع',
+                    title: item.restaurant_name || "طلب في انتظار الدفع",
                     dateRange: item.date,
                     customerName: item.customer_name,
-                    imageSrc: '/_nuxt/assets/images/Logo.svg',
+                    imageSrc: "/_nuxt/assets/images/Logo.svg",
                     status: item.status,
-                    statusText: item.status_text
+                    statusText: item.status_text,
                 }));
             }
         }
     } catch (error) {
         console.error("Get payment pending orders error:", error);
-        errorToast('حصل خطأ في تحميل الطلبات في انتظار الدفع');
+        errorToast("حصل خطأ في تحميل الطلبات في انتظار الدفع");
     } finally {
         loading.value = false;
     }
 };
 
 // Watch for filter changes and refetch data
-watch(() => context.filterValues, () => {
-    getPaymentPendingOrders(1); // Reset to first page when filters change
-}, { deep: true });
+watch(
+    () => context?.filtersTrigger?.value,
+    () => {
+        if (context) {
+            context.currentPage.value = 1; // Reset to first page
+            getPaymentPendingOrders(1);
+        }
+    },
+);
 
-// استخدام الـ function من الصفحة الرئيسية - مكتوبة مرة واحدة! 
+// استخدام الـ function من الصفحة الرئيسية - مكتوبة مرة واحدة!
 const filteredReservations = computed(() => {
-  return reservations.value; // API already filtered with status=payment_pending
+    return reservations.value; // API already filtered with status=payment_pending
 });
-
 </script>

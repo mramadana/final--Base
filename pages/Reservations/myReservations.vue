@@ -8,7 +8,7 @@
 import { useI18n } from 'vue-i18n';
 
 definePageMeta({
-    name: 'sideMenu.my_reservations'
+    name: 'sideMenu.my_reservations',
 })
 
 const { t } = useI18n({ useScope: 'global' });
@@ -42,19 +42,16 @@ const loading = ref(false);
 // Set page title and load data
 onMounted(async () => {
   context.setPageTitle('reservations.view_reservations');
+  // Register fetch callback for pagination
+  context.fetchDataCallback.value = getReservations;
+  // Reset pagination when entering this page
+  context.totalPage.value = 0;
+  context.pageLimit.value = 10;
   await getReservations();
 });
 
 // Reservations data - reactive for API
 const reservations = ref([]);
-
-// Pagination data
-const pagination = ref({
-    totalItems: 0,
-    currentPage: 1,
-    perPage: 20,
-    totalPages: 1
-});
 
 // Get reservations from API
 const getReservations = async (page = 1) => {
@@ -68,14 +65,10 @@ const getReservations = async (page = 1) => {
         if (res.data.key === 'success') {
             const data = res.data.data;
             
-            // Update pagination
+            // Update parent context for paginator from API response
             if (data.pagination) {
-                pagination.value = {
-                    totalItems: data.pagination.total_items || 0,
-                    currentPage: data.pagination.current_page || 1,
-                    perPage: data.pagination.per_page || 20,
-                    totalPages: data.pagination.total_pages || 1
-                };
+                context.totalPage.value = data.pagination.total_items;
+                context.pageLimit.value = data.pagination.per_page;
             }
             
             // Map reservations data to component format
@@ -103,7 +96,8 @@ const getReservations = async (page = 1) => {
 
 // Watch for filter changes and refetch data
 watch(() => context.filterValues, () => {
-    getReservations(1); // Reset to first page when filters change
+    context.currentPage.value = 1; // Reset to first page
+    getReservations(1);
 }, { deep: true });
 
 // استخدام الـ function من الصفحة الرئيسية - مكتوبة مرة واحدة! 

@@ -167,7 +167,7 @@ export const useAuthStore = defineStore("auth", {
         headers: { Authorization: `Bearer ${this.token}` },
       };
 
-      const resData = await axios.delete("provider/sign-out", config);
+      const resData = await axios.post("provider/sign-out" , {} , config);
       if (
         response(resData) == "success" ||
         response(resData) == "blocked" ||

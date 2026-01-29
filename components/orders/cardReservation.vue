@@ -112,7 +112,7 @@ const getStatusClass = (status) => {
     warning: 'status--warning',
     confirmed: 'status--confirmed',
     pending: 'status--pending',
-    canceled: 'status--canceled',
+    cancelled: 'status--canceled',
   };
   return classes[status] || 'status--confirmed';
 };

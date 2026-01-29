@@ -43,19 +43,16 @@ const loading = ref(false);
 // Set page title and load data
 onMounted(async () => {
   context.setPageTitle('reservations.view_completed_orders');
+  // Register fetch callback for pagination
+  context.fetchDataCallback.value = getCompletedReservations;
+  // Reset pagination when entering this page
+  context.totalPage.value = 0;
+  context.pageLimit.value = 10;
   await getCompletedReservations();
 });
 
 // Reservations data - reactive for API
 const reservations = ref([]);
-
-// Pagination data
-const pagination = ref({
-    totalItems: 0,
-    currentPage: 1,
-    perPage: 20,
-    totalPages: 1
-});
 
 // Get completed reservations from API
 const getCompletedReservations = async (page = 1) => {
@@ -70,14 +67,10 @@ const getCompletedReservations = async (page = 1) => {
         if (res.data.key === 'success') {
             const data = res.data.data;
             
-            // Update pagination
+            // Update parent context for paginator from API response
             if (data.pagination) {
-                pagination.value = {
-                    totalItems: data.pagination.total_items || 0,
-                    currentPage: data.pagination.current_page || 1,
-                    perPage: data.pagination.per_page || 20,
-                    totalPages: data.pagination.total_pages || 1
-                };
+                context.totalPage.value = data.pagination.total_items;
+                context.pageLimit.value = data.pagination.per_page;
             }
             
             // Map reservations data to component format
@@ -105,7 +98,8 @@ const getCompletedReservations = async (page = 1) => {
 
 // Watch for filter changes and refetch data
 watch(() => context.filterValues, () => {
-    getCompletedReservations(1); // Reset to first page when filters change
+    context.currentPage.value = 1; // Reset to first page
+    getCompletedReservations(1);
 }, { deep: true });
 
 // استخدام الـ function من الصفحة الرئيسية - مكتوبة مرة واحدة! 

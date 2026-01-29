@@ -7,10 +7,12 @@
 
         <SkeltonStaticCard v-else />
 
-        <HomeCardInfo 
-            :notifications="homeData?.notifications || []" 
-            :subscription="homeData?.subscription || null" 
+        <HomeCardInfo
+        :notifications="homeData?.notifications || []"
+        :subscription="homeData?.subscription || null"
+        @delete-notification="handleDeleteNotification"
         />
+
 
         <div class="row mb-5 equal-height-row">
             <div class="col-12 col-lg-4 equal-height-col">
@@ -23,7 +25,7 @@
                 <div class="layout-form sm-radius h-100">
                     <div class="header-reservations">
                         <h3 class="main-title mb-0">{{ t("reservations.today_reservations") }}</h3>
-                        <nuxt-link class="order-link" to="/reservations">
+                        <nuxt-link class="order-link" to="/Reservations/myReservations">
                             {{ t("reservations.all_reservations") }}
                             <i class="fa-solid fa-chevron-left fz-13 mr-1"></i>
                         </nuxt-link>
@@ -54,7 +56,6 @@
             </Dialog>
         </div>
 
-
     </div>
 </template>
 
@@ -63,6 +64,8 @@
     const { t } = useI18n({ useScope: 'global' });
     const globalStore = useGlobalStore();
     const authStore = useAuthStore();
+    // Toast
+    const { successToast, errorToast } = toastMsg();
     const axios = useApi();
     const { response } = responseApi();
     const pageTilte = ref(t("Titles.home"));
@@ -91,7 +94,7 @@
             title: 'الحجوزات الحالية',
             number: '٠ حجز',
             icon: '/_nuxt/assets/images/home-img/current-reservations.svg',
-            link: '/reservations/current',
+            link: '/Reservations/myReservations',
             buttonText: 'عرض جميع الحجوزات',
             dateText: 'اخر تحديث اليوم'
         },
@@ -99,7 +102,7 @@
             title: 'الحجوزات الواردة',
             number: '٠ حجز',
             icon: '/_nuxt/assets/images/home-img/incoming-reservations.svg',
-            link: '/reservations/incoming',
+            link: '/orders/new',
             buttonText: 'عرض جميع الواردة',
             dateText: 'اخر تحديث اليوم'
         },
@@ -107,7 +110,7 @@
             title: 'الحجوزات المكتملة',
             number: '٠ حجز',
             icon: '/_nuxt/assets/images/home-img/completed-reservations.svg',
-            link: '/reservations/completed',
+            link: '/Reservations/completed',
             buttonText: 'عرض الحجوزات المكتملة',
             dateText: 'اخر تحديث اليوم'
         },
@@ -123,11 +126,32 @@
             title: 'طلبات قائمة الانتظار',
             number: '٠ حجز',
             icon: '/_nuxt/assets/images/sidebar/timer.svg',
-            link: '/waiting-list',
+            link: '/orders/waiting',
             buttonText: 'عرض قائمة الانتظار',
             dateText: 'اخر تحديث اليوم'
         }
     ]);
+
+    const handleDeleteNotification = async (id) => {
+        try {
+            const config = {
+            headers: { Authorization: `Bearer ${authStore.token}` }
+            };
+
+            const res = await axios.delete(
+            `provider/notifications/delete/${id}`,
+            config
+            );
+
+            if (response(res) === 'success') {
+                homeData.value.notifications =
+                homeData.value.notifications.filter(n => n.id !== id);
+                successToast(res?.data?.msg)
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    };
 
     // Fetch home data from API
     const fetchHomeData = async () => {

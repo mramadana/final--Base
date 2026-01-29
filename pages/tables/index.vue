@@ -5,7 +5,7 @@
   
       <!-- Filter Component -->
       <ReservationFilter 
-        v-if="!loading" 
+        v-if="!loading && filteredTables?.length > 0" 
         v-model="filterValues" 
         :show-search="true" 
         :show-select="true" 

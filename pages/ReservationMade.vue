@@ -134,10 +134,17 @@
   const pageLimit = ref(10);
   const totalPage = ref(0);
   
+  // Callback for child pages to register their fetch function
+  const fetchDataCallback = ref(null);
+  
   // Paginate Function
   const onPaginate = (e) => {
     currentPage.value = e.page + 1;
     window.scrollTo(0, 0);
+    // Call child page fetch function if registered
+    if (fetchDataCallback.value) {
+      fetchDataCallback.value(currentPage.value);
+    }
   };
   
   /******************* Computed *******************/
@@ -160,7 +167,8 @@
     pageLimit,
     totalPage,
     onPaginate,
-    showPaginate
+    showPaginate,
+    fetchDataCallback
   });
   
   globalStore.title = pageHeadTitle.value;

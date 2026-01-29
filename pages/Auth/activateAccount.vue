@@ -15,9 +15,6 @@
                             @resend-code="resendCode"
                             ref="otpComponent"
                         />
-
-                        <NuxtLink to="/Auth/completeInfo"> {{ $t('Titles.verification_code') }} </NuxtLink>
-
                         <button type="submit" class="custom-btn w-100 mr-auto"> {{ $t('Titles.verification_code') }} </button>
 
                     </div>

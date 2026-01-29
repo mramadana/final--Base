@@ -249,10 +249,11 @@ const getWorkingHours = async () => {
                 available: true,
                 reservedExternally: false
             }));
+        } else {
+            errorToast(res.data.msg);
         }
     } catch (error) {
         console.error("Get working hours error:", error);
-        errorToast('حصل خطأ في تحميل ساعات العمل');
     } finally {
         loading.value = false;
     }

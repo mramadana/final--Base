@@ -108,11 +108,15 @@
 </template>
 
 <script setup>
+
 import { useI18n } from 'vue-i18n';
 
 definePageMeta({
   name: 'reservations.reservation_details',
 });
+
+
+const globalStore = useGlobalStore();
 
 // Get route parameter
 const route = useRoute();
@@ -184,6 +188,8 @@ const messageText = computed(() => {
     return t('reservationDetails.payment_completed_msg');
   } else if (bookingStatus.value === 'ملغي') {
     return t('reservationDetails.payment_failed_msg');
+  } else if (bookingStatus.value === 'مكتمل') {
+    return t('reservationDetails.payment_completed_msg');
   }
   return '';
 });
@@ -195,6 +201,8 @@ const messageClass = computed(() => {
     return 'status-message pending';
   } else if (bookingStatus.value === 'ملغي') {
     return 'status-message fail';
+  } else if (bookingStatus.value === 'مكتمل') {
+    return 'status-message success';
   }
   return 'status-message warning';
 });
@@ -287,6 +295,12 @@ const confirmReject = async () => {
   }
 };
 
+const pageHeadTitle = ref(t("Sidebar.my_reservation"));
+// Set global store
+globalStore.title = pageHeadTitle.value;
+globalStore.titleIcon = "fa-solid fa-angle-left";
+globalStore.titleLink = "/Reservations/myReservations";
+globalStore.subtitle = t("reservations.reservation_details");
 // Initialize data on mount
 onMounted(async () => {
   await getReservationDetails();

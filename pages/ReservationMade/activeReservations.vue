@@ -42,19 +42,16 @@ const loading = ref(false);
 // Set page title and load data
 onMounted(async () => {
   context.setPageTitle('reservations.active_reservations');
+  // Register fetch callback for pagination
+  context.fetchDataCallback.value = getActiveReservations;
+  // Reset pagination when entering this page
+  context.totalPage.value = 0;
+  context.pageLimit.value = 10;
   await getActiveReservations();
 });
 
 // Reservations data - reactive for API
 const reservations = ref([]);
-
-// Pagination data
-const pagination = ref({
-    totalItems: 0,
-    currentPage: 1,
-    perPage: 20,
-    totalPages: 1
-});
 
 // Get active reservations from API
 const getActiveReservations = async (page = 1) => {
@@ -69,14 +66,10 @@ const getActiveReservations = async (page = 1) => {
         if (res.data.key === 'success') {
             const data = res.data.data;
             
-            // Update pagination
+            // Update parent context for paginator from API response
             if (data.pagination) {
-                pagination.value = {
-                    totalItems: data.pagination.total_items || 0,
-                    currentPage: data.pagination.current_page || 1,
-                    perPage: data.pagination.per_page || 20,
-                    totalPages: data.pagination.total_pages || 1
-                };
+                context.totalPage.value = data.pagination.total_items;
+                context.pageLimit.value = data.pagination.per_page;
             }
             
             // Map reservations data to component format
@@ -106,6 +99,7 @@ const getActiveReservations = async (page = 1) => {
 watch(
   () => context.filtersTrigger.value,
   () => {
+    context.currentPage.value = 1; // Reset to first page
     getActiveReservations(1);
   }
 );

@@ -69,7 +69,6 @@
                 </div>
             </form>
 
-            <NuxtLink to="/Auth/activateAccount">{{ $t("Auth.activate_account") }}</NuxtLink>
         </div>
 
         <!-- success modal -->

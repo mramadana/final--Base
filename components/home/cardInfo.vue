@@ -19,9 +19,14 @@
                                     <span class="notif-time">{{ notif.created_at || notif.time }}</span>
                                 </div>
                             </div>
-                            <button class="delete-btn" @click="deleteNotification(index)">
-                                <img src="@/assets/images/home-img/delet-noft.svg" alt="delete-noft">
+                            <button class="delete-btn" @click="deleteNotification(notif)">
+                            <img src="@/assets/images/home-img/delet-noft.svg" v-if="!deleteLoading[notif.id]">
+                            <span
+                                class="spinner-border spinner-border-sm m-0"
+                                v-if="deleteLoading[notif.id]"
+                            ></span>
                             </button>
+
                         </div>
                     </div>
 
@@ -100,9 +105,9 @@
                         </div>
                     </div>
                     
-                    <button class="renew-btn">
+                    <NuxtLink to="/Auth/completePayment" class="renew-btn text-center">
                         اعادة الاشتراك
-                    </button>
+                    </NuxtLink>
                 </div>
             </div>
         </div>
@@ -110,6 +115,16 @@
 </template>
 
 <script setup>
+
+// success response
+const { response } = responseApi();
+
+// Axios
+const axios = useApi();
+
+// toast
+const { successToast, errorToast } = toastMsg();
+
 const props = defineProps({
     notifications: {
         type: Array,
@@ -121,6 +136,11 @@ const props = defineProps({
     }
 });
 
+const emit = defineEmits(['delete-notification']);
+
+// delete loading
+const deleteLoading = ref({});
+
 const notificationsList = computed(() => {
     return props.notifications && props.notifications.length > 0 
         ? props.notifications 
@@ -130,12 +150,12 @@ const notificationsList = computed(() => {
 const quickLinks = ref([
     {
         text: 'إضافة طاولة جديدة',
-        url: '/tables/add'
+        url: '/tables/addTable'
     },
     {
         text: 'الحجوزات',
         image: '/_nuxt/assets/images/sidebar/reservations.svg',
-        url: '/reservations'
+        url: '/Reservations/myReservations'
     },
     {
         text: 'المنيو',
@@ -144,11 +164,14 @@ const quickLinks = ref([
     }
 ]);
 
-const deleteNotification = (index) => {
-    // This would need to call an API to delete the notification
-    // For now, we'll just remove it from the local list
-    notificationsList.value.splice(index, 1);
+const deleteNotification = (notif) => {
+  deleteLoading.value[notif.id] = true;
+  emit('delete-notification', notif.id);
+  setTimeout(() => {
+    deleteLoading.value[notif.id] = false;
+  }, 500);
 };
+
 
 const formatDate = (dateString) => {
     if (!dateString) return '';
