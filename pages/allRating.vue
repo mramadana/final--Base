@@ -25,9 +25,11 @@
                 <div v-for="review in reviews" :key="review.id" class="review-card">
                     <div class="d-flex align-items-center justify-content-between mb-2">
                         <h4 class="reviewer-name">{{ review.name }}</h4>
-                        <div class="d-flex justify-content-start rate-parent sm-rate">
-                            <StarRating :rating="review.rating" :read-only="true" :increment="0.5" :max-rating="5" :star-size="22" :rounded-corners="true" :border-width="2"/>
-                        </div>
+                        <ClientOnly>
+                            <div class="d-flex justify-content-start rate-parent sm-rate">
+                                <StarRating :rating="review.rating" :read-only="true" :increment="0.5" :max-rating="5" :star-size="22" :rounded-corners="true" :border-width="2"/>
+                            </div>
+                        </ClientOnly>
                     </div>
                     <p class="review-date">{{ review.date }}</p>
                     <p class="review-text">{{ review.comment }}</p>

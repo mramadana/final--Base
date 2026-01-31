@@ -487,7 +487,8 @@
         "meals_loaded_successfully": "تم تحميل الوجبات بنجاح",
         "services_loaded_successfully": "تم تحميل الخدمات بنجاح",
         "error_loading_meals": "حدث خطأ أثناء تحميل الوجبات",
-        "error_loading_services": "حدث خطأ أثناء تحميل الخدمات"
+        "error_loading_services": "حدث خطأ أثناء تحميل الخدمات",
+        "no_services": "لا توجد خدمات حاليا "
     },
 
     "noData": {
@@ -622,6 +623,37 @@
         "reactivate_account_message": "يرجى اعادة الاشتراك لاعادة استخدام الحساب مرة اخرى",
         "subscription_active_until": "اشتراكك نشط حتى تاريخ انتهاء الاشتراك",
         "subscription_expiry_date": "تاريخ انتهاء الاشتراك",
-        "renew_subscription": "اعادة الاشتراك"
+        "renew_subscription": "اعادة الاشتراك",
+        "current_reservations": "الحجوزات الحالية",
+        "incoming_reservations": "الحجوزات الواردة",
+        "completed_reservations": "الحجوزات المكتملة",
+        "cancelled_reservations": "الحجوزات الملغية",
+        "waiting_list_reservations": "طلبات قائمة الانتظار",
+        "show_all_reservations": "عرض جميع الحجوزات",
+        "show_all_incoming": "عرض جميع الواردة",
+        "show_completed_reservations": "عرض الحجوزات المكتملة",
+        "show_cancelled_reservations": "عرض الحجوزات الملغية",
+        "show_waiting_list": "عرض قائمة الانتظار",
+        "last_updated_today": "اخر تحديث اليوم",
+        "zero_reservations": "٠ حجز",
+        "waiting_for_response": "بأنتظار الرد",
+        "table_occupation": "نسبة إشغال الطاولات",
+        "occupation_ratio": "نسبة الإشغال",
+        "available": "المتاح",
+        "all": "الكل",
+        "confirmed": "مؤكد",
+        "pending_confirmation": "قيد التأكيد",
+        "canceled": "ملغي",
+        "active_reservation": "حجز نشط",
+        "error_loading_active_reservations": "حصل خطأ في تحميل الحجوزات النشطة",
+        "people_count": "أفراد",
+        "reservations_text": "الحجوزات",
+        "available_table": "متاحة",
+        "reserved_table": "محجوزة",
+        "closed_table": "مغلقة",
+        "error_loading_tables": "حصل خطأ في تحميل الطاولات",
+        "table_deleted_successfully": "تم حذف الطاولة بنجاح",
+        "error_deleting_table": "حدث خطأ أثناء حذف الطاولة",
+        "error_adding_table": "حدث خطأ أثناء إضافة الطاولة"
     }
 }

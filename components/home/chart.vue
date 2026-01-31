@@ -1,7 +1,7 @@
 <template>
     <div class="chart-container">
         <div class="chart-header">
-            <h3 class="chart-title">نسبة إشغال الطاولات</h3>
+            <h3 class="chart-title">{{ $t('home.table_occupation') }}</h3>
             <div class="chart-legend">
                 <label class="legend-item">
                     <input 
@@ -10,7 +10,7 @@
                         @change="updateChart"
                         class="legend-checkbox"
                     />
-                    <span class="legend-text">نسبة الإشغال</span>
+                    <span class="legend-text">{{ $t('home.occupation_ratio') }}</span>
                 </label>
                 <label class="legend-item">
                     <input 
@@ -19,7 +19,7 @@
                         @change="updateChart"
                         class="legend-checkbox"
                     />
-                    <span class="legend-text">المتاح</span>
+                    <span class="legend-text">{{ $t('home.available') }}</span>
                 </label>
             </div>
         </div>
@@ -28,6 +28,8 @@
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n({ useScope: 'global' });
 
 const props = defineProps({
     occupationPercentage: {
@@ -64,12 +66,12 @@ const chartData = computed(() => {
   return [
     { 
       value: busyRatio, 
-      name: "نسبة الإشغال",
+      name: t('home.occupation_ratio'),
       itemStyle: { color: "#E8E8E8" }
     },
     { 
       value: freeRatio, 
-      name: "المتاح",
+      name: t('home.available'),
       itemStyle: { color: "#666666" }
     },
   ];

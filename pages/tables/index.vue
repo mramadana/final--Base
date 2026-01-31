@@ -5,7 +5,7 @@
   
       <!-- Filter Component -->
       <ReservationFilter 
-        v-if="!loading && filteredTables?.length > 0" 
+        v-if="!loading" 
         v-model="filterValues" 
         :show-search="true" 
         :show-select="true" 
@@ -246,12 +246,11 @@
             id: item.id,
             image: item.image || '/_nuxt/assets/images/Logo.svg',
             tableNumber: item.code,
-            numberOfPeople: `${item.people_number} أفراد`,
+            numberOfPeople: `${item.people_number} ${t('home.people_count')}`,
             bookingPrice: `${item.price} ${item.currency}`,
             bookingDate: item.created_at || '-',
-            reservations: 'الحجوزات', // You might need to get this from API
-            // status: item.status === 'available' ? 'متاحة' : item.status === 'reserved' ? 'محجوزة' : 'مغلقة',
-            status: item.is_reserved == true ? 'محجوزة' : item.is_reserved == false ? 'متاحة' : 'مغلقة',
+            reservations: t('home.reservations_text'), // You might need to get this from API
+            status: item.is_reserved == true ? t('home.reserved_table') : item.is_reserved == false ? t('home.available_table') : t('home.closed_table'),
             statusBadge: item.is_reserved,
             // Keep original data for reference
             originalData: item
@@ -261,7 +260,7 @@
       
     } catch (err) {
       console.error('Get tables error:', err);
-      errorToast('حصل خطأ في تحميل الطاولات');
+      errorToast(t('home.error_loading_tables'));
     } finally {
       loading.value = false;
     }
@@ -299,12 +298,12 @@
         showDeleteDialog.value = false;
         itemToDelete.value = null;
         
-        successToast('تم حذف الطاولة بنجاح');
+        successToast(t('home.table_deleted_successfully'));
       }
       
     } catch (error) {
       console.error('Delete error:', error);
-      errorToast('حدث خطأ أثناء حذف الطاولة');
+      errorToast(t('home.error_deleting_table'));
     } finally {
       isDeleting.value = false;
     }

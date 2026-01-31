@@ -95,10 +95,9 @@
   };
 
   // Watch for filter changes and refetch data
-  watch(() => context.filterValues, () => {
-    context.currentPage.value = 1; // Reset to first page
+  watch(() => context.filtersTrigger.value, () => {
     getCancelledReservations(1);
-  }, { deep: true });
+  });
 
   // استخدام الـ function من الصفحة الرئيسية - مكتوبة مرة واحدة! 
   const filteredReservations = computed(() => {

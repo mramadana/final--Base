@@ -78,7 +78,7 @@ const getActiveReservations = async (page = 1) => {
                     id: item.id,
                     orderNum: item.order_num,
                     metaTime: item.created_at,
-                    title: item.name || 'حجز نشط',
+                    title: item.name || t('home.active_reservation'),
                     dateRange: item.date,
                     customerName: item.customer_name,
                     imageSrc: '/_nuxt/assets/images/Logo.svg',
@@ -89,7 +89,7 @@ const getActiveReservations = async (page = 1) => {
         }
     } catch (error) {
         console.error("Get active reservations error:", error);
-        errorToast('حصل خطأ في تحميل الحجوزات النشطة');
+        errorToast(t('home.error_loading_active_reservations'));
     } finally {
         loading.value = false;
     }

@@ -29,9 +29,11 @@
                         <div v-for="item in ratingStats.breakdown" :key="item.stars" class="rating-row">
                             <div class="d-flex align-items-center justify-content-between">
                                 <span class="percentage">{{ item.percentage }} %</span>
-                                <div class="d-flex justify-content-start rate-parent mt-2 mb-2 sm-rate">
-                                    <StarRating :rating="item.stars" :read-only="true" :increment="0.5" :max-rating="5" :star-size="20" :rounded-corners="true" :border-width="2"/>
-                                </div>
+                                <ClientOnly>
+                                    <div class="d-flex justify-content-start rate-parent mt-2 mb-2 sm-rate">
+                                        <StarRating :rating="item.stars" :read-only="true" :increment="0.5" :max-rating="5" :star-size="20" :rounded-corners="true" :border-width="2"/>
+                                    </div>
+                                </ClientOnly>
                             </div>
                             <div class="progress-bar">
                                 <div class="progress-fill" :style="{ width: item.percentage + '%' }"></div>
@@ -50,9 +52,11 @@
                         <div v-for="review in reviews" :key="review.id" class="review-card">
                             <div class="d-flex align-items-center justify-content-between mb-2">
                                 <h4 class="reviewer-name">{{ review.name }}</h4>
-                                <div class="d-flex justify-content-start rate-parent sm-rate">
-                                    <StarRating :rating="review.rating" :read-only="true" :increment="0.5" :max-rating="5" :star-size="22" :rounded-corners="true" :border-width="2"/>
-                                </div>
+                                <ClientOnly>
+                                    <div class="d-flex justify-content-start rate-parent sm-rate">
+                                        <StarRating :rating="review.rating" :read-only="true" :increment="0.5" :max-rating="5" :star-size="22" :rounded-corners="true" :border-width="2"/>
+                                    </div>
+                                </ClientOnly>
                             </div>
                             <p class="review-date">{{ review.date }}</p>
                             <p class="review-text">{{ review.comment }}</p>
@@ -74,6 +78,9 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n';
+import { useGlobalStore } from '~/stores/global';
+import { useAuthStore } from '~/stores/auth';
+
 import StarRating from 'vue-star-rating';
 
 const { t } = useI18n({ useScope: 'global' });
@@ -89,8 +96,6 @@ const axios = useApi();
 
 // Loading state
 const loading = ref(true);
-
-const rating = ref(0);
 
 // Rating Statistics
 const ratingStats = ref({

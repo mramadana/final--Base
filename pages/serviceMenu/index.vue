@@ -9,7 +9,6 @@
     </div>
 
     <div v-else>
-      <h1 class="main-title md mb-4">{{ menuTitle }}</h1>
 
       <!-- Filter Component -->
       <ReservationFilter 

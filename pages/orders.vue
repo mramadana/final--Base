@@ -80,10 +80,10 @@ onBeforeUnmount(() => {
 
 // Status options for select
 const statusOptions = ref([
-    { id: 1, name: "الكل" },
-    { id: 2, name: "مؤكد" },
-    { id: 3, name: "قيد التأكيد" },
-    { id: 4, name: "ملغي" },
+    { id: 1, name: t('home.all') },
+    { id: 2, name: t('home.confirmed') },
+    { id: 3, name: t('home.pending_confirmation') },
+    { id: 4, name: t('home.canceled') },
 ]);
 
 // Handle filter events

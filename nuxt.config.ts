@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  ssr: false,
+  // ssr: false,
   
   app: {
     pageTransition: {
@@ -68,9 +68,9 @@ export default defineNuxtConfig({
   build: {
     transpile: [
       "@fawmi/vue-google-maps",
-      "@syncfusion/ej2-vue-calendars",
-      "@syncfusion/ej2-base",
-      "@syncfusion/ej2-calendars"
+      // "@syncfusion/ej2-vue-calendars",
+      // "@syncfusion/ej2-base",
+      // "@syncfusion/ej2-calendars"
     ],
   },
 

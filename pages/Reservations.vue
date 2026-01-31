@@ -45,6 +45,24 @@
     date: null
   });
   
+  const debouncedSearch = ref('');
+  let searchTimer = null;
+  
+  watch(
+    () => filterValues.value.search,
+    (val) => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => {
+        debouncedSearch.value = (val || '').trim();
+        currentPage.value = 1; // Reset to first page when search stabilizes
+      }, 1000);
+    }
+  );
+  
+  onBeforeUnmount(() => {
+    clearTimeout(searchTimer);
+  });
+  
   // Status options for select
   const statusOptions = ref([
     { id: 'all', name: 'الكل' },
@@ -94,8 +112,8 @@
   const buildApiQuery = () => {
     const params = new URLSearchParams();
     
-    if (filterValues.value.search) {
-      params.append('table_code', filterValues.value.search);
+    if (debouncedSearch.value) {
+      params.append('table_code', debouncedSearch.value);
     }
     
     if (filterValues.value.select && filterValues.value.select !== 'all') {
@@ -108,6 +126,14 @@
     
     return params.toString();
   };
+
+  const filtersTrigger = computed(() => {
+    return JSON.stringify({
+      search: debouncedSearch.value,
+      select: filterValues.value.select,
+      date: filterValues.value.date
+    });
+  });
 
   // Filtering function - now just returns data (API handles filtering)
   const applyFilters = (data) => {
@@ -146,6 +172,7 @@
     handleDateChange,
     applyFilters,
     buildApiQuery,
+    filtersTrigger,
     setPageTitle,
     currentPage,
     pageLimit,

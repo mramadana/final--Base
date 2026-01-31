@@ -91,44 +91,44 @@
 
     const items = ref([
         {
-            title: 'الحجوزات الحالية',
-            number: '٠ حجز',
+            title: t('home.current_reservations'),
+            number: t('home.zero_reservations'),
             icon: '/_nuxt/assets/images/home-img/current-reservations.svg',
             link: '/Reservations/myReservations',
-            buttonText: 'عرض جميع الحجوزات',
-            dateText: 'اخر تحديث اليوم'
+            buttonText: t('home.show_all_reservations'),
+            dateText: t('home.last_updated_today')
         },
         {
-            title: 'الحجوزات الواردة',
-            number: '٠ حجز',
+            title: t('home.incoming_reservations'),
+            number: t('home.zero_reservations'),
             icon: '/_nuxt/assets/images/home-img/incoming-reservations.svg',
             link: '/orders/new',
-            buttonText: 'عرض جميع الواردة',
-            dateText: 'اخر تحديث اليوم'
+            buttonText: t('home.show_all_incoming'),
+            dateText: t('home.last_updated_today')
         },
         {
-            title: 'الحجوزات المكتملة',
-            number: '٠ حجز',
+            title: t('home.completed_reservations'),
+            number: t('home.zero_reservations'),
             icon: '/_nuxt/assets/images/home-img/completed-reservations.svg',
             link: '/Reservations/completed',
-            buttonText: 'عرض الحجوزات المكتملة',
-            dateText: 'اخر تحديث اليوم'
+            buttonText: t('home.show_completed_reservations'),
+            dateText: t('home.last_updated_today')
         },
         {
-            title: 'الحجوزات الملغية',
-            number: '٠ حجز',
+            title: t('home.cancelled_reservations'),
+            number: t('home.zero_reservations'),
             icon: '/_nuxt/assets/images/home-img/cancelled-reservations.svg',
             link: '/reservations/cancelled',
-            buttonText: 'عرض الحجوزات الملغية',
-            dateText: 'اخر تحديث اليوم'
+            buttonText: t('home.show_cancelled_reservations'),
+            dateText: t('home.last_updated_today')
         },
         {
-            title: 'طلبات قائمة الانتظار',
-            number: '٠ حجز',
+            title: t('home.waiting_list_reservations'),
+            number: t('home.zero_reservations'),
             icon: '/_nuxt/assets/images/sidebar/timer.svg',
             link: '/orders/waiting',
-            buttonText: 'عرض قائمة الانتظار',
-            dateText: 'اخر تحديث اليوم'
+            buttonText: t('home.show_waiting_list'),
+            dateText: t('home.last_updated_today')
         }
     ]);
 
@@ -184,7 +184,7 @@
                             dateRange: res.date || '',
                             customerName: res.user_name || '',
                             status: res.status || 'pending',
-                            statusText: res.status_text || 'بأنتظار الرد',
+                            statusText: res.status_text || t('reservations.waiting_for_response'),
                             reservation_num: res.reservation_num || ''
                         }));
                     }

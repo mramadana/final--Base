@@ -287,7 +287,7 @@ const submitTable = async () => {
 
         } catch (error) {
             console.error("Add table error:", error);
-            errorToast("حدث خطأ أثناء إضافة الطاولة");
+            errorToast(t('home.error_adding_table'));
         } finally {
             loading.value = false;
         }
