@@ -2,37 +2,19 @@
     <div class="custom-height">
         <div class="container">
             <div class="layout-form custom-width lg">
-                <div
-                    class="d-flex align-items-center justify-content-between mb-4 gap-3"
-                >
+                <div class="d-flex align-items-center justify-content-between mb-4 gap-3">
                     <h1 class="main-title bold lg mb-0 position-relative">
                         {{ $t("notifications.notifications") }}
                     </h1>
                     <div class="deleteAll-info d-flex align-items-center gap-4">
                         <label class="switch">
-                            <input
-                                type="checkbox"
-                                @change="toggleNotify"
-                                v-model="isSelected"
-                            />
+                            <input type="checkbox" @change="toggleNotify" v-model="isSelected" />
                             <div class="slider round"></div>
                         </label>
-                        <button
-                            type="button"
-                            class="deleteAll-btn"
-                            @click="deleteAll"
-                            v-if="notifications.length"
-                        >
-                            <i
-                                class="far fa-trash-alt trash-icon"
-                                v-if="!deleteLoading"
-                            ></i>
-                            <span
-                                class="spinner-border spinner-border-sm m-0"
-                                v-if="deleteLoading"
-                                role="status"
-                                aria-hidden="true"
-                            ></span>
+                        <button type="button" class="deleteAll-btn" @click="deleteAll" v-if="notifications.length">
+                            <i class="far fa-trash-alt trash-icon" v-if="!deleteLoading"></i>
+                            <span class="spinner-border spinner-border-sm m-0" v-if="deleteLoading" role="status"
+                                aria-hidden="true"></span>
                             <div class="resp-text">
                                 {{ $t("notifications.delete_all") }}
                             </div>
@@ -41,59 +23,38 @@
                 </div>
 
                 <transition-group name="fade" v-if="!loading">
-                    <div
-                        v-for="(result, index) in notifications"
-                        :key="result.index"
-                    >
+                    <div v-for="(result, index) in notifications" :key="result.index">
                         <div class="layout-form sm" v-if="notifications.length">
                             <div class="notificatin-card">
-                                <NuxtLink 
-                                    :to="getNotificationRoute(result)" 
-                                    class="d-flex flex-grow-1 text-decoration-none"
-                                >
+                                <NuxtLink :to="getNotificationRoute(result)"
+                                    class="d-flex flex-grow-1 text-decoration-none">
                                     <div class="notif-icon notification ml-2">
-                                        <img
-                                            src="@/assets/images/notification-img.svg"
-                                            alt="notification-img"
-                                        />
+                                        <img src="@/assets/images/notification-img.svg" alt="notification-img" />
                                     </div>
                                     <div class="text text-start">
                                         <h1 class="main-title normal wrap_text">
                                             {{ result.body }}
                                         </h1>
-                                        <div
-                                            class="d-flex align-items-center gap-2"
-                                        >
-                                            <i
-                                                class="far fa-clock main-disc"
-                                            ></i>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <i class="far fa-clock main-disc"></i>
                                             <div>
-                                                <span class="main-disc sm"
-                                                    >{{ $t("ratings.since") }} :
+                                                <span class="main-disc sm">
                                                     {{
                                                         result.created_at
-                                                    }}</span
-                                                >
+                                                    }}</span>
                                                 &nbsp;
                                                 <span class="main-disc sm">{{
                                                     result.time
-                                                }}</span>
+                                                    }}</span>
                                             </div>
                                         </div>
                                     </div>
                                 </NuxtLink>
                                 <button class="delete-btn" @click.stop>
-                                    <i
-                                        class="far fa-trash-alt trash-icon"
-                                        v-if="!deleteLoading"
-                                        @click="removenotifation(index)"
-                                    ></i>
-                                    <span
-                                        class="spinner-border spinner-border-sm m-0"
-                                        v-if="deleteLoading"
-                                        role="status"
-                                        aria-hidden="true"
-                                    ></span>
+                                    <i class="far fa-trash-alt trash-icon" v-if="!deleteLoading"
+                                        @click="removenotifation(index)"></i>
+                                    <span class="spinner-border spinner-border-sm m-0" v-if="deleteLoading"
+                                        role="status" aria-hidden="true"></span>
                                 </button>
                             </div>
                         </div>
@@ -111,15 +72,9 @@
                                 <Skeleton shape="circle" size="4rem"></Skeleton>
                                 <div class="not_body">
                                     <div class="time mb-3">
-                                        <Skeleton
-                                            height=".6rem"
-                                            width="4rem"
-                                        ></Skeleton>
+                                        <Skeleton height=".6rem" width="4rem"></Skeleton>
                                     </div>
-                                    <Skeleton
-                                        height=".6rem"
-                                        width="14rem"
-                                    ></Skeleton>
+                                    <Skeleton height=".6rem" width="14rem"></Skeleton>
                                 </div>
                             </div>
                             <Skeleton height="1.2rem" width=".8rem"></Skeleton>
@@ -128,13 +83,7 @@
                 </div>
 
                 <div v-if="showPaginate" class="paginate-parent">
-                    <Paginator
-                        :rows="pageLimit"
-                        @page="onPaginate"
-                        :totalRecords="totalPage"
-                        class="mt-5"
-                        dir="ltr"
-                    />
+                    <Paginator :rows="pageLimit" @page="onPaginate" :totalRecords="totalPage" class="mt-5" dir="ltr" />
                 </div>
             </div>
         </div>
@@ -188,34 +137,34 @@ const config = {
 const getNotificationRoute = (notification) => {
     const type = notification.type;
     const data = notification.data;
-    
+
     // Reservation-related notifications
-    if (type === 'new_reservation_notification' || 
-        type === 'confirm_reservation_notification' || 
-        type === 'cancel_reservation_notification' || 
+    if (type === 'new_reservation_notification' ||
+        type === 'confirm_reservation_notification' ||
+        type === 'cancel_reservation_notification' ||
         type === 'rate_reservation_notification' ||
         type === 'waiting_list_to_pending_status_notification' ||
         type === 'cancel_waiting_list_reservation_notification' ||
         type === 'reservation_in_progress_notification') {
         return data?.reservation_id ? `/reservation-${data.reservation_id}` : '/Reservations/myReservations';
     }
-    
+
     // Settlement notifications
-    if (type === 'admin_accept_settlement_notification' || 
+    if (type === 'admin_accept_settlement_notification' ||
         type === 'admin_reject_settlement_notification') {
         return data?.settlement_id ? `/financialTransactions/${data.settlement_id}` : '/financialTransactions/requestSettlement';
     }
-    
+
     // Approval notification
     if (type === 'approval_notification') {
         return '/';
     }
-    
+
     // Admin notifications (for both apps)
     if (type === 'admin_notification' || type === 'block_notification') {
         return '/';
     }
-    
+
     // Default fallback
     return '/';
 };
@@ -462,16 +411,16 @@ definePageMeta({
     transform: translateY(-50%);
 }
 
-input:checked + .slider {
+input:checked+.slider {
     background-color: #34c759;
     border-color: #34c759;
 }
 
-input:focus + .slider {
+input:focus+.slider {
     box-shadow: 0 0 1px #101010;
 }
 
-input:checked + .slider:before {
+input:checked+.slider:before {
     -webkit-transform: translate(17px, -50%);
     -ms-transform: translate(17px, -50%);
     transform: translate(17px, -50%);

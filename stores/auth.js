@@ -21,6 +21,7 @@ export const useAuthStore = defineStore("auth", {
     currentPasword: null,
     lat: null,
     lng: null,
+    userType: null
   }),
   actions: {
 
@@ -34,9 +35,6 @@ export const useAuthStore = defineStore("auth", {
         console.error("Sign-in error:", error);
         return { status: "error", msg: error.message || "An error occurred" };
       }
-
-      console.log(data, "data");
-      console.log("Data key:", data.key);
   
       if (data.key === "needActive") {
         console.log("Redirecting to activate account");
@@ -61,6 +59,8 @@ export const useAuthStore = defineStore("auth", {
         this.user = data.data;
         this.token = data.data.token;
         this.isLoggedIn = true;
+        this.userType = data.data.category?.type || null;
+        console.log("User type:", this.userType);
         navigateTo("/");
         return { status: "success", msg: data.msg };
       } else {

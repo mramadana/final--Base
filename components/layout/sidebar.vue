@@ -111,11 +111,15 @@ const route = useRoute();
 const logoutDialog = ref(false);
 const logoutLoading = ref(false);
 
+// Auth store
+import { useAuthStore } from '~/stores/auth';
+const authStore = useAuthStore();
+
 // Collapse state
 const openMenus = ref({});
 
-// Menu items structure
-const menuItems = ref([
+// All menu items
+const allMenuItems = [
     {
         label: 'Sidebar.home',
         to: '/',
@@ -151,7 +155,14 @@ const menuItems = ref([
             { label: 'sideMenu.add_meal', to: '/addMeal', icon: '/_nuxt/assets/images/sidebar/folder-add.png' }
         ]
     },
-
+    {
+        label: 'Sidebar.service_list',
+        icon: '/_nuxt/assets/images/sidebar/menu-board.svg',
+        children: [
+            { label: 'sideMenu.my_menus', to: '/serviceMenu', icon: '/_nuxt/assets/images/sidebar/folder-open.png' },
+            { label: 'sideMenu.add_service', to: '/serviceMenu/addService', icon: '/_nuxt/assets/images/sidebar/folder-add.png' }
+        ]
+    },
     {
         label: 'Sidebar.new_orders',
         icon: '/_nuxt/assets/images/sidebar/new-order.svg',
@@ -207,7 +218,34 @@ const menuItems = ref([
         to: '/Wallet',
         icon: '/_nuxt/assets/images/sidebar/wallet-money.svg'
     }
-]);
+];
+
+// Filtered menu items based on userType
+const menuItems = computed(() => {
+  if (typeof window !== 'undefined') {
+    const userType = authStore.userType;
+
+    if (userType === 'service') {
+      return allMenuItems.filter(item => {
+        // Hide workingTime
+        if (item.to === '/workingTime' || item.to === '/orders/payment-pending') return false;
+        // Hide Tables menu
+        if (item.label === 'Sidebar.tables' || item.label === 'Sidebar.menu_list' || item.label === 'Sidebar.financial_transactions') return false;
+        return true;
+      });
+    }
+
+    if (userType === 'restraunt') {
+      return allMenuItems.filter(item => {
+        if (item.label === 'Sidebar.service_list') return false;
+        return true;
+      });
+    }
+  }
+
+  return allMenuItems;
+});
+
 
 // Toggle collapse - close all others and toggle the clicked one
 const toggleCollapse = (index) => {

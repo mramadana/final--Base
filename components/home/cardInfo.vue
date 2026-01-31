@@ -5,7 +5,7 @@
             <div class="col-12 col-lg-6">
                 <div class="info-card">
                     <div class="card-header-section">
-                        <h3 class="card-title">أحدث التنبيهات</h3>
+                        <h3 class="card-title">{{ $t('home.latest_notifications') }}</h3>
                     </div>
                     
                     <div class="notifications-list" v-if="notificationsList.length > 0">
@@ -31,11 +31,11 @@
                     </div>
 
                     <div class="main-title flex-grow-1 d-flex align-items-center justify-content-center" v-else>
-                        لا يوجد تنبيهات الان
+                        {{ $t('home.no_notifications') }}
                     </div>
                     
                     <NuxtLink to="/notifications" class="view-all-link">
-                        عرض جميع التنبيهات
+                        {{ $t('home.view_all_notifications') }}
                     </NuxtLink>
                 </div>
             </div>
@@ -44,7 +44,7 @@
             <div class="col-12 col-lg-3">
                 <div class="info-card quick-links-card">
                     <div class="card-header-section">
-                        <h3 class="card-title">روابط سريعة</h3>
+                        <h3 class="card-title">{{ $t('home.quick_links') }}</h3>
                     </div>
                     
                     <div class="quick-links-content">
@@ -83,21 +83,19 @@
             <div class="col-12 col-lg-3">
                 <div class="info-card account-card">
                     <div class="card-header-section">
-                        <h3 class="card-title">حالة الحساب</h3>
+                        <h3 class="card-title">{{ $t('home.account_status') }}</h3>
                         <span :class="['status-badge', subscription?.is_active ? 'active' : 'inactive']">
                             <img :src="subscription?.is_active ? '/_nuxt/assets/images/done.svg' : '/_nuxt/assets/images/home-img/danger.svg'" :alt="subscription?.is_active ? 'active' : 'inactive'">
-                            {{ subscription?.is_active ? 'مفعل' : 'غير مفعل' }}
+                            {{ subscription?.is_active ? $t('home.active') : $t('home.inactive') }}
                         </span>
                     </div>
                     
                     <div class="account-content">
                         <p class="account-message" v-if="!subscription?.is_active">
-                            يرجى اعادة الاشتراك لاعادة<br>
-                            استخدام الحساب مرة اخرى
+                            {{ $t('home.reactivate_account_message') }}
                         </p>
                         <p class="account-message" v-else>
-                            اشتراكك نشط حتى<br>
-                            تاريخ انتهاء الاشتراك
+                            {{ $t('home.subscription_active_until') }}
                         </p>
                         
                         <div class="subscription-date" v-if="subscription?.expiration_date">
@@ -106,7 +104,7 @@
                     </div>
                     
                     <NuxtLink to="/Auth/completePayment" class="renew-btn text-center">
-                        اعادة الاشتراك
+                        {{ $t('home.renew_subscription') }}
                     </NuxtLink>
                 </div>
             </div>
@@ -116,14 +114,12 @@
 
 <script setup>
 
-// success response
-const { response } = responseApi();
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n({ useScope: 'global' });
 
-// Axios
-const axios = useApi();
-
-// toast
-const { successToast, errorToast } = toastMsg();
+// Get userType from store
+const store = useAuthStore();
+const { userType } = storeToRefs(store);
 
 const props = defineProps({
     notifications: {
@@ -147,22 +143,26 @@ const notificationsList = computed(() => {
         : [];
 });
 
-const quickLinks = ref([
-    {
-        text: 'إضافة طاولة جديدة',
-        url: '/tables/addTable'
-    },
-    {
-        text: 'الحجوزات',
-        image: '/_nuxt/assets/images/sidebar/reservations.svg',
-        url: '/Reservations/myReservations'
-    },
-    {
-        text: 'المنيو',
-        image: '/_nuxt/assets/images/sidebar/menu-board.svg',
-        url: '/menu'
-    }
-]);
+const quickLinks = computed(() => {
+    const links = [
+        {
+            text: userType.value === 'service' ? t('home.add_new_service') : t('home.add_new_table'),
+            url: userType.value === 'service' ? '/serviceMenu/addService' : '/tables/addTable'
+        },
+        {
+            text: t('home.reservations'),
+            image: '/_nuxt/assets/images/sidebar/reservations.svg',
+            url: '/Reservations/myReservations'
+        },
+        {
+            text: userType.value === 'service' ? t('home.services_list') : t('home.menu'),
+            image: '/_nuxt/assets/images/sidebar/menu-board.svg',
+            url: userType.value === 'service' ? '/serviceMenu' : '/menu'
+        }
+    ];
+    
+    return links;
+});
 
 const deleteNotification = (notif) => {
   deleteLoading.value[notif.id] = true;

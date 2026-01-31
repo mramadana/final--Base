@@ -71,15 +71,6 @@
 
         </div>
 
-        <!-- success modal -->
-        <Dialog v-model:visible="successRegister" modal class="custum_dialog_width without-close" :draggable="false">
-            <div class="text-center">
-                <h1 class="main-title bold mb-4 hint_success">
-                    {{ $t("Auth.hint_success") }}
-                </h1>
-                <img src="@/assets/images/check_img.svg" alt="check-img" class="check-img lg" loading="lazy" />
-            </div>
-        </Dialog>
     </div>
 </template>
 
@@ -127,7 +118,6 @@ const { lat, lng } = storeToRefs(store);
 // Form data
 const loading = ref(false);
 const showValidation = ref(false);
-const successRegister = ref(false);
 const signUpForm = ref(null);
 
 // Countries
@@ -209,7 +199,6 @@ const signUp = async () => {
 
             if (res.status === "success") {
                 successToast(res.msg);
-                successRegister.value = true;
 
                 // Store name, email, password in localStorage
                 if (process.client) {
