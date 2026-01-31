@@ -79,8 +79,12 @@ const config = computed(() => ({
 
 // Page meta
 definePageMeta({
+    name: 'financial.settlement_details',
     layout: 'default',
 });
+
+// Images
+import Logo from '@/assets/images/Logo.svg';
 
 // Global store
 const globalStore = useGlobalStore();
@@ -141,7 +145,7 @@ const getSettlementById = async () => {
                     dateRange: `${new Date().toLocaleTimeString('ar-SA')} - ${new Date().toLocaleTimeString('ar-SA')}`,
                     reservationDate: new Date().toLocaleDateString('ar-SA'),
                     customerName: 'عميل',
-                    imageSrc: '/_nuxt/assets/images/Logo.svg',
+                    imageSrc: Logo,
                     status: item.status,
                     statusText: item.status_text
                 }));

@@ -14,7 +14,7 @@
                             :validation-schema="validations.name"
                             :showErrors="showValidation"
                             :hasIcon="true"
-                            icon="/_nuxt/assets/images/auth-img/user.svg"
+                            :icon="userIcon"
                             :with_icon="true"
                         />
                     </div>
@@ -44,7 +44,7 @@
                                     :showErrors="showValidation"
                                     :moveErrorToParent="true"
                                     :hasIcon="true"
-                                    icon="/_nuxt/assets/images/auth-img/mobile.svg"
+                                    :icon="mobileIcon"
                                     :with_icon="true"
                                 />
                                 <GlobalCountryDropdown
@@ -74,7 +74,7 @@
                             :validation-schema="validations.password"
                             :showErrors="showValidation"
                             :hasIcon="true"
-                            icon="/_nuxt/assets/images/auth-img/lock.svg"
+                            :icon="lockIcon"
                             :with_icon="true"
                         />
                     </div>
@@ -196,6 +196,12 @@
 <script setup>
 // Imports and utilities
 import { useI18n } from "vue-i18n";
+
+// Icons
+import userIcon from '@/assets/images/auth-img/user.svg';
+import mobileIcon from '@/assets/images/auth-img/mobile.svg';
+import lockIcon from '@/assets/images/auth-img/lock.svg';
+
 const { t } = useI18n({ useScope: "global" });
 
 // Form fields (moved before validation to avoid undefined errors)

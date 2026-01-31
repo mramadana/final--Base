@@ -118,107 +118,151 @@ const authStore = useAuthStore();
 // Collapse state
 const openMenus = ref({});
 
+// images
+
+// Sidebar icons
+import homeIcon from '@/assets/images/sidebar/home.svg';
+import clockIcon from '@/assets/images/sidebar/clock.svg';
+import tablesIcon from '@/assets/images/sidebar/tables.svg';
+import tableImg from '@/assets/images/sidebar/table-img.png';
+import addTableImg from '@/assets/images/sidebar/add.png';
+
+import reservationsIcon from '@/assets/images/sidebar/reservations.svg';
+import myReservationImg from '@/assets/images/sidebar/my-reservation-img.svg';
+import completedReservationImg from '@/assets/images/sidebar/completed-reservations.png';
+import cancelReservationImg from '@/assets/images/sidebar/cancle-reservation.png';
+
+import menuBoardIcon from '@/assets/images/sidebar/menu-board.svg';
+import folderOpenImg from '@/assets/images/sidebar/folder-open.png';
+import folderAddImg from '@/assets/images/sidebar/folder-add.png';
+
+import newOrderIcon from '@/assets/images/sidebar/new-order.svg';
+import moneyTimeIcon from '@/assets/images/sidebar/money-time.svg';
+import timerIcon from '@/assets/images/sidebar/timer.svg';
+
+import calendarTickIcon from '@/assets/images/sidebar/calendar-tick.svg';
+import activeReservationImg from '@/assets/images/sidebar/active-reservations.png';
+import scheduledReservationImg from '@/assets/images/sidebar/scheduled-reservations.png';
+
+import coinIcon from '@/assets/images/sidebar/coin.svg';
+import moneyChangeImg from '@/assets/images/sidebar/money-change.png';
+import moneyTimeNewImg from '@/assets/images/sidebar/money-time-new.png';
+import moneyRemoveImg from '@/assets/images/sidebar/money-remove.png';
+
+import starIcon from '@/assets/images/sidebar/star.svg';
+
+import peopleIcon from '@/assets/images/sidebar/people.svg';
+import userTagImg from '@/assets/images/sidebar/user-tag.png';
+import userAddImg from '@/assets/images/sidebar/user-add.png';
+
+import documentTextIcon from '@/assets/images/sidebar/document-text.svg';
+import walletMoneyIcon from '@/assets/images/sidebar/wallet-money.svg';
+
+
+
+
 // All menu items
 const allMenuItems = [
-    {
-        label: 'Sidebar.home',
-        to: '/',
-        icon: '/_nuxt/assets/images/sidebar/home.svg'
-    },
-    {
-        label: 'workingTime.page_title',
-        to: '/workingTime',
-        icon: '/_nuxt/assets/images/sidebar/clock.svg'
-    },
-    {
-        label: 'Sidebar.tables',
-        icon: '/_nuxt/assets/images/sidebar/tables.svg',
-        children: [
-            { label: 'sideMenu.my_tables', to: '/tables', icon: '/_nuxt/assets/images/sidebar/table-img.png' },
-            { label: 'sideMenu.add_new_table', to: '/tables/addTable', icon: '/_nuxt/assets/images/sidebar/add.png' },
-        ]
-    },
-    {
-        label: 'Sidebar.my_reservation',
-        icon: '/_nuxt/assets/images/sidebar/reservations.svg',
-        children: [
-            { label: 'sideMenu.my_reservations', to: '/Reservations/myReservations', icon: '/_nuxt/assets/images/sidebar/my-reservation-img.svg' },
-            { label: 'sideMenu.completed_reservations', to: '/Reservations/completed', icon: '/_nuxt/assets/images/sidebar/completed-reservations.png' },
-            { label: 'sideMenu.cancelled_reservations', to: '/Reservations/cancelled', icon: '/_nuxt/assets/images/sidebar/cancle-reservation.png' }
-        ]
-    },
-    {
-        label: 'Sidebar.menu_list',
-        icon: '/_nuxt/assets/images/sidebar/menu-board.svg',
-        children: [
-            { label: 'sideMenu.my_menus', to: '/Menu', icon: '/_nuxt/assets/images/sidebar/folder-open.png' },
-            { label: 'sideMenu.add_meal', to: '/addMeal', icon: '/_nuxt/assets/images/sidebar/folder-add.png' }
-        ]
-    },
-    {
-        label: 'Sidebar.service_list',
-        icon: '/_nuxt/assets/images/sidebar/menu-board.svg',
-        children: [
-            { label: 'sideMenu.my_menus', to: '/serviceMenu', icon: '/_nuxt/assets/images/sidebar/folder-open.png' },
-            { label: 'sideMenu.add_service', to: '/serviceMenu/addService', icon: '/_nuxt/assets/images/sidebar/folder-add.png' }
-        ]
-    },
-    {
-        label: 'Sidebar.new_orders',
-        icon: '/_nuxt/assets/images/sidebar/new-order.svg',
-        to: '/orders/new',
-    },
-    {
-        label: 'Sidebar.pending_payment',
-        icon: '/_nuxt/assets/images/sidebar/money-time.svg',
-        to: '/orders/payment-pending',
-    },
-    {
-        label: 'Sidebar.waiting_list',
-        to: '/orders/waiting',
-        icon: '/_nuxt/assets/images/sidebar/timer.svg'
-    },
-    {
-        label: 'Sidebar.reservations',
-        icon: '/_nuxt/assets/images/sidebar/calendar-tick.svg',
-        children: [
-            { label: 'sideMenu.active_reservations', to: '/ReservationMade/activeReservations', icon: '/_nuxt/assets/images/sidebar/active-reservations.png' },
-            { label: 'sideMenu.scheduled_reservations', to: '/ReservationMade/scheduledReservations', icon: '/_nuxt/assets/images/sidebar/scheduled-reservations.png' }
-        ]
-    },
-    {
-        label: 'Sidebar.financial_transactions',
-        icon: '/_nuxt/assets/images/sidebar/coin.svg',
-        children: [
-            { label: 'sideMenu.due_amount', to: '/financialTransactions', icon: '/_nuxt/assets/images/sidebar/money-change.png' },
-            { label: 'sideMenu.current_settlement', to: '/financialTransactions/currentSettlement', icon: '/_nuxt/assets/images/sidebar/money-time-new.png' },
-            { label: 'sideMenu.finished_settlement', to: '/financialTransactions/requestSettlement', icon: '/_nuxt/assets/images/sidebar/money-remove.png' },
-        ]
-    },
-    {
-        label: 'Sidebar.ratings',
-        icon: '/_nuxt/assets/images/sidebar/star.svg',
-        to: '/ratings'
-    },
-    {
-        label: 'Sidebar.users',
-        icon: '/_nuxt/assets/images/sidebar/people.svg',
-        children: [
-            { label: 'sideMenu.view_users', to: '/users', icon: '/_nuxt/assets/images/sidebar/user-tag.png' },
-            { label: 'sideMenu.add_user', to: '/users/addUser', icon: '/_nuxt/assets/images/sidebar/user-add.png' },
-        ]
-    },
-    {
-        label: 'Sidebar.booking_form',
-        to: '/inquiryForm',
-        icon: '/_nuxt/assets/images/sidebar/document-text.svg'
-    },
-    {
-        label: 'Sidebar.schedule',
-        to: '/Wallet',
-        icon: '/_nuxt/assets/images/sidebar/wallet-money.svg'
-    }
+  {
+    label: 'Sidebar.home',
+    to: '/',
+    icon: homeIcon
+  },
+  {
+    label: 'workingTime.page_title',
+    to: '/workingTime',
+    icon: clockIcon
+  },
+  {
+    label: 'Sidebar.tables',
+    icon: tablesIcon,
+    children: [
+      { label: 'sideMenu.my_tables', to: '/tables', icon: tableImg },
+      { label: 'sideMenu.add_new_table', to: '/tables/addTable', icon: addTableImg },
+    ]
+  },
+  {
+    label: 'Sidebar.my_reservation',
+    icon: reservationsIcon,
+    children: [
+      { label: 'sideMenu.my_reservations', to: '/Reservations/myReservations', icon: myReservationImg },
+      { label: 'sideMenu.completed_reservations', to: '/Reservations/completed', icon: completedReservationImg },
+      { label: 'sideMenu.cancelled_reservations', to: '/Reservations/cancelled', icon: cancelReservationImg }
+    ]
+  },
+  {
+    label: 'Sidebar.menu_list',
+    icon: menuBoardIcon,
+    children: [
+      { label: 'sideMenu.my_menus', to: '/Menu', icon: folderOpenImg },
+      { label: 'sideMenu.add_meal', to: '/addMeal', icon: folderAddImg }
+    ]
+  },
+  {
+    label: 'Sidebar.service_list',
+    icon: menuBoardIcon,
+    children: [
+      { label: 'sideMenu.my_menus', to: '/serviceMenu', icon: folderOpenImg },
+      { label: 'sideMenu.add_service', to: '/serviceMenu/addService', icon: folderAddImg }
+    ]
+  },
+  {
+    label: 'Sidebar.new_orders',
+    icon: newOrderIcon,
+    to: '/orders/new',
+  },
+  {
+    label: 'Sidebar.pending_payment',
+    icon: moneyTimeIcon,
+    to: '/orders/payment-pending',
+  },
+  {
+    label: 'Sidebar.waiting_list',
+    to: '/orders/waiting',
+    icon: timerIcon
+  },
+  {
+    label: 'Sidebar.reservations',
+    icon: calendarTickIcon,
+    children: [
+      { label: 'sideMenu.active_reservations', to: '/ReservationMade/activeReservations', icon: activeReservationImg },
+      { label: 'sideMenu.scheduled_reservations', to: '/ReservationMade/scheduledReservations', icon: scheduledReservationImg }
+    ]
+  },
+  {
+    label: 'Sidebar.financial_transactions',
+    icon: coinIcon,
+    children: [
+      { label: 'sideMenu.due_amount', to: '/financialTransactions', icon: moneyChangeImg },
+      { label: 'sideMenu.current_settlement', to: '/financialTransactions/currentSettlement', icon: moneyTimeNewImg },
+      { label: 'sideMenu.finished_settlement', to: '/financialTransactions/requestSettlement', icon: moneyRemoveImg },
+    ]
+  },
+  {
+    label: 'Sidebar.ratings',
+    icon: starIcon,
+    to: '/ratings'
+  },
+  {
+    label: 'Sidebar.users',
+    icon: peopleIcon,
+    children: [
+      { label: 'sideMenu.view_users', to: '/users', icon: userTagImg },
+      { label: 'sideMenu.add_user', to: '/users/addUser', icon: userAddImg },
+    ]
+  },
+  {
+    label: 'Sidebar.booking_form',
+    to: '/inquiryForm',
+    icon: documentTextIcon
+  },
+  {
+    label: 'Sidebar.schedule',
+    to: '/Wallet',
+    icon: walletMoneyIcon
+  }
 ];
+
 
 // Filtered menu items based on userType
 const menuItems = computed(() => {

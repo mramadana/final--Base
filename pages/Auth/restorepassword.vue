@@ -17,7 +17,7 @@
                  :class="{ 'is-invalid': phoneInputRef?.shouldShowError }">
               <FormInput ref="phoneInputRef" v-model:modelValue="phone" name="phone" type="number"
                 :placeholder="$t('Auth.enter_mobile_number')" :validation-schema="validations.phone"
-                :showErrors="showValidation" :moveErrorToParent="true" :hasIcon="true" icon="/_nuxt/assets/images/auth-img/mobile.svg"
+                :showErrors="showValidation" :moveErrorToParent="true" :hasIcon="true" :icon="mobileIcon"
                 :with_icon="true" />
               <GlobalCountryDropdown v-model="selectedCountry"
                 :placeholder="$t('Auth.select_country')" />
@@ -55,6 +55,9 @@ definePageMeta({
 /******************* Plugins *******************/
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
+
+// Icons
+import mobileIcon from '@/assets/images/auth-img/mobile.svg';
 
 const { locale, t } = useI18n({ useScope: 'global' });
 

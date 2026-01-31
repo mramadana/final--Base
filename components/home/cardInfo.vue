@@ -85,7 +85,7 @@
                     <div class="card-header-section">
                         <h3 class="card-title">{{ $t('home.account_status') }}</h3>
                         <span :class="['status-badge', subscription?.is_active ? 'active' : 'inactive']">
-                            <img :src="subscription?.is_active ? '/_nuxt/assets/images/done.svg' : '/_nuxt/assets/images/home-img/danger.svg'" :alt="subscription?.is_active ? 'active' : 'inactive'">
+                            <img :src="subscription?.is_active ? doneIcon : dangerIcon" :alt="subscription?.is_active ? 'active' : 'inactive'">
                             {{ subscription?.is_active ? $t('home.active') : $t('home.inactive') }}
                         </span>
                     </div>
@@ -116,6 +116,13 @@
 
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n({ useScope: 'global' });
+
+// images 
+import reservationsIcon from '@/assets/images/sidebar/reservations.svg';
+import menuBoardIcon from '@/assets/images/sidebar/menu-board.svg';
+// Account status
+import doneIcon from '@/assets/images/done.svg';
+import dangerIcon from '@/assets/images/home-img/danger.svg';
 
 // Get userType from store
 const store = useAuthStore();
@@ -151,12 +158,12 @@ const quickLinks = computed(() => {
         },
         {
             text: t('home.reservations'),
-            image: '/_nuxt/assets/images/sidebar/reservations.svg',
+            image: reservationsIcon,
             url: '/Reservations/myReservations'
         },
         {
             text: userType.value === 'service' ? t('home.services_list') : t('home.menu'),
-            image: '/_nuxt/assets/images/sidebar/menu-board.svg',
+            image: menuBoardIcon,
             url: userType.value === 'service' ? '/serviceMenu' : '/menu'
         }
     ];

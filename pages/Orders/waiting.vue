@@ -9,6 +9,10 @@
 </template>
 
 <script setup>
+
+// Images
+import Logo from '@/assets/images/Logo.svg';
+
 definePageMeta({
     name: "Sidebar.waiting_list",
 });
@@ -88,7 +92,7 @@ const getWaitingOrders = async (page = 1) => {
                     title: item.name || "طلب في قائمة الانتظار",
                     dateRange: item.date,
                     customerName: item.customer_name,
-                    imageSrc: "/_nuxt/assets/images/Logo.svg",
+                    imageSrc: Logo,
                     status: item.status,
                     statusText: item.status_text,
                 }));

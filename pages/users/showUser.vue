@@ -20,7 +20,7 @@
               :label="$t('Auth.customer_name')"
               :placeholder="$t('Auth.customer_name')"
               :hasIcon="true"
-              icon="/_nuxt/assets/images/auth-img/user.svg"
+              :icon="userIcon"
               :with_icon="true"
               :readonly="true"
             />
@@ -40,7 +40,7 @@
                   type="number"
                   :placeholder="$t('Auth.enter_mobile_number')"
                   :hasIcon="true"
-                  icon="/_nuxt/assets/images/auth-img/mobile.svg"
+                  :icon="mobileIcon"
                   :with_icon="true"
                   :readonly="true"
                 />
@@ -132,6 +132,11 @@
 <script setup>
 // Imports and utilities
 import { useI18n } from "vue-i18n";
+
+// Icons
+import userIcon from '@/assets/images/auth-img/user.svg';
+import mobileIcon from '@/assets/images/auth-img/mobile.svg';
+
 const { t } = useI18n({ useScope: "global" });
 
 const route = useRoute();

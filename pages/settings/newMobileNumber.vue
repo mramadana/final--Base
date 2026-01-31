@@ -12,7 +12,7 @@
                              :class="{ 'is-invalid': phoneInputRef?.shouldShowError }">
                             <FormInput ref="phoneInputRef" v-model:modelValue="phone" name="phone" type="number"
                                 :placeholder="$t('Global.new_mobile')" :validation-schema="validations.phone"
-                                :showErrors="showValidation" :moveErrorToParent="true" :hasIcon="true" icon="/_nuxt/assets/images/auth-img/mobile.svg"
+                                :showErrors="showValidation" :moveErrorToParent="true" :hasIcon="true" :icon="mobileIcon"
                                 :with_icon="true" />
                             <GlobalCountryDropdown v-model="selectedCountry"
                                 :placeholder="$t('Global.select_country')" />
@@ -38,6 +38,9 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n';
+
+// Icons
+import mobileIcon from '@/assets/images/auth-img/mobile.svg';
 
 definePageMeta({
     name: "settings.change_mobile_title",

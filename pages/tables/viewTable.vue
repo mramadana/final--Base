@@ -32,21 +32,21 @@
                         <FormInput v-model:modelValue="tableNumberRef" name="tableNumber" type="text"
                             :label="$t('tables.table_symbol')" :placeholder="$t('tables.table_symbol')"
                             :validation-schema="validations.tableNumber" :showErrors="showValidation" :hasIcon="true"
-                            icon="/_nuxt/assets/images/sidebar/table-img.png" readonly :with_icon="true" :disabled="true" />
+                            :icon="tableImg" readonly :with_icon="true" :disabled="true" />
                     </div>
                     <div class="col-12 col-md-6">
                         <!-- Number of People -->
                         <FormInput v-model:modelValue="numberOfPeopleRef" name="numberOfPeople" type="number"
                             :label="$t('tables.number_of_people')" :placeholder="$t('tables.number_of_people')"
                             :validation-schema="validations.numberOfPeople" :showErrors="showValidation" :hasIcon="true"
-                            icon="/_nuxt/assets/images/auth-img/user.svg" readonly :with_icon="true" :disabled="true" />
+                            :icon="userIcon" readonly :with_icon="true" :disabled="true" />
                     </div>
 
                     <!-- Booking Price -->
                     <FormInput v-model:modelValue="bookingPriceRef" name="bookingPrice" type="number" min="0" step="1"
                         :label="$t('tables.booking_price_table')" readonly :placeholder="$t('tables.booking_price_table')"
                         :validation-schema="validations.bookingPrice" :showErrors="showValidation" :hasIcon="true"
-                        icon="/_nuxt/assets/images/money.svg" :with_icon="true" :disabled="true" />
+                        :icon="moneyIcon" :with_icon="true" :disabled="true" />
 
                     <!-- Description in Arabic -->
                     <div class="form-group">
@@ -101,6 +101,11 @@ definePageMeta({
 });
 
 import { useI18n } from "vue-i18n";
+
+// Icons
+import tableImg from '@/assets/images/sidebar/table-img.png';
+import userIcon from '@/assets/images/auth-img/user.svg';
+import moneyIcon from '@/assets/images/money.svg';
 
 const { t } = useI18n({ useScope: "global" });
 

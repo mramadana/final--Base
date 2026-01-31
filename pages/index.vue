@@ -61,6 +61,14 @@
 
 <script setup>
     import { useI18n } from 'vue-i18n';
+
+    // Icons
+    import currentReservationsIcon from '@/assets/images/home-img/current-reservations.svg';
+    import incomingReservationsIcon from '@/assets/images/home-img/incoming-reservations.svg';
+    import completedReservationsIcon from '@/assets/images/home-img/completed-reservations.svg';
+    import cancelledReservationsIcon from '@/assets/images/home-img/cancelled-reservations.svg';
+    import timerIcon from '@/assets/images/sidebar/timer.svg';
+
     const { t } = useI18n({ useScope: 'global' });
     const globalStore = useGlobalStore();
     const authStore = useAuthStore();
@@ -93,7 +101,7 @@
         {
             title: t('home.current_reservations'),
             number: t('home.zero_reservations'),
-            icon: '/_nuxt/assets/images/home-img/current-reservations.svg',
+            icon: currentReservationsIcon,
             link: '/Reservations/myReservations',
             buttonText: t('home.show_all_reservations'),
             dateText: t('home.last_updated_today')
@@ -101,7 +109,7 @@
         {
             title: t('home.incoming_reservations'),
             number: t('home.zero_reservations'),
-            icon: '/_nuxt/assets/images/home-img/incoming-reservations.svg',
+            icon: incomingReservationsIcon,
             link: '/orders/new',
             buttonText: t('home.show_all_incoming'),
             dateText: t('home.last_updated_today')
@@ -109,7 +117,7 @@
         {
             title: t('home.completed_reservations'),
             number: t('home.zero_reservations'),
-            icon: '/_nuxt/assets/images/home-img/completed-reservations.svg',
+            icon: completedReservationsIcon,
             link: '/Reservations/completed',
             buttonText: t('home.show_completed_reservations'),
             dateText: t('home.last_updated_today')
@@ -117,7 +125,7 @@
         {
             title: t('home.cancelled_reservations'),
             number: t('home.zero_reservations'),
-            icon: '/_nuxt/assets/images/home-img/cancelled-reservations.svg',
+            icon: cancelledReservationsIcon,
             link: '/reservations/cancelled',
             buttonText: t('home.show_cancelled_reservations'),
             dateText: t('home.last_updated_today')
@@ -125,7 +133,7 @@
         {
             title: t('home.waiting_list_reservations'),
             number: t('home.zero_reservations'),
-            icon: '/_nuxt/assets/images/sidebar/timer.svg',
+            icon: timerIcon,
             link: '/orders/waiting',
             buttonText: t('home.show_waiting_list'),
             dateText: t('home.last_updated_today')

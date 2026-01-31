@@ -37,7 +37,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-6 66666666666666666">
                         <!-- Number of People -->
                         <FormInput 
                             v-model:modelValue="numberOfPeopleRef"
@@ -47,7 +47,7 @@
                             :validation-schema="validations.numberOfPeople"
                             :showErrors="showValidationRef"
                             :hasIcon="true"
-                            icon="/_nuxt/assets/images/auth-img/users.svg"
+                            :icon="usersIcon"
                             :with_icon="true"
                         />
                     </div>
@@ -61,7 +61,7 @@
                             :validation-schema="validations.customerName"
                             :showErrors="showValidationRef"
                             :hasIcon="true"
-                            icon="/_nuxt/assets/images/auth-img/user.svg"
+                            :icon="userIcon"
                             :with_icon="true"
                         />
                     </div>
@@ -84,7 +84,7 @@
                             :showErrors="showValidationRef" 
                             :moveErrorToParent="true" 
                             :hasIcon="true" 
-                            icon="/_nuxt/assets/images/auth-img/mobile.svg"
+                            :icon="mobileIcon"
                             :with_icon="true" 
                         />
                     </div>
@@ -140,6 +140,11 @@ import { useI18n } from "vue-i18n";
 import flatPickr from 'vue-flatpickr-component';
 import 'flatpickr/dist/flatpickr.css';
 import { Arabic } from "flatpickr/dist/l10n/ar";
+
+// Icons
+import usersIcon from '@/assets/images/auth-img/user.svg';
+import userIcon from '@/assets/images/auth-img/user.svg';
+import mobileIcon from '@/assets/images/auth-img/mobile.svg';
 
 const { t } = useI18n({ useScope: "global" });
 

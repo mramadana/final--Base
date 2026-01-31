@@ -12,7 +12,7 @@
                         <!-- Customer name input -->
                         <FormInput v-model:modelValue="name" name="name" type="text" :label="$t('Auth.customer_name')"
                             :placeholder="$t('Auth.customer_name')" :validation-schema="validations.name"
-                            :showErrors="showValidation" :hasIcon="true" icon="/_nuxt/assets/images/auth-img/user.svg"
+                            :showErrors="showValidation" :hasIcon="true" :icon="userIcon"
                             :with_icon="true" />
 
                         <!-- Mobile number input with country dropdown -->
@@ -24,7 +24,7 @@
                                 <FormInput ref="phoneInputRef" v-model:modelValue="phone" name="phone" type="number"
                                     :placeholder="$t('Auth.enter_mobile_number')" :validation-schema="validations.phone"
                                     :showErrors="showValidation" :moveErrorToParent="true" :hasIcon="true"
-                                    icon="/_nuxt/assets/images/auth-img/mobile.svg" :with_icon="true" />
+                                    :icon="mobileIcon" :with_icon="true" />
                                 <GlobalCountryDropdown v-model="selectedCountry"
                                     :placeholder="$t('Auth.select_country')" />
                             </div>
@@ -38,20 +38,20 @@
                         <!-- Email input -->
                         <FormInput v-model:modelValue="email" name="email" type="email" :label="$t('Auth.email')"
                             :placeholder="$t('Auth.enter_email')" :validation-schema="validations.email"
-                            :showErrors="showValidation" :hasIcon="true" icon="/_nuxt/assets/images/auth-img/sms.svg"
+                            :showErrors="showValidation" :hasIcon="true" :icon="smsIcon"
                             :with_icon="true" />
 
                         <!-- Password input -->
                         <FormInput v-model:modelValue="password" name="password" type="password"
                             :label="$t('Auth.password')" :placeholder="$t('Auth.please_enter_password')"
                             :validation-schema="validations.password" :showErrors="showValidation" :hasIcon="true"
-                            icon="/_nuxt/assets/images/auth-img/lock.svg" :with_icon="true" />
+                            :icon="lockIcon" :with_icon="true" />
 
                         <!-- Confirm Password input -->
                         <FormInput v-model:modelValue="confirmPassword" name="password_confirmation" type="password"
                             :label="$t('Auth.confirm_password_sm')" :placeholder="$t('Auth.please_confirm_password')"
                             :validation-schema="validations.confirmPassword" :showErrors="showValidation"
-                            :hasIcon="true" icon="/_nuxt/assets/images/auth-img/lock.svg" :with_icon="true" />
+                            :hasIcon="true" :icon="lockIcon" :with_icon="true" />
 
                         <!-- Submit button -->
                         <button type="submit" class="custom-btn w-100 mr-auto" :disabled="loading">
@@ -77,6 +77,11 @@
 <script setup>
 // Imports and utilities
 import { useI18n } from "vue-i18n";
+import userIcon from '@/assets/images/auth-img/user.svg';
+import mobileIcon from '@/assets/images/auth-img/mobile.svg';
+import smsIcon from '@/assets/images/auth-img/sms.svg';
+import lockIcon from '@/assets/images/auth-img/lock.svg';
+
 const { t } = useI18n({ useScope: "global" });
 
 // Form fields (moved before validation to avoid undefined errors)

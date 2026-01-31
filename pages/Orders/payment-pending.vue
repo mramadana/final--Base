@@ -9,6 +9,10 @@
 </template>
 
 <script setup>
+
+// Images
+import Logo from '@/assets/images/Logo.svg';
+
 definePageMeta({
     name: "orders.payment_pending",
 });
@@ -88,7 +92,7 @@ const getPaymentPendingOrders = async (page = 1) => {
                     title: item.restaurant_name || "طلب في انتظار الدفع",
                     dateRange: item.date,
                     customerName: item.customer_name,
-                    imageSrc: "/_nuxt/assets/images/Logo.svg",
+                    imageSrc: Logo,
                     status: item.status,
                     statusText: item.status_text,
                 }));

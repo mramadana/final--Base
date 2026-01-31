@@ -90,6 +90,9 @@ definePageMeta({
     layout: 'default',
 });
 
+// Images
+import Logo from '@/assets/images/Logo.svg';
+
 // Global store
 const globalStore = useGlobalStore();
 const pageHeadTitle = ref(t('Sidebar.financial_transactions'));
@@ -158,7 +161,7 @@ const getSettlementsDue = async () => {
                     dateRange: `${item.reservation_time_start} - ${item.reservation_time_end}`,
                     reservationDate: item.reservation_date,
                     customerName: item.user_name,
-                    imageSrc: '/_nuxt/assets/images/Logo.svg',
+                    imageSrc: Logo,
                     status: item.status,
                     statusText: item.status_text
                 }));

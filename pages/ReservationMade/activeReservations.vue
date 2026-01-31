@@ -11,6 +11,7 @@ definePageMeta({
 })
 
 import { useI18n } from 'vue-i18n';
+import Logo from '@/assets/images/Logo.svg';
 const { t } = useI18n({ useScope: 'global' });
 
 // Axios
@@ -81,7 +82,7 @@ const getActiveReservations = async (page = 1) => {
                     title: item.name || t('home.active_reservation'),
                     dateRange: item.date,
                     customerName: item.customer_name,
-                    imageSrc: '/_nuxt/assets/images/Logo.svg',
+                    imageSrc: Logo,
                     status: item.status,
                     statusText: item.status_text
                 }));

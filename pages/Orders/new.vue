@@ -9,6 +9,10 @@
 </template>
 
 <script setup>
+
+// Images
+import Logo from '@/assets/images/Logo.svg';
+
 definePageMeta({
     name: "orders.new_order",
 });
@@ -89,7 +93,7 @@ const getNewOrders = async (page = 1) => {
                     title: item.restaurant_name || "طلب جديد",
                     dateRange: item.date,
                     customerName: item.customer_name,
-                    imageSrc: "/_nuxt/assets/images/Logo.svg",
+                    imageSrc: Logo,
                     status: item.status,
                     statusText: item.status_text,
                 }));

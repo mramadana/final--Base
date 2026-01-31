@@ -93,6 +93,8 @@
   })
 
   import { useI18n } from 'vue-i18n';
+  import Logo from '@/assets/images/Logo.svg';
+
   const { t } = useI18n({ useScope: 'global' });
 
   // Axios
@@ -244,7 +246,7 @@
         if (data.data && Array.isArray(data.data)) {
           tables.value = data.data.map(item => ({
             id: item.id,
-            image: item.image || '/_nuxt/assets/images/Logo.svg',
+            image: item.image || Logo,
             tableNumber: item.code,
             numberOfPeople: `${item.people_number} ${t('home.people_count')}`,
             bookingPrice: `${item.price} ${item.currency}`,

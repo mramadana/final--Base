@@ -7,6 +7,9 @@
 <script setup>
 import { useI18n } from 'vue-i18n';
 
+// Images
+import Logo from '@/assets/images/Logo.svg';
+
 definePageMeta({
     name: 'sideMenu.my_reservations',
 })
@@ -80,7 +83,7 @@ const getReservations = async (page = 1) => {
                     title: item.name,
                     dateRange: item.date,
                     customerName: item.user_name,
-                    imageSrc: '/_nuxt/assets/images/Logo.svg',
+                    imageSrc: Logo,
                     status: item.status,
                     statusText: item.status_text
                 }));
