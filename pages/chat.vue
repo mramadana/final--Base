@@ -6,7 +6,7 @@
         <div class="messages-container" ref="messagesContainer">
           <div class="chat-message test" v-for="(msg, index) in messages" :key="index">
             <div class="w-100" :class="{ 'customer': user?.id != msg.sender_id }">
-              <div class="d-flex" :dir="user?.id == msg.sender_id ? 'rtl' : 'ltr'">
+              <div class="d-flex flex-grow-1" :dir="user?.id == msg.sender_id ? 'rtl' : 'ltr'">
                 <img
                   v-if="user?.id != msg.sender_id"
                   src="~/assets/images/Logo.svg"
@@ -112,8 +112,8 @@ const getMessages = async (roomId) => {
       params: { per_page: 1 },
     });
     const data = res?.data;
-    if (data?.key === 'success' && data?.data?.messages?.data) {
-      messages.value = [...(data.data.messages.data || [])].reverse();
+    if (data?.key === 'success' && data?.data?.messages) {
+      messages.value = [...(data.data.messages || [])].reverse();
       nextTick(() => scrollToBottom());
     }
   } catch (e) {
@@ -366,6 +366,7 @@ onBeforeUnmount(() => {
   padding: 10px 16px !important;
   min-height: 44px !important;
   resize: none !important;
+  box-shadow: none !important;
 }
 
 .chat-textarea::placeholder {
