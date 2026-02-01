@@ -56,14 +56,16 @@
         <p><i class="fas fa-users icon"></i> {{ $t('reservationDetails.number_of_people') }}: {{
           reservationData.table_info.people_number || '---' }} أفراد</p>
       </div>
-
-      <div v-if="reservationData.meal_info && reservationData.meal_info.length > 0">
-        <h2 class="section-title">{{ $t('reservationDetails.requested_services') }}</h2>
-        <div class="services-list">
-          <span v-for="meal in reservationData.meal_info" :key="meal.id" class="service-tag">
-            {{ meal.name }} × {{ meal.quantity }}
-          </span>
+      <div class="elements align-items-start d-flex flex-wrap gap-2 justify-content-between">
+        <div v-if="reservationData.meal_info && reservationData.meal_info.length > 0">
+          <h2 class="section-title">{{ $t('reservationDetails.requested_services') }}</h2>
+          <div class="services-list">
+            <span v-for="meal in reservationData.meal_info" :key="meal.id" class="service-tag">
+              {{ meal.name }} × {{ meal.quantity }}
+            </span>
+          </div>
         </div>
+        <button @click="navigateTo(`/chat?id=${reservationData.room_id}`)">chaaaaat</button>
       </div>
     </div>
 

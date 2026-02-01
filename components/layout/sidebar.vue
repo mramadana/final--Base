@@ -449,11 +449,16 @@ onMounted(() => {
         margin-inline-start: auto;
         font-size: 12px;
         transition: transform 0.3s ease;
-        
         &.rotated {
             transform: rotate(-90deg);
         }
     }
+}
+
+html[dir="ltr"] {
+  .collapse-icon {
+    transform: scale(-1);
+  }
 }
 
 .submenu {

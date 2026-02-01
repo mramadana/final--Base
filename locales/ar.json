@@ -589,7 +589,9 @@
         "delete_all": "حذف كل الاشعارات",
         "view_all_notifications": "عرض جميع الاشعارات",
         "delete": "حذف",
-        "notifications": "الاشعارات"
+        "notifications": "الاشعارات",
+        "enable_notifications": "تفعيل الاشعارات",
+        "chat": "محادثة"
     },
     "Table": {
         "Loading": "جاري التحميل"
@@ -655,5 +657,8 @@
         "table_deleted_successfully": "تم حذف الطاولة بنجاح",
         "error_deleting_table": "حدث خطأ أثناء حذف الطاولة",
         "error_adding_table": "حدث خطأ أثناء إضافة الطاولة"
-    }
+    },
+    "company": "الشركة",
+    "alasbaghArabic": "ريفنت",
+    "enterMsg": "اكتب رسالتك..."
 }

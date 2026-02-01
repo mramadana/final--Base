@@ -2,15 +2,18 @@
     <div class="custom-height">
         <div class="container">
             <div class="layout-form custom-width lg">
-                <div class="d-flex align-items-center justify-content-between mb-4 gap-3">
+                <div class="d-flex align-items-center justify-content-between mb-4 gap-3 flex-wrap">
                     <h1 class="main-title bold lg mb-0 position-relative">
                         {{ $t("notifications.notifications") }}
                     </h1>
                     <div class="deleteAll-info d-flex align-items-center gap-4">
-                        <label class="switch">
-                            <input type="checkbox" @change="toggleNotify" v-model="isSelected" />
-                            <div class="slider round"></div>
-                        </label>
+                        <div class="elements d-flex align-items-center gap-4">
+                            <h6 class="mb-0 hint-notification">{{ $t("notifications.enable_notifications") }}</h6>
+                            <label class="switch">
+                                <input type="checkbox" @change="toggleNotify" v-model="isSelected" />
+                                <div class="slider round"></div>
+                            </label>
+                        </div>
                         <button type="button" class="deleteAll-btn" @click="deleteAll" v-if="notifications.length">
                             <i class="far fa-trash-alt trash-icon" v-if="!deleteLoading"></i>
                             <span class="spinner-border spinner-border-sm m-0" v-if="deleteLoading" role="status"
@@ -91,6 +94,11 @@
 </template>
 
 <script setup>
+
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n({ useScope: 'global' });
+
 // success response
 const { response } = responseApi();
 
@@ -248,7 +256,7 @@ const initializeNotificationSettings = () => {
     }
 };
 
-// // Delete All Notifications
+ // Delete All Notifications
 
 const deleteAll = async () => {
     loading.value = true;
@@ -273,7 +281,10 @@ let showPaginate = computed(() => {
     return totalPage.value > pageLimit.value;
 });
 
-/******************* Watch *******************/
+// Global store
+const globalStore = useGlobalStore();
+const pageHeadTitle = ref(t('notifications.notifications'));
+globalStore.title = pageHeadTitle.value;
 
 /******************* Mounted *******************/
 onMounted(async () => {
@@ -289,6 +300,12 @@ definePageMeta({
 </script>
 
 <style lang="scss" scoped>
+
+.hint-notification {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 400;
+}
 .notification {
     &::before {
         display: none;
