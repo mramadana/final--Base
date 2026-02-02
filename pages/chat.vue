@@ -1,48 +1,28 @@
 <template>
-  <div class="chat-page" dir="rtl">
+  <div class="chat-page">
     <div class="chat-container" :class="{ open: chatOpen, closed: !chatOpen }">
 
       <div class="chat-body" v-if="chatOpen">
         <div class="messages-container" ref="messagesContainer">
           <div class="chat-message test" v-for="(msg, index) in messages" :key="index">
-            <div class="w-100" :class="{ 'customer': user?.id != msg.sender_id }">
-              <div class="d-flex flex-grow-1" :dir="user?.id == msg.sender_id ? 'rtl' : 'ltr'">
-                <img
-                  v-if="user?.id != msg.sender_id"
-                  src="~/assets/images/Logo.svg"
-                  class="chatLogo msg-avatar"
-                  loading="lazy"
-                  alt="chatLogo"
-                >
+            <div class="w-100" :class="msg.sender_type == 'Provider' ? 'provider' : 'user'">
+              <div class="d-flex" :dir="user?.id == msg.sender_id ? 'rtl' : 'ltr'">
+                <img v-if="user?.id != msg.sender_id" src="~/assets/images/Logo.svg" class="chatLogo msg-avatar"
+                  loading="lazy" alt="chatLogo">
                 <div class="bubble" style="white-space: break-spaces;">
                   <p :class="user?.id != msg.sender_id ? 'text-black' : ''">{{ msg.body }}</p>
                 </div>
-                <img
-                  v-if="user?.id == msg.sender_id"
-                  :src="user?.avatar || '/Logo.svg'"
-                  class="chatLogo msg-avatar"
-                  loading="lazy"
-                  alt="avatar"
-                  onerror="this.src='/Logo.svg'"
-                >
+                <img v-if="user?.id == msg.sender_id" :src="user?.avatar || '/Logo.svg'" class="chatLogo msg-avatar"
+                  loading="lazy" alt="avatar" onerror="this.src='/Logo.svg'">
               </div>
             </div>
           </div>
         </div>
         <div class="chat-input">
-          <Textarea
-            v-model="newMessage"
-            @keydown.enter.exact.prevent="sendMessage"
-            @keydown.enter.shift.exact.prevent="newline"
-            :placeholder="$t('enterMsg')"
-            class="noRezie chat-textarea"
-          />
-          <Button
-            icon="pi pi-send"
-            @click="sendMessage"
-            class="p-button-rounded p-button-info chat-send-btn"
-            aria-label="send"
-          >
+          <Textarea v-model="newMessage" @keydown.enter.exact.prevent="sendMessage"
+            @keydown.enter.shift.exact.prevent="newline" :placeholder="$t('enterMsg')" class="noRezie chat-textarea" />
+          <Button icon="pi pi-send" @click="sendMessage" class="p-button-rounded p-button-info chat-send-btn"
+            aria-label="send">
             <i class="fa-solid fa-paper-plane"></i>
           </Button>
         </div>
@@ -57,10 +37,11 @@ definePageMeta({
   name: 'chat',
 });
 
-const route = useRoute();
-const router = useRouter();
 import { useI18n } from 'vue-i18n';
 const { locale } = useI18n();
+
+const route = useRoute();
+const router = useRouter();
 
 const chatOpen = ref(true);
 const messages = ref([]);
@@ -83,6 +64,75 @@ const socket = ref(null);
 
 // id الغرفة من الراوت: id أو reservation_id (مثلاً chat?reservation_id=53)
 const roomId = computed(() => route.query.id || route.query.reservation_id);
+
+/* =========================
+ * ✅ KEEP QUERY ON RELOAD (بدون تعديل أي كود تاني)
+ * ========================= */
+const CHAT_QUERY_STORAGE_KEY = 'chat:last_room_query';
+
+const saveLastRoomQuery = () => {
+  if (!import.meta.client) return;
+
+  const id = route.query.id;
+  const reservationId = route.query.reservation_id;
+
+  if (id) {
+    sessionStorage.setItem(
+      CHAT_QUERY_STORAGE_KEY,
+      JSON.stringify({ key: 'id', value: String(id) })
+    );
+  } else if (reservationId) {
+    sessionStorage.setItem(
+      CHAT_QUERY_STORAGE_KEY,
+      JSON.stringify({ key: 'reservation_id', value: String(reservationId) })
+    );
+  }
+};
+
+const getLastRoomQuery = () => {
+  if (!import.meta.client) return null;
+  try {
+    const raw = sessionStorage.getItem(CHAT_QUERY_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed?.key || !parsed?.value) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
+};
+
+const ensureRoomQueryExists = async () => {
+  if (!import.meta.client) return;
+
+  // لو الـ query موجود خلاص → خزّنه وخلاص
+  if (route.query.id || route.query.reservation_id) {
+    saveLastRoomQuery();
+    return;
+  }
+
+  // لو اختفى بعد reload → رجّعه من sessionStorage
+  const saved = getLastRoomQuery();
+  if (saved?.key && saved?.value) {
+    await router.replace({
+      path: route.path,
+      query: {
+        ...route.query,
+        [saved.key]: saved.value,
+      },
+    });
+  }
+};
+
+// أي تغيير في roomId خزّنه
+watch(
+  () => roomId.value,
+  (val) => {
+    if (!val) return;
+    saveLastRoomQuery();
+  },
+  { immediate: true }
+);
 
 const toggleChat = () => {
   if (chatOpen.value) {
@@ -107,15 +157,35 @@ const createRoom = async () => null;
 const getMessages = async (roomId) => {
   if (!roomId) return;
   try {
-    const res = await axios.get(`chat/get-room-messages/${roomId}`, {
-      ...config.value,
-      params: { per_page: 1 },
-    });
-    const data = res?.data;
-    if (data?.key === 'success' && data?.data?.messages) {
-      messages.value = [...(data.data.messages || [])].reverse();
-      nextTick(() => scrollToBottom());
+    let allMessages = [];
+    let loadMore = true;
+    let oldestId = null;
+
+    while (loadMore) {
+      const params = oldestId !== null ? { oldest_id: oldestId } : {};
+      const res = await axios.get(`chat/get-room-messages/${roomId}`, {
+        ...config.value,
+        params,
+      });
+      const data = res?.data;
+      if (data?.key !== 'success' || !data?.data?.messages) break;
+
+      const batch = data.data.messages;
+      const loadOldMessages = data.data.load_old_messages;
+
+      allMessages = [...batch, ...allMessages];
+
+      if (loadOldMessages === 1 && batch.length > 0) {
+        oldestId = Math.min(...batch.map((m) => m.id));
+        loadMore = true;
+      } else {
+        loadMore = false;
+      }
     }
+
+    allMessages.sort((a, b) => a.id - b.id);
+    messages.value = allMessages;
+    nextTick(() => scrollToBottom());
   } catch (e) {
     errorToast(e?.response?.data?.msg || e?.response?.data?.message || 'حدث خطأ في تحميل الرسائل');
   }
@@ -136,7 +206,7 @@ const sendMessage = () => {
   if (socket.value && roomId.value) {
     socket.value.emit('sendMessage', {
       receiver_id: null,
-      receiver_type: 'provider',
+      receiver_type: 'User',
       room_id: roomId.value,
       type: 'text',
       body,
@@ -148,6 +218,9 @@ const sendMessage = () => {
 
 onMounted(async () => {
   if (!import.meta.client) return;
+
+  // ✅ أهم سطرين: رجّع الـ query لو اختفى بعد reload
+  await ensureRoomQueryExists();
 
   // جلب الرسائل فور دخول الصفحة: chat/get-room-messages/{id}?per_page=1
   if (roomId.value) {
@@ -162,7 +235,7 @@ onMounted(async () => {
     transports: ['websocket'],
     query: {
       sender_id: user.value?.id,
-      sender_type: 'User',
+      sender_type: 'Provider',
       sender_name: user.value?.name || '',
       avatar: user.value?.avatar || '',
       lang: locale.value || 'ar',
@@ -278,12 +351,12 @@ onBeforeUnmount(() => {
   margin-bottom: 12px;
 }
 
-.chat-message .w-100.customer {
+.chat-message .w-100.provider {
   display: flex;
   justify-content: flex-start;
 }
 
-.chat-message .w-100:not(.customer) {
+.chat-message .w-100:not(.provider) {
   display: flex;
   justify-content: flex-end;
 }
@@ -351,7 +424,7 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: 8px;
   padding: 12px 16px;
-//   border-top: 1px solid rgba(255, 255, 255, 0.08);
+  //   border-top: 1px solid rgba(255, 255, 255, 0.08);
   background-color: #2d2d2d;
   border-radius: 12px 12px 0 0;
   overflow: hidden;
