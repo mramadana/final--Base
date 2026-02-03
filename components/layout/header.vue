@@ -128,7 +128,7 @@
             }
         }
 
-        getNotificationsCount();
+        // getNotificationsCount();
     } else {
         notifCount.value = 0;
     }
@@ -143,10 +143,10 @@
 
     const router = useRouter();
 
-    router.afterEach(() => {
-      getNotificationsCount();
+    // router.afterEach(() => {
+    //   getNotificationsCount();
       
-    });
+    // });
 
 
 

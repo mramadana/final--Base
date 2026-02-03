@@ -7,26 +7,48 @@
           <div class="chat-message test" v-for="(msg, index) in messages" :key="index">
             <div class="w-100" :class="msg.sender_type == 'Provider' ? 'provider' : 'user'">
               <div class="d-flex" :dir="user?.id == msg.sender_id ? 'rtl' : 'ltr'">
-                <img v-if="user?.id != msg.sender_id" src="~/assets/images/Logo.svg" class="chatLogo msg-avatar"
-                  loading="lazy" alt="chatLogo">
+                <img
+                  v-if="user?.id != msg.sender_id"
+                  src="~/assets/images/Logo.svg"
+                  class="chatLogo msg-avatar"
+                  loading="lazy"
+                  alt="chatLogo"
+                >
                 <div class="bubble" style="white-space: break-spaces;">
                   <p :class="user?.id != msg.sender_id ? 'text-black' : ''">{{ msg.body }}</p>
                 </div>
-                <img v-if="user?.id == msg.sender_id" :src="user?.avatar || '/Logo.svg'" class="chatLogo msg-avatar"
-                  loading="lazy" alt="avatar" onerror="this.src='/Logo.svg'">
+                <img
+                  v-if="user?.id == msg.sender_id"
+                  :src="user?.avatar || '/Logo.svg'"
+                  class="chatLogo msg-avatar"
+                  loading="lazy"
+                  alt="avatar"
+                  onerror="this.src='/Logo.svg'"
+                >
               </div>
             </div>
           </div>
         </div>
+
         <div class="chat-input">
-          <Textarea v-model="newMessage" @keydown.enter.exact.prevent="sendMessage"
-            @keydown.enter.shift.exact.prevent="newline" :placeholder="$t('enterMsg')" class="noRezie chat-textarea" />
-          <Button icon="pi pi-send" @click="sendMessage" class="p-button-rounded p-button-info chat-send-btn"
-            aria-label="send">
+          <Textarea
+            v-model="newMessage"
+            @keydown.enter.exact.prevent="sendMessage"
+            @keydown.enter.shift.exact.prevent="newline"
+            :placeholder="$t('enterMsg')"
+            class="noRezie chat-textarea"
+          />
+          <Button
+            icon="pi pi-send"
+            @click="sendMessage"
+            class="p-button-rounded p-button-info chat-send-btn"
+            aria-label="send"
+          >
             <i class="fa-solid fa-paper-plane"></i>
           </Button>
         </div>
       </div>
+
     </div>
   </div>
 </template>
@@ -62,74 +84,80 @@ const axios = useApi();
 const SOCKET_URL = 'https://reevent-sa.com:4930';
 const socket = ref(null);
 
-// id الغرفة من الراوت: id أو reservation_id (مثلاً chat?reservation_id=53)
-const roomId = computed(() => route.query.id || route.query.reservation_id);
-
 /* =========================
- * ✅ KEEP QUERY ON RELOAD (بدون تعديل أي كود تاني)
+ * ✅ sessionStorage ONLY (بدون router.replace خالص)
  * ========================= */
 const CHAT_QUERY_STORAGE_KEY = 'chat:last_room_query';
 
-const saveLastRoomQuery = () => {
-  if (!import.meta.client) return;
+// هنا هنحط آخر قيمة محفوظة بشكل reactive
+const savedRoomQuery = ref(null); // { key: 'id'|'reservation_id', value: '...' } | null
 
-  const id = route.query.id;
-  const reservationId = route.query.reservation_id;
-
-  if (id) {
-    sessionStorage.setItem(
-      CHAT_QUERY_STORAGE_KEY,
-      JSON.stringify({ key: 'id', value: String(id) })
-    );
-  } else if (reservationId) {
-    sessionStorage.setItem(
-      CHAT_QUERY_STORAGE_KEY,
-      JSON.stringify({ key: 'reservation_id', value: String(reservationId) })
-    );
-  }
-};
-
-const getLastRoomQuery = () => {
-  if (!import.meta.client) return null;
+const safeParse = (raw) => {
+  if (!raw) return null;
   try {
-    const raw = sessionStorage.getItem(CHAT_QUERY_STORAGE_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    if (!parsed?.key || !parsed?.value) return null;
-    return parsed;
+    const obj = JSON.parse(raw);
+    if (!obj?.key || !obj?.value) return null;
+    return { key: obj.key, value: String(obj.value) };
   } catch {
     return null;
   }
 };
 
-const ensureRoomQueryExists = async () => {
-  if (!import.meta.client) return;
-
-  // لو الـ query موجود خلاص → خزّنه وخلاص
-  if (route.query.id || route.query.reservation_id) {
-    saveLastRoomQuery();
-    return;
-  }
-
-  // لو اختفى بعد reload → رجّعه من sessionStorage
-  const saved = getLastRoomQuery();
-  if (saved?.key && saved?.value) {
-    await router.replace({
-      path: route.path,
-      query: {
-        ...route.query,
-        [saved.key]: saved.value,
-      },
-    });
-  }
+const readFromSession = () => {
+  if (!import.meta.client) return null;
+  return safeParse(sessionStorage.getItem(CHAT_QUERY_STORAGE_KEY));
 };
 
-// أي تغيير في roomId خزّنه
+const writeToSession = (key, value) => {
+  if (!import.meta.client) return;
+  const payload = JSON.stringify({ key, value: String(value) });
+  sessionStorage.setItem(CHAT_QUERY_STORAGE_KEY, payload);
+  savedRoomQuery.value = { key, value: String(value) };
+};
+
+// ✅ دي بتضيف الـ param للـ URL "بدون" أي navigation (مفيش loop)
+const syncUrlWithSession = () => {
+  if (!import.meta.client) return;
+
+  // لو الـ query موجود بالفعل مش محتاجين نعمل حاجة
+  if (route.query.id || route.query.reservation_id) return;
+
+  const saved = savedRoomQuery.value || readFromSession();
+  if (!saved?.key || !saved?.value) return;
+
+  // نضيفه للـ URL من غير router.replace
+  const url = new URL(window.location.href);
+  url.searchParams.set(saved.key, saved.value);
+  window.history.replaceState(window.history.state, '', url.pathname + url.search + url.hash);
+};
+
+// ✅ الغرفة المعتمدة: من query لو موجود، وإلا من sessionStorage
+const activeRoomQuery = computed(() => {
+  const id = route.query.id;
+  const reservationId = route.query.reservation_id;
+
+  if (id) return { key: 'id', value: String(id) };
+  if (reservationId) return { key: 'reservation_id', value: String(reservationId) };
+
+  return savedRoomQuery.value; // fallback
+});
+
+// id الغرفة اللي هنستخدمه في API/socket
+const roomId = computed(() => activeRoomQuery.value?.value || null);
+
+// ✅ حفظ فقط (مفيش أي تعديل للراوت هنا)
 watch(
-  () => roomId.value,
-  (val) => {
-    if (!val) return;
-    saveLastRoomQuery();
+  () => [route.query.id, route.query.reservation_id],
+  ([id, reservationId]) => {
+    if (!import.meta.client) return;
+
+    if (id) writeToSession('id', id);
+    else if (reservationId) writeToSession('reservation_id', reservationId);
+    else {
+      // لو اتشال من الراوت، هنخليه يرجع للـ URL (بدون navigation)
+      // وهنفضل مستخدمين الـ savedRoomQuery داخليًا
+      syncUrlWithSession();
+    }
   },
   { immediate: true }
 );
@@ -219,10 +247,13 @@ const sendMessage = () => {
 onMounted(async () => {
   if (!import.meta.client) return;
 
-  // ✅ أهم سطرين: رجّع الـ query لو اختفى بعد reload
-  await ensureRoomQueryExists();
+  // ✅ جهز الـ savedRoomQuery من sessionStorage مرة واحدة
+  savedRoomQuery.value = readFromSession();
 
-  // جلب الرسائل فور دخول الصفحة: chat/get-room-messages/{id}?per_page=1
+  // ✅ لو الراوت اتشال منه الـ param، ضيفه للـ URL بدون navigation
+  syncUrlWithSession();
+
+  // ✅ لو لسه roomId مش موجود في route، هيجي من sessionStorage (activeRoomQuery)
   if (roomId.value) {
     await getMessages(roomId.value);
   }
@@ -356,6 +387,18 @@ onBeforeUnmount(() => {
   justify-content: flex-start;
 }
 
+.provider {
+  .msg-avatar {
+    display: none;
+  }
+}
+
+.user {
+  .d-flex {
+    flex-direction: row !important;
+  }
+}
+
 .chat-message .w-100:not(.provider) {
   display: flex;
   justify-content: flex-end;
@@ -397,7 +440,7 @@ onBeforeUnmount(() => {
 .bubble {
   padding: 10px 14px;
   border-radius: 12px;
-  max-width: 75%;
+  // max-width: 75%;
   word-wrap: break-word;
 }
 
@@ -424,7 +467,7 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: 8px;
   padding: 12px 16px;
-  //   border-top: 1px solid rgba(255, 255, 255, 0.08);
+  // border-top: 1px solid rgba(255, 255, 255, 0.08);
   background-color: #2d2d2d;
   border-radius: 12px 12px 0 0;
   overflow: hidden;
