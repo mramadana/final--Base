@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import { watchEffect } from 'vue';
 
 export default {
 
@@ -63,9 +64,42 @@ export default {
   },
 
   methods: {
+    isFileAccepted(file) {
+      const accept = (this.acceptedFiles || '').trim();
+      if (!accept || accept === '*/*') return true;
+
+      const tokens = accept
+        .split(',')
+        .map(t => t.trim())
+        .filter(Boolean);
+
+      const fileType = (file && file.type) ? file.type : '';
+      const fileName = (file && file.name) ? file.name : '';
+      const fileExt = fileName.includes('.') ? `.${fileName.split('.').pop().toLowerCase()}` : '';
+
+      return tokens.some(token => {
+        if (token.startsWith('.')) {
+          return fileExt === token.toLowerCase();
+        }
+
+        if (token.endsWith('/*')) {
+          const prefix = token.slice(0, -1);
+          return fileType.startsWith(prefix);
+        }
+
+        return fileType === token;
+      });
+    },
+
     handleFileChange(event) {
       if (this.readOnly) return;
       let selectedFiles = event.target.files;
+
+      selectedFiles = Array.from(selectedFiles || []).filter(file => this.isFileAccepted(file));
+      if (!selectedFiles.length) {
+        event.target.value = null;
+        return;
+      }
 
       if (this.validateImageSize(selectedFiles)) {
         if (this.IsMultible) {

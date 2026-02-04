@@ -269,7 +269,7 @@ const confirmDelete = async () => {
       showDeleteDialog.value = false;
       itemToDelete.value = null;
       
-      successToast(t('menu.service_deleted_successfully'));
+      successToast(response.data.msg);
     } else {
       errorToast(response.data.msg || t('menu.error_deleting_service'));
     }

@@ -294,6 +294,7 @@
         "all_reservations": "View All Reservations",
         "view_reservations": "Browse all your reservations from here",
         "search_table": "Search by table number",
+        "search_service": "Search by service number",
         "view_completed_orders": "Browse all completed reservations",
         "view_cancelled_orders": "Browse all cancelled reservations",
         "status": "Reservation Status",

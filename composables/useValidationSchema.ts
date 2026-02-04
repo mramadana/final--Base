@@ -266,7 +266,6 @@ export const useValidationSchema = () => {
       yup
         .string()
         .trim()
-        .required(t('validation.required_with_label', { field: label }))
         .min(3, label + " " + t('validation.min', { field: label, min: 3 }))
         .max(30, label + " " + t('validation.max', { field: label, max: 30 }))
         .label(label);
@@ -277,6 +276,7 @@ export const useValidationSchema = () => {
         .string()
         .trim()
         .required(t('validation.required_with_label', { field: label }))
+        .matches(/^[1-9][0-9]*$/, t('Table.number_of_people'))
         .max(3, label + " " + t('tables.max', { field: label, max: 3 }))
         .label(label);
 

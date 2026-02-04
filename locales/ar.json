@@ -294,6 +294,7 @@
         "all_reservations": "عرض جميع الحجوزات",
         "view_reservations": "استعرض جميع الحجوزات الخاصة بك من هنا",
         "search_table": "البحث برقم الطاوله ",
+        "search_service": "البحث برقم الخدمة",
         "view_completed_orders": "استعرض جميع الحجوزات المكتملة",
         "view_cancelled_orders": "استعرض جميع الحجوزات الملغية",
         "status": "حالة الحجز",
@@ -402,7 +403,7 @@
         "available_time": "الموعد المتاح",
         "choose_date": "اختر التاريخ",
         "choose_time": "اختر الموعد",
-        "customer_name": "اسم المعميل",
+        "customer_name": "اسم العميل",
         "phone_number": "رقم الجوال",
         "notes": "إضافة ملاحظة",
         "save_appointment": "حفظ الموعد",
@@ -598,7 +599,8 @@
         "no_notifications": "لا توجد اشعارات"
     },
     "Table": {
-        "Loading": "جاري التحميل"
+        "Loading": "جاري التحميل",
+        "number_of_people": "عدد افراد الطاولة يجب ان يكون اكبر من 0"
     },
     
     "service": {

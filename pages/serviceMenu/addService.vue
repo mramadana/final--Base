@@ -213,7 +213,7 @@
                         <div class="time-input-wrapper">
                             <flat-pickr 
                                 v-model="currentDay.timeTo" 
-                                :config="timePickrConfig" 
+                                :config="getTimeToPickrConfig(currentDay)" 
                                 class="custom-time"
                                 :placeholder="$t('workingTime.time_to')" 
                             />
@@ -226,7 +226,7 @@
                             {{ $t('workingTime.add_new_time') }}
                         </button>
                     </div>
-                    
+
                     <!-- Working Hours Validation Error -->
                     <p v-if="showWorkingHoursError" class="error-message text-danger mt-1">
                         الرجاء إضافة موعد واحد على الأقل قبل الحفظ
@@ -263,7 +263,7 @@
                             <div class="time-input-wrapper">
                                 <flat-pickr 
                                     v-model="day.timeTo" 
-                                    :config="timePickrConfig" 
+                                    :config="getTimeToPickrConfig(day)" 
                                     class="custom-time"
                                     :placeholder="$t('workingTime.time_to')" 
                                 />
@@ -300,6 +300,7 @@
 
 <script setup>
 import { useI18n } from "vue-i18n";
+import { watch } from 'vue';
 import flatPickr from 'vue-flatpickr-component';
 import 'flatpickr/dist/flatpickr.css';
 import { Arabic } from "flatpickr/dist/l10n/ar";
@@ -518,6 +519,57 @@ const timePickrConfig = computed(() => ({
     disableMobile: true,
     locale: import.meta.client ? (localStorage.getItem("locale") === "en" ? "default" : Arabic) : Arabic,
 }));
+
+const parseTimeToMinutes = (timeStr) => {
+    if (!timeStr || typeof timeStr !== 'string') return null;
+    const parts = timeStr.split(':');
+    if (parts.length !== 2) return null;
+    const h = Number(parts[0]);
+    const m = Number(parts[1]);
+    if (!Number.isFinite(h) || !Number.isFinite(m)) return null;
+    return (h * 60) + m;
+};
+
+const isTimeRangeValid = (timeFrom, timeTo) => {
+    const fromMinutes = parseTimeToMinutes(timeFrom);
+    const toMinutes = parseTimeToMinutes(timeTo);
+    if (fromMinutes === null || toMinutes === null) return true;
+    return fromMinutes < toMinutes;
+};
+
+const getTimeToPickrConfig = (dayObj) => ({
+    ...timePickrConfig.value,
+    onChange: (_selectedDates, dateStr) => {
+        const timeFrom = dayObj?.timeFrom;
+        const timeTo = dateStr || dayObj?.timeTo;
+        if (!timeFrom || !timeTo) return;
+        if (!isTimeRangeValid(timeFrom, timeTo)) {
+            dayObj.timeTo = '';
+            errorToast(t('workingTime.time_from_must_be_before_time_to'));
+        }
+    }
+});
+
+watch(
+    () => currentDay.value.timeFrom,
+    () => {
+        if (!isTimeRangeValid(currentDay.value.timeFrom, currentDay.value.timeTo)) {
+            currentDay.value.timeTo = '';
+        }
+    }
+);
+
+watch(
+    savedDays,
+    (days) => {
+        (days || []).forEach((d) => {
+            if (!isTimeRangeValid(d.timeFrom, d.timeTo)) {
+                d.timeTo = '';
+            }
+        });
+    },
+    { deep: true }
+);
 
 // Add new day with validation
 const addNewDay = () => {

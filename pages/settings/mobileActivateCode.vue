@@ -108,7 +108,7 @@ const resendCode = async () => {
         fd.append('phone', user.value.phone);
         fd.append('country_code', user.value.country_id);
         
-        const res = await axios.post(`provider/profile/change-phone/send-code-to-new-phone`, fd, config);
+        const res = await axios.post(`provider/profile/change-phone/check-current-password-and-send-code`, fd, config);
         
         if (response(res) == "success") {
             successToast(res.data.msg);

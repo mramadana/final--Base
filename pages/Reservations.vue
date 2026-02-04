@@ -5,7 +5,7 @@
   
       <!-- Filter Component -->
       <ReservationFilter v-if="reservations?.length > 0" v-model="filterValues" :show-search="true" :show-select="true" :show-calendar="true"
-        :search-placeholder="$t('reservations.search_table')" :select-options="statusOptions"
+        :search-placeholder="$t(authStore.userType === 'service' ? 'reservations.search_service' : 'reservations.search_table')" :select-options="statusOptions"
         :select-placeholder="$t('reservations.status')" option-label="name" option-value="id"
         :calendar-placeholder="$t('reservations.choose_date')" calendar-mode="single" @search="handleSearch"
         @select-change="handleSelectChange" @date-change="handleDateChange" />
@@ -29,6 +29,9 @@
 
   import { useI18n } from 'vue-i18n';
   const { t } = useI18n({ useScope: 'global' });
+
+  import { useAuthStore } from '~/stores/auth';
+  const authStore = useAuthStore();
 
   // const globalStore = useGlobalStore();
   // const pageHeadTitle = ref(t("Sidebar.tables"));

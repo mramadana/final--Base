@@ -456,10 +456,10 @@ const submitStep1 = async () => {
 
         // Append images (they don't have name attributes in the form)
         if (uploadedImage.value) {
-            fd.append("project_logo", uploadedImage.value);
+            fd.append("project_logo", uploadedProfileImage.value);
         }
         if (uploadedProfileImage.value) {
-            fd.append("project_cover", uploadedProfileImage.value);
+            fd.append("project_cover", uploadedImage.value);
         }
 
         console.log("Submitting Step 1...");
