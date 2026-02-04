@@ -4,7 +4,7 @@
             <div class="inner-header">
                 <div class="right-side d-flex align-items-center gap-4 flex-wrap">
 
-                    <NuxtLink to="/settings" class="settings-link">
+                    <NuxtLink v-if="user?.is_parent" to="/settings" class="settings-link">
                         <i class="fa-solid fa-gear"></i>
                     </NuxtLink>
 
@@ -37,7 +37,7 @@
                 </div>
                 <div class="d-flex align-items-center">
 
-                    <NuxtLink  to="/Notifications" class="notification ml-5" :class="{ 'hide-badge': isNotificationsPage }">
+                    <NuxtLink  to="/Notifications" class="notification ml-5" :class="{ 'hide-badge': !notifCount }">
                         <div class="notif-icon">
                             <!-- <i class="fas fa-bell"></i> -->
                              <img src="@/assets/images/notification-img.svg" alt="notification-img">
@@ -149,16 +149,16 @@
         return route.path === '/Notifications';
     });
 
-    // router.afterEach(() => {
-    //   getNotificationsCount();
+    router.afterEach(() => {
+      getNotificationsCount();
       
-    // });
-
-
-
-    onMounted( async () => {
-       await getNotificationsCount();
     });
+
+
+
+    // onMounted( async () => {
+    //    await getNotificationsCount();
+    // });
 
     onMounted(() => {
         store.user.image

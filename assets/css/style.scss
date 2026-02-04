@@ -1438,21 +1438,21 @@ input.p-inputtext.p-component {
       color: #fff;
     }
     .nof-cont {
-      &::before {
-        content: attr(data-number);
-        position: absolute;
-        width: 15px;
-        height: 15px;
-        background-image: linear-gradient(to bottom, #00A19A99, #543D8FE5);
-        color: #fff;
-        top: -5px;
-        @include dir-left(-5px);
-        font-size: 9px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
+      // &::before {
+      //   content: attr(data-number);
+      //   position: absolute;
+      //   width: 15px;
+      //   height: 15px;
+      //   background-image: linear-gradient(to bottom, #00A19A99, #543D8FE5);
+      //   color: #fff;
+      //   top: -5px;
+      //   @include dir-left(-5px);
+      //   font-size: 9px;
+      //   border-radius: 50%;
+      //   display: flex;
+      //   align-items: center;
+      //   justify-content: center;
+      // }
     }
   }
   .bell-img {

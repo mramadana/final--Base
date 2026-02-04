@@ -90,17 +90,34 @@
           {{ $t('reservationDetails.chat_with_client') }}
         </button>
       </div>
+      <h2 class="section-title mt-4" v-if="reservationData.notes">{{ $t('workingTime.notes') }}</h2>
+
+      <div v-if="reservationData.notes" class="notes-section mt-3">
+        <h3 class="notes-title">
+          <i class="fas fa-sticky-note"></i> {{ reservationData.notes }}
+        </h3>
+      </div>
     </div>
 
     <div class="card-section" v-if="reservationData.services_info && reservationData.services_info.length > 0">
       <h2 class="section-title">{{ $t('reservationDetails.requested_services') }}</h2>
       <div class="services-list">
-        <span v-for="service in reservationData.services_info" :key="service.id" class="service-tag">
-          {{ service.name }} × {{ service.quantity }}
-        </span>
+        <div v-for="service in reservationData.services_info" :key="service.id" class="service-item">
+          <div class="service-name">{{ service.name }}</div>
+          <div class="service-details">
+            <span v-if="service.employee_name" class="service-detail">
+              <i class="fas fa-user"></i> {{ service.employee_name }}
+            </span>
+            <span v-if="service.duration" class="service-detail">
+              <i class="fas fa-clock"></i> {{ service.duration }}
+            </span>
+            <span v-if="service.time" class="service-detail">
+              <i class="fas fa-calendar-alt"></i> {{ service.time }}
+            </span>
+          </div>
+        </div>
       </div>
     </div>
-
 
     <Dialog v-model:visible="acceptDialog" modal class="custum_dialog_width without-close" :draggable="false">
       <div class="text-center dialog-content">
@@ -594,8 +611,41 @@ $primary-blue: #3B82F6;
 
 .services-list {
   display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.service-item {
+  background-color: #444444;
+  color: #fff;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.service-name {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #fff;
+}
+
+.service-details {
+  display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 16px;
+  font-size: 0.85rem;
+}
+
+.service-detail {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #ccc;
+
+  i {
+    color: #fff;
+    font-size: 0.9rem;
+  }
 }
 
 .service-tag {
@@ -606,6 +656,28 @@ $primary-blue: #3B82F6;
   font-size: 0.8rem;
   font-weight: 500;
 }
+
+.notes-section {
+  background-color: #3a3a3a;
+  padding: 16px;
+  border-radius: 8px;
+  margin-top: 16px;
+}
+
+.notes-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  i {
+    color: #fff;
+  }
+}
+
 
 .dialog-content {
   text-align: center;
