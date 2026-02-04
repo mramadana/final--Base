@@ -267,7 +267,7 @@ export const useValidationSchema = () => {
         .string()
         .trim()
         .min(3, label + " " + t('validation.min', { field: label, min: 3 }))
-        .max(30, label + " " + t('validation.max', { field: label, max: 30 }))
+        .max(200, label + " " + t('validation.max', { field: label, max: 200 }))
         .label(label);
 
     // table number of people

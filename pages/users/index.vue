@@ -260,7 +260,7 @@ const confirmDelete = async () => {
             showDeleteDialog.value = false;
             itemToDelete.value = null;
 
-            successToast(res.msg || t("users.user_deleted_successfully"));
+            successToast(res?.data?.msg);
 
             // Refetch data if no items left on current page
             if (users.value.length === 0 && currentPage.value > 1) {

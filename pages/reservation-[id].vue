@@ -1,6 +1,6 @@
 <template>
   <div class="layout-form">
-    
+
     <div :class="messageClass" v-if="messageText">
       <i class="fas fa-info-circle message-icon"></i>
       <span>{{ messageText }}</span>
@@ -9,29 +9,24 @@
     <div class="page-header">
       <h1 class="main-title">{{ $t('reservationDetails.reservation_details') }}</h1>
       <div class="header-actions">
-        
-        <button v-if="reservationData.buttons?.can_accept" class="action-btn-accept" @click="showAcceptDialog" :disabled="loading">
+
+        <button v-if="reservationData.buttons?.can_accept" class="action-btn-accept" @click="showAcceptDialog"
+          :disabled="loading">
           <i v-if="loading && loadingAction === 'accept'" class="fas fa-spinner fa-spin"></i>
           {{ $t('reservationDetails.accept_reservation') }}
         </button>
-        <button v-if="reservationData.buttons?.can_reject" class="action-btn-reject" @click="showRejectDialog" :disabled="loading">
-          <i v-if="loading && loadingAction === 'reject'" class="fas fa-spinner fa-spin"></i>
+        <button v-if="reservationData.buttons?.can_reject" class="action-btn-reject" @click="showRejectDialog"
+          :disabled="loading">
           {{ $t('reservationDetails.reject_reservation') }}
         </button>
-        
-        <button 
-          v-if="reservationData.buttons?.can_approve_user_attendance" 
-          class="action-btn-attendance"
-          @click="approveUserAttendance"
-          :disabled="loading">
+
+        <button v-if="reservationData.buttons?.can_approve_user_attendance" class="action-btn-attendance"
+          @click="approveUserAttendance" :disabled="loading">
           <i v-if="loading && loadingAction === 'attendance'" class="fas fa-spinner fa-spin"></i>
           {{ $t('reservationDetails.confirm_attendance') }}
         </button>
-        
-        <button 
-          v-if="reservationData.buttons?.can_finish_order" 
-          class="action-btn-finish"
-          @click="finishOrder"
+
+        <button v-if="reservationData.buttons?.can_finish_order" class="action-btn-finish" @click="finishOrder"
           :disabled="loading">
           <i v-if="loading && loadingAction === 'finish'" class="fas fa-spinner fa-spin"></i>
           {{ $t('reservationDetails.confirm_departure') }}
@@ -48,11 +43,13 @@
           <p><i class="fas fa-calendar-check icon"></i> {{ $t('reservationDetails.booking_status') }}: <span
               :class="statusClass">{{ reservationData.status_text || bookingStatus }}</span></p>
           <p v-if="paymentStatus" class="payment-status-wrapper">
-            <i class="fas fa-dollar-sign icon"></i> {{ $t('reservationDetails.payment_status') }}: <span :class="paymentStatusClass">{{ paymentStatus
+            <i class="fas fa-dollar-sign icon"></i> {{ $t('reservationDetails.payment_status') }}: <span
+              :class="paymentStatusClass">{{ paymentStatus
               }}</span>
           </p>
           <p v-if="reservationData.cancel_reason" class="cancel-reason">
-            <i class="fas fa-times-circle icon"></i> {{ $t('reservationDetails.cancellation_reason') }}: {{ reservationData.cancel_reason }}
+            <i class="fas fa-times-circle icon"></i> {{ $t('reservationDetails.cancellation_reason') }}: {{
+              reservationData.cancel_reason }}
           </p>
         </div>
         <div class="details-left">
@@ -71,7 +68,7 @@
         <img :src="reservationData.table_info.image?.file_name || 'https://i.imgur.com/rM195Vn.jpg'" alt="صورة طاولة"
           class="table-image" />
         <span class="table-rating" v-if="reservationData.rate"> <i class="fas fa-star"></i> {{ reservationData.rate
-          }}</span>
+        }}</span>
       </div>
 
       <div class="restaurant-details">
@@ -87,9 +84,7 @@
             </span>
           </div>
         </div>
-        <button 
-          v-if="reservationData.buttons?.can_chat" 
-          class="action-btn-chat"
+        <button v-if="reservationData.buttons?.can_chat" class="action-btn-chat"
           @click="navigateTo(`/chat?id=${reservationData.room_id}`)">
           <i class="fas fa-comment-dots"></i>
           {{ $t('reservationDetails.chat_with_client') }}
@@ -120,9 +115,13 @@
         <textarea v-model="rejectReason" class="rejection-textarea"
           :placeholder="$t('reservationDetails.enter_reject_reason')"></textarea>
         <div class="dialog-actions">
-          <button class="action-btn-accept" @click="hideRejectDialog">{{ $t('reservationDetails.cancel') }}</button>
-          <button class="action-btn-reject" @click="confirmReject">{{ $t('reservationDetails.confirm_reject')
-            }}</button>
+          <button class="action-btn-accept" @click="hideRejectDialog">
+            {{ $t('reservationDetails.cancel') }}
+          </button>
+          <button class="action-btn-reject" @click="confirmReject">
+            <i v-if="loading && loadingAction === 'reject'" class="fas fa-spinner fa-spin"></i>
+            {{ $t('reservationDetails.confirm_reject')}}
+          </button>
         </div>
       </div>
     </Dialog>
@@ -269,7 +268,7 @@ const showAcceptDialog = async () => {
       acceptDialog.value = true;
       bookingStatus.value = 'مقبول';
       paymentStatus.value = 'بانتظار الدفع';
-      
+
       // إخفاء النافذة بعد 2 ثانية
       setTimeout(() => {
         acceptDialog.value = false;
@@ -277,7 +276,7 @@ const showAcceptDialog = async () => {
 
       // تحديث البيانات من السيرفر
       await getReservationDetails();
-      
+
       successToast(t('reservationDetails.approval_success'));
     }
   } catch (error) {
@@ -323,8 +322,10 @@ const confirmReject = async () => {
 
       // تحديث البيانات من السيرفر
       await getReservationDetails();
-      
+
       successToast(t('reservationDetails.reject_success'));
+    } else {
+      errorToast(res.data.msg);
     }
   } catch (error) {
     console.error("Reject reservation error:", error);
@@ -484,7 +485,8 @@ $primary-blue: #3B82F6;
 .action-btn-chat {
   background-color: #191919;
   color: #fff;
-  
+  margin-inline-start: auto;
+
   i {
     font-size: 1.1rem;
   }

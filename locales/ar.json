@@ -328,7 +328,8 @@
         "save_changes": "حفظ التغير",
         "calibration_standards": "المعاير الخاصه بالمكان",
         "saved_successfully": "تم حفظ التعديل بنجاح",
-        "select_at_least_one_standard": "يجب اختيار معيار واحد على الأقل"
+        "select_at_least_one_standard": "يجب اختيار معيار واحد على الأقل",
+        "chat": "التواصل"
     },
 
     "reservationDetails": {
@@ -600,6 +601,7 @@
         "loading_users": "جاري تحميل المستخدمين",
         "loading_user_data": "جاري تحميل بيانات المستخدم",
         "inquiry_sent_successfully": "تم ارسال الاستفسار بنجاح",
+        "add_user_successfully": "تم اضافة المستخدم بنجاح",
         "enter_amount": ""
     },
 

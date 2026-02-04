@@ -56,11 +56,16 @@
 <script setup>
 definePageMeta({
   middleware: 'auth',
-  name: 'chat',
+  name: 'settings.chat',
 });
 
+
 import { useI18n } from 'vue-i18n';
-const { locale } = useI18n();
+const { locale, t } = useI18n();
+
+const globalStore = useGlobalStore();
+const pageHeadTitle = ref(t('settings.chat'));
+globalStore.title = pageHeadTitle.value;
 
 const route = useRoute();
 const router = useRouter();
