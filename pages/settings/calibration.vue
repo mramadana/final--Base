@@ -68,7 +68,7 @@
 
 definePageMeta({
     name: "settings.calibration",
-    layout: "default",
+    middleware: 'auth'
 });
 
 import { useI18n } from 'vue-i18n';
@@ -100,6 +100,13 @@ const config = {
 // Save calibration settings
 const saveCalibration = async () => {
     const selectedItems = calibrationData.value.filter(item => item.selected);
+    
+    // Validate: at least one standard must be selected
+    if (selectedItems.length === 0) {
+        errorToast(t('settings.select_at_least_one_standard'));
+        return;
+    }
+    
     console.log('Selected calibration items:', selectedItems);
     
     loading.value = true;

@@ -90,7 +90,7 @@ export const useValidationSchema = () => {
         .string()
         .trim()
         .min(14, t('Auth.iban') + " " + t('validation.min', { field: label, min: 14 }))
-        .max(29, t('Auth.iban') + " " + t('validation.max', { field: label, max: 29 }))
+        .max(24, t('Auth.iban') + " " + t('validation.max', { field: label, max: 24 }))
         // .matches(/^[0-9]+$/, t('validation.iban_only_digits'))
         .label(label);
 
@@ -99,8 +99,8 @@ export const useValidationSchema = () => {
       yup
         .string()
         .trim()
-        .required(t('validation.required_with_label', { field: t('Auth.commercial_reg_number') }))
-        .min(10, t('Auth.commerciaRumber') + " " + t('validation.min', { field: label, min: 10 }))
+        .required(t('validation.required_with_label', { field: t('Auth.commerciaRumber') }))
+        .min(10, t('Auth.commerciaRumber') + " " + t('validation.min_num', { field: label, min: 10 }))
         // .matches(/^[0-9]+$/, t('validation.commercial_reg_number_only_digits'))
         .label(label);
 
@@ -119,7 +119,8 @@ export const useValidationSchema = () => {
         .string()
         .trim()
         .required(t('validation.required_with_label', { field: t('Auth.account_number') }))
-        .min(8, t('Auth.account_number') + " " + t('validation.min_num', { field: label, min: 8 }))
+        .min(10, t('Auth.account_number') + " " + t('validation.min_num', { field: label, min: 10 }))
+        .max(24, t('Auth.account_number') + " " + t('validation.max_num', { field: label, max: 24 }))
         .matches(/^[0-9]+$/, t('validation.account_number_only_digits'))
         .label(label);
 
@@ -190,7 +191,7 @@ export const useValidationSchema = () => {
         .string()
         .trim()
         .required(t('validation.required_with_label', { field: t(labelKey) }))
-        .min(6, t('Auth.password') + " " + t('validation.min', { field: t(labelKey), min: 6 }))
+        .min(8, t('Auth.password') + " " + t('validation.min', { field: t(labelKey), min: 8 }))
         .label(t(labelKey));
 
     // Job Title Schema  

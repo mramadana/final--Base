@@ -87,7 +87,7 @@ const config = computed(() => ({
 // Page meta
 definePageMeta({
     name: 'sideMenu.due_amount',
-    layout: 'default',
+    middleware: 'auth'
 });
 
 // Images

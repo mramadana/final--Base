@@ -41,8 +41,8 @@
         "rate": "التقييم مطلوب",
         "message": "الرسالة مطلوبة",
         "required": "هذا الحقل مطلوب",
-        "min": "يجب ان يكون {min} احرف على الاقل",
-        "min_num": "يجب ان يكون {min} رقم على الاقل",
+        "min": "يجب ان يكون {min} احرف وارقام",
+        "min_num": "يجب ان يكون {min} ارقام على الاقل",
         "max": "يجب ان يكون {max} احرف على الاكثر",
         "max_num": "يجب ان يكون {max} رقم على الاكثر",
         "minNum": " يجب ان يكون رقم الجوال {min} ارقام على الاقل",
@@ -56,7 +56,7 @@
         "job": "مجال العمل مطلوب",
         "verification_code": "يرجى ادخال رمز التفعيل",
         "attach_logo": "قم باضافه صورة الشعار",
-        "attach_profile_image": "قم باضافه صورة البروفيل",
+        "attach_profile_image": "قم باضافه صورة اللوجو",
         "attach_table_image": "قم باضافه صورة الطاولة",
         "attach_table_image_2": "قم باضافه صور الطاولة",
         "attach_menu_image": "قم باضافه صورة المنيو",
@@ -111,7 +111,7 @@
         "create_new_account": "انشاء حساب جديد",
         "create_acc": "انشاء حساب",
         "back": "السابق",
-        "verification_info": "الرجاء ادخال رمز التفعيل المرسل عبر رقم الجوال التالي للانتهاء من اعدادات انشاء الحساب الحساب",
+        "verification_info": "الرجاء ادخال رمز التفعيل المرسل عبر رقم الجوال التالي {phone} للانتهاء من اعدادات انشاء الحساب",
         "activation_code": "الرجاء ادخال رمز التفعيل المرسل عبر رقم الجوال التالي للانتهاء من اعداداتتعين كلمه المرور",
         "project_basic_data": "بيانات المشروع الأساسية",
         "project_name_ar": "اسم المشروع باللغة العربية",
@@ -121,7 +121,7 @@
         "table_desc_ar": "وصف الطاولة بالعربية",
         "table_desc_en": "وصف الطاولة بالانجليزية",
         "add_logo": "قم بإضافة صورة الشعار",
-        "add_profile_image": "قم بإضافة صورة البروفايل",
+        "add_profile_image": "قم بإضافة صورة اللوجو",
         "next": "التالي",
         "previous": "السابق",
         "complete": "إنهاء",
@@ -159,7 +159,7 @@
         "select_country": "قم بتحديد الدولة",
         "region": "المنطقة",
         "select_region": "قم بتحديد المنطقة",
-        "location": "قم بتحديد الموكيشن",
+        "location": "قم بتحديد اللوكيشن",
         "commercial_reg_number": "قم بإضافة رقم السجل التجاري",
         "commerciaRumber": "السجل التجاري",
         "reservation_duration": "مدة تنفيذ الحجز",
@@ -306,7 +306,7 @@
         "pending_reservations": "حجز واردة",
         "completed_reservations": "حجز مكتمل",
         "cancelled_reservations": "حجز ملغي حتي لان ",
-        "waiting_list_reservations": "حجز في قائمة االنتظار"
+        "waiting_list_reservations": "حجز في قائمة الانتظار"
     },
 
     "settings": {
@@ -326,7 +326,8 @@
         "confirm_code": "الرجاء ادخال رمز التفعيل المرسل عبر رقم الجوال",
         "save_changes": "حفظ التغير",
         "calibration_standards": "المعاير الخاصه بالمكان",
-        "saved_successfully": "تم حفظ التعديل بنجاح"
+        "saved_successfully": "تم حفظ التعديل بنجاح",
+        "select_at_least_one_standard": "يجب اختيار معيار واحد على الأقل"
     },
 
     "reservationDetails": {
@@ -410,6 +411,7 @@
         "time_required": "الموعد المتاح مطلوب",
         "date_and_time_required": "يرجى إدخال التاريخ والموعد المتاح",
         "loading_times": "جاري تحميل المواعيد المتاحة",
+        "time_from_must_be_before_time_to": "وقت البداية يجب أن يكون قبل وقت النهاية",
         "days": {
             "saturday": "السبت",
             "sunday": "الأحد",
@@ -472,6 +474,7 @@
         "edit_meal": "تعديل الوجبة",
         "select_menu": "تحديد المنيو",
         "meal_price": "سعر الوجبة",
+        "service_price": "سعر الخدمة",
         "meal_details": "عرض تفاصيل الوجبة",
         "menus_loaded_successfully": "تم تحميل المنيوهات بنجاح",
         "error_loading_menus": "حدث خطأ أثناء تحميل المنيوهات",
@@ -591,7 +594,8 @@
         "delete": "حذف",
         "notifications": "الاشعارات",
         "enable_notifications": "تفعيل الاشعارات",
-        "chat": "محادثة"
+        "chat": "محادثة",
+        "no_notifications": "لا توجد اشعارات"
     },
     "Table": {
         "Loading": "جاري التحميل"

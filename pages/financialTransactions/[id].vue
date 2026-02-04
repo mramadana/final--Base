@@ -80,7 +80,7 @@ const config = computed(() => ({
 // Page meta
 definePageMeta({
     name: 'financial.settlement_details',
-    layout: 'default',
+    middleware: 'auth'
 });
 
 // Images

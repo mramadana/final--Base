@@ -47,7 +47,7 @@
 
 definePageMeta({
   name: 'sideMenu.current_settlement',
-  layout: 'default'
+  middleware: 'auth'
 })
 
 import { useI18n } from 'vue-i18n';

@@ -161,7 +161,7 @@ const submitApproval = async () => {
     setTimeout(() => {
         accept_create_acount.value = false
         setTimeout(() => {
-            navigateTo('/Auth/completePayment')
+            navigateTo('/Auth/login')
         }, 1000)
     }, 1500)
 }

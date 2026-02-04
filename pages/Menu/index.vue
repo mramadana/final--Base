@@ -123,7 +123,7 @@ onMounted(() => {
 
 definePageMeta({
     name: "menu.my_menus",
-    layout: "default",
+    middleware: 'auth'
 });
 </script>
 

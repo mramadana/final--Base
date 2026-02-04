@@ -302,7 +302,7 @@ const submitTable = async () => {
 // Page meta
 definePageMeta({
     name: "tables.add_new_table",
-    layout: "default",
+    middleware: 'auth'
 });
 
 // Fetch categories on mount

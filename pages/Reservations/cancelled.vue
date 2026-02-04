@@ -33,7 +33,8 @@
   globalStore.title = pageHeadTitle.value;
 
   definePageMeta({
-    name: 'sideMenu.cancelled_reservations'
+    name: 'sideMenu.cancelled_reservations',
+    middleware: 'auth'
   })
 
   // Inject context from parent

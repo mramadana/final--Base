@@ -37,7 +37,7 @@
                 </div>
                 <div class="d-flex align-items-center">
 
-                    <NuxtLink  to="/Notifications" class="notification ml-5">
+                    <NuxtLink  to="/Notifications" class="notification ml-5" :class="{ 'hide-badge': isNotificationsPage }">
                         <div class="notif-icon">
                             <!-- <i class="fas fa-bell"></i> -->
                              <img src="@/assets/images/notification-img.svg" alt="notification-img">
@@ -142,6 +142,12 @@
     });
 
     const router = useRouter();
+    const route = useRoute();
+
+    // Check if current page is notifications page
+    const isNotificationsPage = computed(() => {
+        return route.path === '/Notifications';
+    });
 
     // router.afterEach(() => {
     //   getNotificationsCount();

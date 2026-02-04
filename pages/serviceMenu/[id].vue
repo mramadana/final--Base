@@ -88,7 +88,7 @@
   
 definePageMeta({
     // name: 'Sidebar.menu_list',
-    layout: 'default'
+    middleware: 'auth'
 })
 
 

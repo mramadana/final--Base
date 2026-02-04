@@ -208,19 +208,19 @@ const uploadedProfileImage = ref([]);
 
 // Validation schemas
 const {
-    customerName,
     projectDescription_ar,
     projectDescription_en,
-    numberOfPeople,
+    commerciaRumber,
+    required,
     reservationDuration: reservationDurationValidation,
 } = useValidationSchema();
 
 const validations = {
-    projectNameAr: customerName("Auth.project_name_ar"),
-    projectNameEn: customerName("Auth.project_name_en"),
+    projectNameAr: required("Auth.project_name_ar"),
+    projectNameEn: required("Auth.project_name_en"),
     projectDescAr: projectDescription_ar("Auth.project_desc_ar"),
     projectDescEn: projectDescription_en("Auth.project_desc_en"),
-    projectCommercialNumber: customerName("Auth.commerciaRumber"),
+    projectCommercialNumber: commerciaRumber("Auth.commerciaRumber"),
     reservationDuration: reservationDurationValidation(
         "Auth.reservation_duration",
     ),

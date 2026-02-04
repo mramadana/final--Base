@@ -3,7 +3,7 @@
         <div class="custom-width with-auth p-0 mt-4">
             <img src="@/assets/images/Logo.svg" alt="login-image" class="logo-image d-block mx-auto mb-4" />
             <h1 class="main-title bold lg mb-4">{{ $t("Auth.activation_code_auth") }}</h1>
-            <p class="desc mb-4 auth-desc">{{ $t("Auth.verification_info") }}</p>
+            <p class="desc mb-4 auth-desc">{{ $t("Auth.verification_info", { phone: forgetPasswordPhone }) }}</p>
             <form @submit.prevent="verificationCode">
                 <div class="row">
                     <div class="col-12 col-md-8 mr-auto">

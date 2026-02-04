@@ -89,7 +89,8 @@
   <script setup>
   
   definePageMeta({
-      name: 'Sidebar.tables'
+      name: 'Sidebar.tables',
+      middleware: 'auth'
   })
 
   import { useI18n } from 'vue-i18n';

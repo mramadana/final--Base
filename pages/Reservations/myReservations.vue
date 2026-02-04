@@ -12,6 +12,7 @@ import Logo from '@/assets/images/Logo.svg';
 
 definePageMeta({
     name: 'sideMenu.my_reservations',
+    middleware: 'auth'
 })
 
 const { t } = useI18n({ useScope: 'global' });

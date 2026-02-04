@@ -50,9 +50,14 @@ export const useAuthStore = defineStore("auth", {
       
       // Debug: Check for any variation of the key
       if (data.key && data.key.includes("package")) {
-        console.log("Found package-related key:", data.key);
         navigateTo("/Auth/completePayment");
         return { status: "need_active_package", msg: "Active package required" };
+      }
+
+      if (data.key === "need_to_complete_data") {
+        navigateTo("/Auth/completeInfo");
+        console.log(data.key,"Redirecting to complete info");
+        return { status: "need_to_complete_data", msg: data.key };
       }
     
       if (data.key === "success") {

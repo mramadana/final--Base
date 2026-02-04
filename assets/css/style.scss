@@ -1429,6 +1429,9 @@ input.p-inputtext.p-component {
       transform: translateX(-50%);
     }
   }
+  &.hide-badge::before {
+    display: none;
+  }
   .notif-icon {
     i {
       font-size: 17px;

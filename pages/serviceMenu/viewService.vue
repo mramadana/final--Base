@@ -49,7 +49,7 @@
 
                     <!-- Price -->
                     <FormInput v-model:modelValue="bookingPriceRef" name="price" type="number" min="0" step="1"
-                        :label="$t('menu.meal_price')" :placeholder="$t('menu.meal_price')"
+                        :label="$t('menu.service_price')" :placeholder="$t('menu.service_price')"
                         :validation-schema="validations.bookingPrice" :showErrors="false" :readonly="true" />
 
                     <!-- Maximum Reservations -->
@@ -174,7 +174,7 @@ const {
 const validations = {
     tableNumber: tableNumber(t('menu.meal_name_ar')),
     numberOfPeople: tableNumber(t('menu.meal_name_en')),
-    bookingPrice: bookingPrice(t('menu.meal_price')),
+    bookingPrice: bookingPrice(t('menu.service_price')),
     descriptionAr: tableNumber(t('menu.meal_description_ar')),
     descriptionEn: tableNumber(t('menu.meal_description_en')),
     maximumReservations: required('service.maximum_reservations'),
@@ -311,7 +311,7 @@ onMounted(async () => {
 
 // Page meta
 definePageMeta({
-    layout: "default",
+    middleware: 'auth',
     name: "sideMenu.view_service"
 });
 </script>

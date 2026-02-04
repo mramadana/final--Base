@@ -7,7 +7,8 @@
 <script setup>
 
 definePageMeta({
-    name: 'sideMenu.completed_reservations'
+    name: 'sideMenu.completed_reservations',
+    middleware: 'auth'
 })
 
   import { useI18n } from 'vue-i18n';

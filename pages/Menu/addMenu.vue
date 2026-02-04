@@ -136,7 +136,7 @@ const { t } = useI18n({ useScope: "global" });
 // Page meta
 definePageMeta({
     name: "menu.add_new_menu",
-    layout: "default",
+    middleware: 'auth'
 });
 
 const globalStore = useGlobalStore();

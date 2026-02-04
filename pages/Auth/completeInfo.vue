@@ -1,11 +1,7 @@
 <template>
     <div class="container container_layout">
         <div class="custom-width with-auth p-0 mt-4">
-            <img
-                src="@/assets/images/Logo.svg"
-                alt="login-image"
-                class="logo-image d-block mx-auto mb-4"
-            />
+            <img src="@/assets/images/Logo.svg" alt="login-image" class="logo-image d-block mx-auto mb-4" />
             <div class="row">
                 <div class="col-12 col-md-8 mx-auto">
                     <!-- Step Indicator -->
@@ -16,19 +12,14 @@
                                     currentStep === 1
                                         ? $t("Auth.project_data")
                                         : currentStep === 2
-                                          ? $t("Auth.project_data")
-                                          : $t("Auth.bank_data")
+                                            ? $t("Auth.project_data")
+                                            : $t("Auth.bank_data")
                                 }}
                             </h2>
-                            <span class="step-counter"
-                                >{{ currentStep }}/3</span
-                            >
+                            <span class="step-counter">{{ currentStep }}/3</span>
                         </div>
                         <div class="progress-bar">
-                            <div
-                                class="progress-fill"
-                                :style="{ width: progressWidth + '%' }"
-                            ></div>
+                            <div class="progress-fill" :style="{ width: progressWidth + '%' }"></div>
                         </div>
                     </div>
                 </div>
@@ -37,135 +28,74 @@
             <!-- Multi-step Forms -->
 
             <!-- Step 1: Project Basic Data -->
-            <form
-                @submit.prevent="handleSubmit"
-                ref="step1Form"
-                v-show="currentStep === 1"
-            >
+            <form @submit.prevent="handleSubmit" ref="step1Form" v-show="currentStep === 1">
                 <div class="step-content">
                     <div class="row">
                         <div class="col-12 col-md-8 mr-auto">
                             <!-- Project Name Arabic -->
-                            <FormInput
-                                v-model:modelValue="projectNameAr"
-                                name="project_name_ar"
-                                type="text"
-                                :label="$t('Auth.project_name_ar')"
-                                :placeholder="$t('Auth.project_name_ar')"
-                                :validation-schema="validations.projectNameAr"
-                                :showErrors="showValidation"
-                            />
+                            <FormInput v-model:modelValue="projectNameAr" name="project_name_ar" type="text"
+                                :label="$t('Auth.project_name_ar')" :placeholder="$t('Auth.project_name_ar')"
+                                :validation-schema="validations.projectNameAr" :showErrors="showValidation" />
 
                             <!-- Project Name English -->
-                            <FormInput
-                                v-model:modelValue="projectNameEn"
-                                name="project_name_en"
-                                type="text"
-                                :label="$t('Auth.project_name_en')"
-                                :placeholder="$t('Auth.project_name_en')"
-                                :validation-schema="validations.projectNameEn"
-                                :showErrors="showValidation"
-                            />
+                            <FormInput v-model:modelValue="projectNameEn" name="project_name_en" type="text"
+                                :label="$t('Auth.project_name_en')" :placeholder="$t('Auth.project_name_en')"
+                                :validation-schema="validations.projectNameEn" :showErrors="showValidation" />
 
                             <!-- Project Description Arabic -->
-                            <FormInput
-                                v-model:modelValue="projectDescAr"
-                                name="project_description_ar"
-                                type="textarea"
-                                :label="$t('Auth.project_desc_ar')"
-                                :placeholder="$t('Auth.project_desc_ar')"
-                                :validation-schema="validations.projectDescAr"
-                                :showErrors="showValidation"
-                                rows="4"
-                            />
+                            <FormInput v-model:modelValue="projectDescAr" name="project_description_ar" type="textarea"
+                                :label="$t('Auth.project_desc_ar')" :placeholder="$t('Auth.project_desc_ar')"
+                                :validation-schema="validations.projectDescAr" :showErrors="showValidation" rows="4" />
 
                             <!-- Project Description English -->
-                            <FormInput
-                                v-model:modelValue="projectDescEn"
-                                name="project_description_en"
-                                type="textarea"
-                                :label="$t('Auth.project_desc_en')"
-                                :placeholder="$t('Auth.project_desc_en')"
-                                :validation-schema="validations.projectDescEn"
-                                :showErrors="showValidation"
-                                rows="4"
-                            />
+                            <FormInput v-model:modelValue="projectDescEn" name="project_description_en" type="textarea"
+                                :label="$t('Auth.project_desc_en')" :placeholder="$t('Auth.project_desc_en')"
+                                :validation-schema="validations.projectDescEn" :showErrors="showValidation" rows="4" />
 
                             <!-- Logo Upload -->
-                            <div
-                                class="position-relative single-input-upload mb-4"
-                            >
+                            <div class="position-relative single-input-upload mb-4">
                                 <div class="main_input special-input">
                                     <div
-                                        class="d-flex align-items-center justify-content-center gap-2 flex-grow-1 gray"
-                                    >
-                                        <i
-                                            class="fa-solid fa-camera fz-20 ml-1"
-                                        ></i>
+                                        class="d-flex align-items-center justify-content-center gap-2 flex-grow-1 gray">
+                                        <i class="fa-solid fa-camera fz-20 ml-1"></i>
                                         <span>{{ $t("Auth.add_logo") }}</span>
                                     </div>
                                 </div>
                                 <!-- if you want to remove the validation, you can set the required to false
                                     and remove showValidation -->
-                                <GlobalImgUploader
-                                    ref="logoUploader"
-                                    acceptedFiles="image/*"
-                                    :resetTrigger="resetImageTrigger"
-                                    :showValidation="showValidation"
-                                    :required="true"
-                                    :errorMessage="t('validation.attach_logo')"
-                                    @uploaded-images-updated="
+                                <GlobalImgUploader ref="logoUploader" acceptedFiles="image/*"
+                                    :resetTrigger="resetImageTrigger" :showValidation="showValidation" :required="true"
+                                    :errorMessage="t('validation.attach_logo')" @uploaded-images-updated="
                                         updateUploadedImages
-                                    "
-                                />
+                                    " />
                             </div>
 
                             <!-- Profile Image Upload -->
-                            <div
-                                class="position-relative single-input-upload mb-4"
-                            >
+                            <div class="position-relative single-input-upload mb-4">
                                 <div class="main_input special-input">
                                     <div
-                                        class="d-flex align-items-center justify-content-center gap-2 flex-grow-1 gray"
-                                    >
-                                        <i
-                                            class="fa-solid fa-camera fz-20 ml-1"
-                                        ></i>
+                                        class="d-flex align-items-center justify-content-center gap-2 flex-grow-1 gray">
+                                        <i class="fa-solid fa-camera fz-20 ml-1"></i>
                                         <span>{{
                                             $t("Auth.add_profile_image")
-                                        }}</span>
+                                            }}</span>
                                     </div>
                                 </div>
                                 <!-- if you want to remove the validation, you can set the required to false
                                     and remove showValidation -->
-                                <GlobalImgUploader
-                                    ref="profileImageUploader"
-                                    acceptedFiles="image/*"
-                                    :resetTrigger="resetImageTrigger"
-                                    :showValidation="showValidation"
-                                    :required="true"
-                                    :errorMessage="
-                                        t('validation.attach_profile_image')
-                                    "
-                                    @uploaded-images-updated="
+                                <GlobalImgUploader ref="profileImageUploader" acceptedFiles="image/*"
+                                    :resetTrigger="resetImageTrigger" :showValidation="showValidation" :required="true"
+                                    :errorMessage="t('validation.attach_profile_image')
+                                        " @uploaded-images-updated="
                                         updateUploadedProfileImage
-                                    "
-                                />
+                                    " />
                             </div>
 
                             <!-- Next Button -->
-                            <button
-                                type="submit"
-                                class="custom-btn w-100 mr-auto"
-                                :disabled="loading"
-                            >
+                            <button type="submit" class="custom-btn w-100 mr-auto" :disabled="loading">
                                 {{ $t("Auth.next") }}
-                                <span
-                                    class="spinner-border spinner-border-sm"
-                                    v-if="loading"
-                                    role="status"
-                                    aria-hidden="true"
-                                ></span>
+                                <span class="spinner-border spinner-border-sm" v-if="loading" role="status"
+                                    aria-hidden="true"></span>
                             </button>
                         </div>
                     </div>
@@ -173,114 +103,54 @@
             </form>
 
             <!-- Step 2: Additional Info -->
-            <form
-                @submit.prevent="handleSubmit"
-                ref="step2Form"
-                v-show="currentStep === 2"
-            >
+            <form @submit.prevent="handleSubmit" ref="step2Form" v-show="currentStep === 2">
                 <div class="step-content">
                     <div class="row">
                         <div class="col-12 col-md-8 mr-auto">
                             <!-- Main Section Dropdown -->
-                            <GlobalCustomDropdown
-                                v-model="mainSection"
-                                :options="sectionOptions"
-                                option-value="id"
-                                :placeholder="$t('Auth.select_main_section')"
-                                :label="$t('Auth.main_section')"
-                                :showValidation="showValidation"
-                                :validation-schema="
-                                    validationsStep2.mainSection
-                                "
-                            />
-                            <input
-                                type="hidden"
-                                name="category_id"
-                                :value="mainSection || ''"
-                            />
+                            <GlobalCustomDropdown v-model="mainSection" :options="sectionOptions" option-value="id"
+                                :placeholder="$t('Auth.select_main_section')" :label="$t('Auth.main_section')"
+                                :showValidation="showValidation" :validation-schema="validationsStep2.mainSection
+                                    " />
+                            <input type="hidden" name="category_id" :value="mainSection || ''" />
 
                             <!-- Country Dropdown -->
-                            <GlobalCustomDropdown
-                                v-model="country"
-                                :options="countryOptions"
-                                option-value="id"
-                                :placeholder="$t('Auth.select_country')"
-                                :label="$t('Auth.country')"
-                                :showValidation="showValidation"
-                                :validation-schema="validationsStep2.country"
-                            />
-                            <input
-                                type="hidden"
-                                name="country"
-                                :value="country || ''"
-                            />
+                            <GlobalCustomDropdown v-model="country" :options="countryOptions" option-value="id"
+                                :placeholder="$t('Auth.select_country')" :label="$t('Auth.country')"
+                                :showValidation="showValidation" :validation-schema="validationsStep2.country" />
+                            <input type="hidden" name="country" :value="country || ''" />
 
                             <!-- Region Dropdown -->
-                            <GlobalCustomDropdown
-                                v-model="region"
-                                :options="regionOptions"
-                                option-value="id"
-                                :placeholder="$t('Auth.select_region')"
-                                :label="$t('Auth.region')"
-                                :showValidation="showValidation"
-                                :validation-schema="validationsStep2.region"
-                            />
-                            <input
-                                type="hidden"
-                                name="region_id"
-                                :value="region || ''"
-                            />
+                            <GlobalCustomDropdown v-model="region" :options="regionOptions" option-value="id"
+                                :placeholder="$t('Auth.select_region')" :label="$t('Auth.region')"
+                                :showValidation="showValidation" :validation-schema="validationsStep2.region" />
+                            <input type="hidden" name="region_id" :value="region || ''" />
 
                             <!-- Location Input -->
-                            <div
-                                class="position-relative single-input-upload mb-4"
-                            >
+                            <div class="position-relative single-input-upload mb-4">
                                 <label class="label">{{
                                     $t("Auth.location")
-                                }}</label>
-                                <div
-                                    class="main_input special-input pointer"
-                                    :class="{
-                                        'handle-border-error':
-                                            showValidation && !address,
-                                    }"
-                                    @click="visible = true"
-                                >
-                                    <div
-                                        class="d-flex align-items-center justify-content-start gap-2 flex-grow-1 gray"
-                                    >
-                                        <i
-                                            class="fa-solid fa-location-dot fz-20 ml-1"
-                                        ></i>
+                                    }}</label>
+                                <div class="main_input special-input pointer" :class="{
+                                    'handle-border-error':
+                                        showValidation && !address,
+                                }" @click="openmodal">
+                                    <div class="d-flex align-items-center justify-content-start gap-2 flex-grow-1 gray">
+                                        <i class="fa-solid fa-location-dot fz-20 ml-1"></i>
                                         <span v-if="!address">{{
                                             $t("Auth.location")
-                                        }}</span>
+                                            }}</span>
                                         <span v-else class="text-white">{{
                                             address
-                                        }}</span>
+                                            }}</span>
                                     </div>
                                 </div>
                                 <!-- Hidden input for validation and form submission -->
-                                <input
-                                    type="hidden"
-                                    name="map_desc"
-                                    :value="address"
-                                />
-                                <input
-                                    type="hidden"
-                                    name="lat"
-                                    :value="location.lat || ''"
-                                />
-                                <input
-                                    type="hidden"
-                                    name="lng"
-                                    :value="location.lng || ''"
-                                />
+                                <input type="hidden" name="map_desc" :value="address" />
+                                <input type="hidden" name="lat" :value="location.lat || ''" />
+                                <input type="hidden" name="lng" :value="location.lng || ''" />
                                 <!-- Validation error message -->
-                                <div
-                                    v-if="showValidation && !address"
-                                    class="error-message mt-2"
-                                >
+                                <div v-if="showValidation && !address" class="error-message mt-2">
                                     <p class="text-danger error-message">
                                         {{ $t("validation.select_location") }}
                                     </p>
@@ -288,32 +158,17 @@
                             </div>
 
                             <!-- Commercial Registration Number Input -->
-                            <FormInput
-                                v-model:modelValue="commercialRegNumber"
-                                name="project_commercial_number"
-                                type="text"
-                                :label="$t('Auth.commercial_reg_number')"
-                                :placeholder="$t('Auth.commercial_reg_number')"
-                                :validation-schema="
-                                    validationsStep2.commercialRegNumber
-                                "
-                                :showErrors="showValidation"
-                            />
+                            <FormInput v-model:modelValue="commercialRegNumber" name="project_commercial_number"
+                                type="text" :label="$t('Auth.commercial_reg_number')"
+                                :placeholder="$t('Auth.commercial_reg_number')" :validation-schema="validationsStep2.commercialRegNumber
+                                    " :showErrors="showValidation" />
 
                             <!-- Navigation Buttons -->
                             <div class="d-flex gap-3 mt-4">
-                                <button
-                                    type="submit"
-                                    class="custom-btn flex-grow-1"
-                                    :disabled="loading"
-                                >
+                                <button type="submit" class="custom-btn flex-grow-1" :disabled="loading">
                                     {{ $t("Auth.next") }}
-                                    <span
-                                        class="spinner-border spinner-border-sm"
-                                        v-if="loading"
-                                        role="status"
-                                        aria-hidden="true"
-                                    ></span>
+                                    <span class="spinner-border spinner-border-sm" v-if="loading" role="status"
+                                        aria-hidden="true"></span>
                                 </button>
                             </div>
                         </div>
@@ -322,76 +177,38 @@
             </form>
 
             <!-- Step 3: Banking Info -->
-            <form
-                @submit.prevent="handleSubmit"
-                ref="step3Form"
-                v-show="currentStep === 3"
-            >
+            <form @submit.prevent="handleSubmit" ref="step3Form" v-show="currentStep === 3">
                 <div class="step-content">
                     <div class="row">
                         <div class="col-12 col-md-8 mr-auto">
                             <!-- Bank Name Input -->
-                            <FormInput
-                                v-model:modelValue="bankNameField"
-                                name="bank_name"
-                                type="text"
-                                :label="$t('Auth.bank_name')"
-                                :placeholder="$t('Auth.bank_name')"
-                                :validation-schema="validationsStep3.bankName"
-                                :showErrors="showValidation"
-                            />
+                            <FormInput v-model:modelValue="bankNameField" name="bank_name" type="text"
+                                :label="$t('Auth.bank_name')" :placeholder="$t('Auth.bank_name')"
+                                :validation-schema="validationsStep3.bankName" :showErrors="showValidation" />
 
                             <!-- Account Number Input -->
-                            <FormInput
-                                v-model:modelValue="accountNumberField"
-                                name="bank_account_number"
-                                type="number"
-                                :label="$t('Auth.account_number')"
-                                :placeholder="$t('Auth.account_number')"
-                                :validation-schema="
-                                    validationsStep3.accountNumber
-                                "
-                                :showErrors="showValidation"
-                            />
+                            <FormInput v-model:modelValue="accountNumberField" name="bank_account_number" type="text"
+                                :label="$t('Auth.account_number')" :placeholder="$t('Auth.account_number')"
+                                :validation-schema="validationsStep3.accountNumber
+                                    " :showErrors="showValidation" />
 
                             <!-- Account Holder Name Input -->
-                            <FormInput
-                                v-model:modelValue="accountHolderNameField"
-                                name="bank_account_name"
-                                type="text"
-                                :label="$t('Auth.account_holder_name')"
-                                :placeholder="$t('Auth.account_holder_name')"
-                                :validation-schema="
-                                    validationsStep3.accountHolderName
-                                "
-                                :showErrors="showValidation"
-                            />
+                            <FormInput v-model:modelValue="accountHolderNameField" name="bank_account_name" type="text"
+                                :label="$t('Auth.account_holder_name')" :placeholder="$t('Auth.account_holder_name')"
+                                :validation-schema="validationsStep3.accountHolderName
+                                    " :showErrors="showValidation" />
 
                             <!-- IBAN Input -->
-                            <FormInput
-                                v-model:modelValue="ibanField"
-                                name="bank_iban_number"
-                                type="text"
-                                :label="$t('Auth.iban')"
-                                :placeholder="$t('Auth.iban')"
-                                :validation-schema="validationsStep3.iban"
-                                :showErrors="showValidation"
-                            />
+                            <FormInput v-model:modelValue="ibanField" name="bank_iban_number" type="text"
+                                :label="$t('Auth.iban')" :placeholder="$t('Auth.iban')"
+                                :validation-schema="validationsStep3.iban" :showErrors="showValidation" />
 
                             <!-- Navigation Buttons -->
                             <div class="d-flex gap-3 mt-4">
-                                <button
-                                    type="submit"
-                                    class="custom-btn flex-grow-1"
-                                    :disabled="loading"
-                                >
+                                <button type="submit" class="custom-btn flex-grow-1" :disabled="loading">
                                     {{ $t("Auth.create_acc") }}
-                                    <span
-                                        class="spinner-border spinner-border-sm"
-                                        v-if="loading"
-                                        role="status"
-                                        aria-hidden="true"
-                                    ></span>
+                                    <span class="spinner-border spinner-border-sm" v-if="loading" role="status"
+                                        aria-hidden="true"></span>
                                 </button>
                             </div>
                         </div>
@@ -406,21 +223,10 @@
         </div>
 
         <!-- global google map component -->
-        <GlobalGoogleMap
-            v-model:visible="visible"
-            @closeModal="updateAddress"
-            @handleClose="handleClose"
-            @updateAddress="handleUpdateAddress"
-            :show_inputs="show_inputs"
-            :lat="location.lat"
-            :lng="location.lng"
-            :current_location="currentLocation"
-            :isDraggable="true"
-            :closeModal_btn="closeModal_btn"
-            :current_location_button="true"
-            :title="$t('Global.confirm_location')"
-            :confirm_loading="locationLoading"
-        />
+        <GlobalGoogleMap v-model:visible="visible" @closeModal="updateAddress" @handleClose="handleClose"
+            @updateAddress="handleUpdateAddress" :show_inputs="show_inputs" :lat="location.lat" :lng="location.lng"
+            :current_location="currentLocation" :isDraggable="true" :closeModal_btn="closeModal_btn"
+            :current_location_button="true" :title="$t('Global.confirm_location')" :confirm_loading="locationLoading" />
     </div>
 </template>
 
@@ -455,6 +261,15 @@ const closeModal_btn = ref(true);
 watch([lat, lng], ([newLat, newLng]) => {
     location.value = { lat: newLat, lng: newLng };
 });
+
+const currentLocation = ref(false);
+
+const openmodal = () => {
+    visible.value = true;
+    setTimeout(() => {
+        currentLocation.value = true;
+    }, 300);
+};
 
 // Form fields - Step 1
 const projectNameAr = ref("");
@@ -536,8 +351,8 @@ const {
 } = useValidationSchema();
 
 const validations = {
-    projectNameAr: customerName("Auth.project_name_ar"),
-    projectNameEn: customerName("Auth.project_name_en"),
+    projectNameAr: required("Auth.project_name_ar"),
+    projectNameEn: required("Auth.project_name_en"),
     projectDescAr: projectDescription_ar("Auth.project_desc_ar"),
     projectDescEn: projectDescription_en("Auth.project_desc_en"),
 };
@@ -670,7 +485,7 @@ const submitStep1 = async () => {
         console.error("Step 1 error:", error);
         errorToast(
             error.response?.data?.msg ||
-                "حدث خطأ أثناء حفظ بيانات المرحلة الأولى",
+            "حدث خطأ أثناء حفظ بيانات المرحلة الأولى",
         );
     } finally {
         loading.value = false;
@@ -709,7 +524,7 @@ const submitStep2 = async () => {
         console.error("Step 2 error:", error);
         errorToast(
             error.response?.data?.msg ||
-                "حدث خطأ أثناء حفظ بيانات المرحلة الثانية",
+            "حدث خطأ أثناء حفظ بيانات المرحلة الثانية",
         );
     } finally {
         loading.value = false;
@@ -752,7 +567,7 @@ const submitStep3 = async () => {
         console.error("Step 3 error:", error);
         errorToast(
             error.response?.data?.msg ||
-                "حدث خطأ أثناء حفظ بيانات المرحلة الثالثة",
+            "حدث خطأ أثناء حفظ بيانات المرحلة الثالثة",
         );
     } finally {
         loading.value = false;
@@ -863,6 +678,7 @@ onUnmounted(() => {
         height: 45px;
     }
 }
+
 .handle-border-error {
     border-color: #e74c3c !important;
 }
@@ -871,6 +687,7 @@ onUnmounted(() => {
     padding: 12px;
     background-color: rgba(255, 255, 255, 0.15);
     border-radius: 8px;
+
     .step-header {
         display: flex;
         justify-content: space-between;

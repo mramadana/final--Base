@@ -1,7 +1,7 @@
 <template>
     <div class="text-center">
 
-        <p class="desc mb-4 auth-desc">{{ $t("settings.confirm_code") }}</p>
+        <p class="desc mb-4 auth-desc">{{ $t("settings.confirm_code") }} {{ user.phone }}</p>
 
         <form @submit.prevent="verificationCode">
             <div class="row">
@@ -18,7 +18,7 @@
                     <div class="d-flex justify-content-center">
 
                         <button type="submit" class="custom-btn md mt-4" :disabled="loading">
-                            {{ $t('Auth.confirmation') }}
+                            {{ $t('settings.change_mobile') }}
                             <span class="spinner-border spinner-border-sm" v-if="loading" role="status" aria-hidden="true"></span>
                         </button>
 
@@ -44,7 +44,7 @@ import { useI18n } from "vue-i18n";
 const { t } = useI18n({ useScope: "global" });
 
 definePageMeta({
-    name: "settings.activation_code",
+    name: "تغيير رقم الجوال",
     middleware: 'auth'
 });
 

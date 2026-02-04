@@ -25,6 +25,8 @@
                     </div>
                 </div>
 
+                <h4 class="main-title bold md text-start mb-4">احدث التنبيهات</h4>
+
                 <transition-group name="fade" v-if="!loading">
                     <div v-for="(result, index) in notifications" :key="result.index">
                         <div class="layout-form sm" v-if="notifications.length">
@@ -63,8 +65,8 @@
                         </div>
                     </div>
 
-                    <div v-if="!notifications.length">
-                        {{ $t("Global.no_notifications") }}
+                    <div class="main-title bold lg" v-if="!notifications.length">
+                        {{ $t("notifications.no_notifications") }}
                     </div>
                 </transition-group>
 
@@ -261,7 +263,7 @@ const initializeNotificationSettings = () => {
 const deleteAll = async () => {
     loading.value = true;
     await axios
-        .delete(`delete-notifications`, config)
+        .delete(`provider/notifications/delete-all`, config)
         .then((res) => {
             if (response(res) == "success") {
                 notifications.value = [];

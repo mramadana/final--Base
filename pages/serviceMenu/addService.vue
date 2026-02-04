@@ -66,8 +66,8 @@
                     type="number"
                     min="0"
                     step="1"
-                    :label="$t('menu.meal_price')"
-                    :placeholder="$t('menu.meal_price')"
+                    :label="$t('menu.service_price')"
+                    :placeholder="$t('menu.service_price')"
                     :validation-schema="validations.bookingPrice"
                     :showErrors="showValidation"
                 />
@@ -308,7 +308,7 @@ const { t } = useI18n({ useScope: "global" });
 
 // Page meta
 definePageMeta({
-    layout: "default",
+    middleware: 'auth',
     name: 'home.add_new_service'
 });
 
@@ -343,7 +343,7 @@ const {
 const validations = {
     tableNumber: tableNumber(t('menu.meal_name_ar')),
     numberOfPeople: tableNumber(t('menu.meal_name_en')),
-    bookingPrice: bookingPrice(t('menu.meal_price')),
+    bookingPrice: bookingPrice(t('menu.service_price')),
     descriptionAr: tableNumber(t('menu.meal_description_ar')),
     descriptionEn: tableNumber(t('menu.meal_description_en')),
     maximumReservations: required('service.maximum_reservations'),
@@ -530,6 +530,18 @@ const addNewDay = () => {
     }
 
     if (!currentDay.value.timeTo) {
+        return;
+    }
+
+    // Validate that timeFrom is before timeTo
+    const timeFromParts = currentDay.value.timeFrom.split(':');
+    const timeToParts = currentDay.value.timeTo.split(':');
+    
+    const timeFromMinutes = parseInt(timeFromParts[0]) * 60 + parseInt(timeFromParts[1]);
+    const timeToMinutes = parseInt(timeToParts[0]) * 60 + parseInt(timeToParts[1]);
+    
+    if (timeFromMinutes >= timeToMinutes) {
+        errorToast(t('workingTime.time_from_must_be_before_time_to'));
         return;
     }
 

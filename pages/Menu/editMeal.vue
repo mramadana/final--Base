@@ -343,7 +343,7 @@ onMounted(async () => {
 // Page meta
 definePageMeta({
     name: "menu.edit_meal",
-    layout: "default",
+    middleware: 'auth'
 });
 </script>
 

@@ -313,7 +313,7 @@ onMounted(async () => {
 // Page meta
 definePageMeta({
     name: "workingTime.page_title",
-    layout: "default",
+    middleware: 'auth'
 });
 
 </script>

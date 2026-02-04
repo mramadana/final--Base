@@ -129,9 +129,7 @@
         if(!isValid){
             // if the images are valid but the inputs have errors
             scrollToFirstError(formData.value, validations);
-            console.log("22222222222");
         } else {
-            console.log("11111111111 - Validation Passed");
             loading.value = true;
             
             try {
@@ -142,7 +140,6 @@
     
                 // Get Returned Data From Store
                 const res = await signInHandler(fd);
-                console.log(res, "reseeeeeeeee");
                 if (res.status === "success") {
                     successToast(res.msg);
                     // Reset form on success

@@ -143,7 +143,7 @@ const { t } = useI18n({ useScope: "global" });
 // Page meta
 definePageMeta({
     name: "menu.meal_details",
-    layout: "default",
+    middleware: 'auth'
 });
 
 // Global store
