@@ -135,7 +135,7 @@
             <div class="text-center">
                 <img src="@/assets/images/Success.gif" alt="check-img" class="check-img lg" loading="lazy" />
                 <h1 class="main-title md mb-0 hint_success">
-                    {{ $t('tables.success_add_table') }}
+                    {{ $t('menu.meal_added_successfully') }}
                 </h1>
             </div>
         </Dialog>

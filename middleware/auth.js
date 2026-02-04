@@ -29,7 +29,10 @@ export default defineNuxtRouteMiddleware((to, from) => {
 
     if (to.path == from.path && isLoggedIn.value == true && to.meta.middleware == "auth") {
         setTimeout(() => {
-          return navigateTo(`${from.path}`);
+          return navigateTo({
+            path: from.path,
+            query: to.query
+          });
         }, 100);
       }
 })

@@ -15,13 +15,13 @@
 
 
         <div class="row mb-5 equal-height-row">
-            <div class="col-12 col-lg-4 equal-height-col">
+            <div v-if="authStore.userType !== 'service'" class="col-12 col-lg-4 equal-height-col">
                 <HomeChart 
                     class="h-100" 
                     :occupationPercentage="homeData?.occupation_percentage || { busy_tables_ratio: '0.00', free_tables_ratio: '0.00' }"
                 />
             </div>
-            <div class="col-12 col-lg-8 equal-height-col">
+            <div :class="authStore.userType === 'service' ? 'col-12' : 'col-12 col-lg-8 equal-height-col'">
                 <div class="layout-form sm-radius h-100">
                     <div class="header-reservations">
                         <h3 class="main-title mb-0">{{ t("reservations.today_reservations") }}</h3>

@@ -374,11 +374,13 @@ const openReservations = (rowId) => {
     showReservationsDialog.value = true;
 };
 
-// Navigate to addAppointment page with table id
-const navigateToAppointment = (tableId) => {
+// Navigate to addAppointment page with table/service id
+const navigateToAppointment = (id) => {
+    const basePath = props.reservationRoutePath || '/tables';
+    const queryKey = basePath.includes('serviceMenu') ? 'serviceId' : 'tableId';
     navigateTo({
-        path: "/tables/addAppointment",
-        query: { tableId: tableId },
+        path: `${basePath}/addAppointment`,
+        query: { [queryKey]: id },
     });
 };
 
@@ -436,6 +438,11 @@ const props = defineProps({
     DropDownemployees: {
         type: Boolean,
         default: false, // hide dropdown by default, change to true when you want to show it
+    },
+
+    reservationRoutePath: {
+        type: String,
+        default: '/tables', // default route path for reservations
     },
 });
 

@@ -33,6 +33,7 @@
         :sortable="false"
         :showImage="true"
         :actionsHeader="$t('menu.actions')"
+        :reservationRoutePath="'/serviceMenu'"
         @refreshData="fetchServicesData"
       >
         <template #actions="{ data }">
@@ -142,9 +143,11 @@ const showFilter = computed(() => {
 // Service Columns
 const serviceColumns = ref([
   { field: 'image', header: t('menu.service_image') },
+  { field: 'type', header: t('menu.type') },
   { field: 'nameAr', header: t('menu.meal_name_ar') },
   { field: 'nameEn', header: t('menu.meal_name_en') },
-  { field: 'price', header: t('menu.price') }
+  { field: 'price', header: t('menu.price') },
+  { field: 'reservations', header: t('tables.reservations') },
 ]);
   
 // Services data from API
@@ -223,7 +226,9 @@ const fetchServicesData = async (page = 1) => {
         image: service.image,
         nameAr: service.name_ar,
         nameEn: service.name_en,
-        price: `${service.price} ${response.data.data.currency}`
+        type: service.type,
+        price: `${service.price} ${response.data.data.currency}`,
+        reservations: t('tables.reservations')
       }));
       
       pagination.value = response.data.data.pagination;
@@ -299,6 +304,16 @@ const handleViewItem = (serviceId) => {
   navigateTo({
     path: '/serviceMenu/viewService',
     query: { id: serviceId }
+  });
+};
+
+
+// Handle Add Reservation
+const handleAddReservation = (serviceId) => {
+  console.log('Add reservation for service:', serviceId);
+  navigateTo({
+    path: '/serviceMenu/addAppointment',
+    query: { serviceId: serviceId }
   });
 };
 

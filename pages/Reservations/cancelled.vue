@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="cancelled-reservations-page">
     <OrdersCardReservation :items="filteredReservations" :loading="loading" link-to="/reservation" />
   </div>
 </template>

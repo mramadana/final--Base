@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="completed-reservations-page">
     <OrdersCardReservation :items="filteredReservations" :loading="loading" link-to="/reservation" />
   </div>
 </template>
@@ -110,3 +110,6 @@ const filteredReservations = computed(() => {
 });
 
 </script>
+
+<style lang="scss">
+</style>

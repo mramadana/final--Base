@@ -4,7 +4,7 @@
       <h1 class="main-title md mb-4">{{ $t(pageTitle) }}</h1>
   
       <!-- Filter Component -->
-      <ReservationFilter v-if="reservations?.length > 0" v-model="filterValues" :show-search="true" :show-select="true" :show-calendar="true"
+      <ReservationFilter v-if="reservations?.length > 0" v-model="filterValues" :show-search="true" :show-select="!shouldHideDropdown" :show-calendar="true"
         :search-placeholder="$t(authStore.userType === 'service' ? 'reservations.search_service' : 'reservations.search_table')" :select-options="statusOptions"
         :select-placeholder="$t('reservations.status')" option-label="name" option-value="id"
         :calendar-placeholder="$t('reservations.choose_date')" calendar-mode="single" @search="handleSearch"
@@ -32,6 +32,15 @@
 
   import { useAuthStore } from '~/stores/auth';
   const authStore = useAuthStore();
+
+  import { useRoute } from 'vue-router';
+  const route = useRoute();
+  
+  // Check if we should hide dropdown based on current route
+  const shouldHideDropdown = computed(() => {
+    return route.name === 'sideMenu.completed_reservations' || 
+           route.name === 'sideMenu.cancelled_reservations';
+  });
 
   // const globalStore = useGlobalStore();
   // const pageHeadTitle = ref(t("Sidebar.tables"));

@@ -1,18 +1,40 @@
 <template>
   <div class="layout-form">
+    
     <div :class="messageClass" v-if="messageText">
       <i class="fas fa-info-circle message-icon"></i>
       <span>{{ messageText }}</span>
     </div>
 
     <div class="page-header">
-      <h1 class="main-title">تفاصيل الحجز</h1>
+      <h1 class="main-title">{{ $t('reservationDetails.reservation_details') }}</h1>
       <div class="header-actions">
-        <button v-if="reservationData.buttons?.can_accept" class="action-btn-accept" @click="showAcceptDialog">
-          قبول الحجز
+        
+        <button v-if="reservationData.buttons?.can_accept" class="action-btn-accept" @click="showAcceptDialog" :disabled="loading">
+          <i v-if="loading && loadingAction === 'accept'" class="fas fa-spinner fa-spin"></i>
+          {{ $t('reservationDetails.accept_reservation') }}
         </button>
-        <button v-if="reservationData.buttons?.can_reject" class="action-btn-reject" @click="showRejectDialog">
-          رفض الحجز
+        <button v-if="reservationData.buttons?.can_reject" class="action-btn-reject" @click="showRejectDialog" :disabled="loading">
+          <i v-if="loading && loadingAction === 'reject'" class="fas fa-spinner fa-spin"></i>
+          {{ $t('reservationDetails.reject_reservation') }}
+        </button>
+        
+        <button 
+          v-if="reservationData.buttons?.can_approve_user_attendance" 
+          class="action-btn-attendance"
+          @click="approveUserAttendance"
+          :disabled="loading">
+          <i v-if="loading && loadingAction === 'attendance'" class="fas fa-spinner fa-spin"></i>
+          {{ $t('reservationDetails.confirm_attendance') }}
+        </button>
+        
+        <button 
+          v-if="reservationData.buttons?.can_finish_order" 
+          class="action-btn-finish"
+          @click="finishOrder"
+          :disabled="loading">
+          <i v-if="loading && loadingAction === 'finish'" class="fas fa-spinner fa-spin"></i>
+          {{ $t('reservationDetails.confirm_departure') }}
         </button>
       </div>
     </div>
@@ -26,11 +48,11 @@
           <p><i class="fas fa-calendar-check icon"></i> {{ $t('reservationDetails.booking_status') }}: <span
               :class="statusClass">{{ reservationData.status_text || bookingStatus }}</span></p>
           <p v-if="paymentStatus" class="payment-status-wrapper">
-            <i class="fas fa-dollar-sign icon"></i> حالة الدفع: <span :class="paymentStatusClass">{{ paymentStatus
+            <i class="fas fa-dollar-sign icon"></i> {{ $t('reservationDetails.payment_status') }}: <span :class="paymentStatusClass">{{ paymentStatus
               }}</span>
           </p>
           <p v-if="reservationData.cancel_reason" class="cancel-reason">
-            <i class="fas fa-times-circle icon"></i> سبب الإلغاء: {{ reservationData.cancel_reason }}
+            <i class="fas fa-times-circle icon"></i> {{ $t('reservationDetails.cancellation_reason') }}: {{ reservationData.cancel_reason }}
           </p>
         </div>
         <div class="details-left">
@@ -54,7 +76,7 @@
 
       <div class="restaurant-details">
         <p><i class="fas fa-users icon"></i> {{ $t('reservationDetails.number_of_people') }}: {{
-          reservationData.table_info.people_number || '---' }} أفراد</p>
+          reservationData.table_info.people_number || '---' }} {{ $t('reservationDetails.people') }}</p>
       </div>
       <div class="elements align-items-start d-flex flex-wrap gap-2 justify-content-between">
         <div v-if="reservationData.meal_info && reservationData.meal_info.length > 0">
@@ -65,7 +87,13 @@
             </span>
           </div>
         </div>
-        <button @click="navigateTo(`/chat?id=${reservationData.room_id}`)">chaaaaat</button>
+        <button 
+          v-if="reservationData.buttons?.can_chat" 
+          class="action-btn-chat"
+          @click="navigateTo(`/chat?id=${reservationData.room_id}`)">
+          <i class="fas fa-comment-dots"></i>
+          {{ $t('reservationDetails.chat_with_client') }}
+        </button>
       </div>
     </div>
 
@@ -112,6 +140,7 @@
 <script setup>
 
 import { useI18n } from 'vue-i18n';
+const { t } = useI18n({ useScope: 'global' });
 
 definePageMeta({
   name: 'reservations.reservation_details',
@@ -141,20 +170,19 @@ const config = computed(() => ({
 
 // Loading state
 const loading = ref(false);
+const loadingAction = ref('');
 
 // Reservation data from API
 const reservationData = ref({});
 
 // حالة الحجز والدفع
-const bookingStatus = ref('بانتظار الرد');
+const bookingStatus = ref(t('reservationDetails.waiting_response'));
 const paymentStatus = ref(null);
 const acceptDialog = ref(false);
 const rejectDialog = ref(false);
 const rejectSuccessDialog = ref(false);
 const rejectReason = ref('');
 
-// الرسائل والكلاسات الديناميكية
-const { t } = useI18n();
 
 // Get reservation details from API
 const getReservationDetails = async () => {
@@ -166,34 +194,36 @@ const getReservationDetails = async () => {
       reservationData.value = data;
 
       // Update booking status from API
-      bookingStatus.value = data.status_text || 'بانتظار الرد';
+      bookingStatus.value = data.status_text || t('reservationDetails.waiting_response');
 
       // Set payment status if available
       if (data.status === 'confirmed' || data.status === 'approved') {
-        paymentStatus.value = 'تم الدفع';
+        paymentStatus.value = t('reservationDetails.paid');
       } else if (data.status === 'pending') {
         paymentStatus.value = null;
       }
     }
   } catch (error) {
     console.error("Get reservation details error:", error);
-    errorToast('حصل خطأ في تحميل تفاصيل الحجز');
+    errorToast(t('reservationDetails.loading_error'));
   } finally {
     loading.value = false;
   }
 };
 
 const messageText = computed(() => {
-  if (bookingStatus.value === 'مقبول' && paymentStatus.value === 'بانتظار الدفع') {
+  if (bookingStatus.value === 'مكتمل') {
+    return '';
+  }
+  if (bookingStatus.value === 'مقبول' || paymentStatus.value === 'بانتظار الدفع' || paymentStatus.value === 'بأنتظار الرد') {
     return t('reservationDetails.payment_pending_msg');
   } else if (bookingStatus.value === 'مقبول' && paymentStatus.value === 'تم الدفع') {
     return t('reservationDetails.payment_completed_msg');
   } else if (bookingStatus.value === 'ملغي') {
     return t('reservationDetails.payment_failed_msg');
-  } else if (bookingStatus.value === 'مكتمل') {
-    return t('reservationDetails.payment_completed_msg');
   }
-  return '';
+  // Show payment_completed_msg for current status as well
+  return t('reservationDetails.payment_completed_msg');
 });
 
 const messageClass = computed(() => {
@@ -205,6 +235,10 @@ const messageClass = computed(() => {
     return 'status-message fail';
   } else if (bookingStatus.value === 'مكتمل') {
     return 'status-message success';
+  } else if (bookingStatus.value === 'حجوزات نشطه') {
+    return 'status-message success';
+  } else if (bookingStatus.value === 'بأنتظار الرد') {
+    return 'status-message waiting_to';
   }
   return 'status-message warning';
 });
@@ -228,6 +262,7 @@ const paymentStatusClass = computed(() => {
 // وظائف التفاعل
 const showAcceptDialog = async () => {
   loading.value = true;
+  loadingAction.value = 'accept';
   try {
     const res = await axios.post(`provider/reservations/${reservationId}/accept`, {}, config.value);
     if (res.data.key === 'success') {
@@ -243,13 +278,14 @@ const showAcceptDialog = async () => {
       // تحديث البيانات من السيرفر
       await getReservationDetails();
       
-      successToast('تم قبول الحجز بنجاح');
+      successToast(t('reservationDetails.approval_success'));
     }
   } catch (error) {
     console.error("Accept reservation error:", error);
-    errorToast('حصل خطأ في قبول الحجز');
+    errorToast(t('reservationDetails.accept_error'));
   } finally {
     loading.value = false;
+    loadingAction.value = '';
   }
 };
 
@@ -264,11 +300,12 @@ const hideRejectDialog = () => {
 
 const confirmReject = async () => {
   if (!rejectReason.value.trim()) {
-    errorToast('يجب إدخال سبب الرفض');
+    errorToast(t('reservationDetails.reject_reason_required'));
     return;
   }
 
   loading.value = true;
+  loadingAction.value = 'reject';
   try {
     const formData = new FormData();
     formData.append('reject_reason', rejectReason.value);
@@ -287,13 +324,50 @@ const confirmReject = async () => {
       // تحديث البيانات من السيرفر
       await getReservationDetails();
       
-      successToast('تم رفض الحجز بنجاح');
+      successToast(t('reservationDetails.reject_success'));
     }
   } catch (error) {
     console.error("Reject reservation error:", error);
-    errorToast('حصل خطأ في رفض الحجز');
+    errorToast(t('reservationDetails.reject_error'));
   } finally {
     loading.value = false;
+    loadingAction.value = '';
+  }
+};
+
+const approveUserAttendance = async () => {
+  loading.value = true;
+  loadingAction.value = 'attendance';
+  try {
+    const res = await axios.post(`provider/reservations/${reservationId}/user-attended`, {}, config.value);
+    if (res.data.key === 'success') {
+      successToast(t('reservationDetails.attendance_confirmed'));
+      await getReservationDetails();
+    }
+  } catch (error) {
+    console.error("Approve attendance error:", error);
+    errorToast(t('reservationDetails.attendance_error'));
+  } finally {
+    loading.value = false;
+    loadingAction.value = '';
+  }
+};
+
+const finishOrder = async () => {
+  loading.value = true;
+  loadingAction.value = 'finish';
+  try {
+    const res = await axios.post(`provider/reservations/${reservationId}/finish`, {}, config.value);
+    if (res.data.key === 'success') {
+      successToast(t('reservationDetails.departure_confirmed'));
+      await getReservationDetails();
+    }
+  } catch (error) {
+    console.error("Finish order error:", error);
+    errorToast(t('reservationDetails.departure_error'));
+  } finally {
+    loading.value = false;
+    loadingAction.value = '';
   }
 };
 
@@ -342,6 +416,11 @@ $primary-blue: #3B82F6;
     color: white;
   }
 
+  &.waiting_to {
+    background-color: #2A2A2A;
+    color: white;
+  }
+
   &.pending {
     background-color: #191919;
     color: #fff;
@@ -374,15 +453,22 @@ $primary-blue: #3B82F6;
 }
 
 .action-btn-accept,
-.action-btn-reject {
+.action-btn-reject,
+.action-btn-chat,
+.action-btn-attendance,
+.action-btn-finish {
   padding: 10px 24px;
   border-radius: 8px;
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
   border: none;
-  transition: background-color 0.3s;
+  transition: all 0.3s;
   min-width: 180px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
 }
 
 .action-btn-accept {
@@ -393,6 +479,25 @@ $primary-blue: #3B82F6;
 .action-btn-reject {
   background-color: #fff;
   color: #EC2D30;
+}
+
+.action-btn-chat {
+  background-color: #191919;
+  color: #fff;
+  
+  i {
+    font-size: 1.1rem;
+  }
+}
+
+.action-btn-attendance {
+  background-color: #fff;
+  color: #191919;
+}
+
+.action-btn-finish {
+  background-color: #2A2A2A;
+  color: #fff;
 }
 
 .card-section {
