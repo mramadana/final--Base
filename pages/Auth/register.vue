@@ -118,7 +118,8 @@ const { successToast, errorToast } = toastMsg();
 // Store
 const store = useAuthStore();
 const { signUpHandler } = store;
-const { lat, lng } = storeToRefs(store);
+const { lat, lng, device_id } = storeToRefs(store);
+
 
 // Form data
 const loading = ref(false);
@@ -196,7 +197,7 @@ const signUp = async () => {
             const fd = new FormData(signUpForm.value);
 
             fd.append("country_id", selectedCountry.value?.id || "");
-            fd.append("device_id", 111);
+            fd.append("device_id", device_id.value);
             fd.append("device_type", "web");
 
             const res = await signUpHandler(fd);

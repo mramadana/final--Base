@@ -51,7 +51,7 @@ import { useAuthStore } from '~/stores/auth';
 // Store
 const store = useAuthStore();
 const { verificationHandler } = store;
-const { user, notificationToken } = storeToRefs(store);
+const { user, notificationToken, device_id } = storeToRefs(store);
 
 // Variables
 const loading = ref(false);
@@ -79,7 +79,7 @@ const verificationCode = async () => {
     fd.append('code', bindModal.value);
     fd.append('phone', user.value.phone);
     fd.append('country_id', user.value.country_id);
-    fd.append('device_id', 111);
+    fd.append('device_id', device_id.value);
     fd.append('device_type', 'web');
     // Append stored data from register
     if (storedData.name) fd.append('name', storedData.name);
