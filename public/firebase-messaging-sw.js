@@ -37,23 +37,23 @@ messaging.onBackgroundMessage((payload) => {
     // self.registration.showNotification(notificationTitle, notificationOptions);
 
 
-    self.addEventListener('notificationclick', function (event) {
-        event.notification.close();
+    // self.addEventListener('notificationclick', function (event) {
+    //     event.notification.close();
     
-        const targetUrl = event.notification?.data?.url || '/';
+    //     const targetUrl = event.notification?.data?.url || '/';
     
-        event.waitUntil(
-            clients.matchAll({ type: "window", includeUncontrolled: true }).then(windowClients => {
-                for (let client of windowClients) {
-                    if (client.url === targetUrl && 'focus' in client) {
-                        return client.focus();
-                    }
-                }
-                if (clients.openWindow) {
-                    return clients.openWindow(targetUrl);
-                }
-            })
-        );
-    });
+    //     event.waitUntil(
+    //         clients.matchAll({ type: "window", includeUncontrolled: true }).then(windowClients => {
+    //             for (let client of windowClients) {
+    //                 if (client.url === targetUrl && 'focus' in client) {
+    //                     return client.focus();
+    //                 }
+    //             }
+    //             if (clients.openWindow) {
+    //                 return clients.openWindow(targetUrl);
+    //             }
+    //         })
+    //     );
+    // });
 
   });
