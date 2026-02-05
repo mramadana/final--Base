@@ -327,7 +327,9 @@
         "confirm_code": "Please enter the activation code sent to your mobile number",
         "save_changes": "Save Changes",
         "calibration_standards": "Place Standards",
-        "saved_successfully": "Saved successfully"
+        "saved_successfully": "Saved successfully",
+        "select_at_least_one_standard": "At least one standard must be selected",
+        "chat": "Communication"
     },
 
     "reservationDetails": {
@@ -426,13 +428,14 @@
         "employee_name": "Employee Name",
         "choose_employee": "Choose Employee",
         "number_of_people": "Number of People",
-        "notes": "Add Note",
+        "notes": "Notes",
         "save_appointment": "Save Appointment",
         "appointment_saved_success": "Appointment saved successfully",
         "date_required": "Available date is required",
         "time_required": "Available time is required",
         "date_and_time_required": "Please enter date and time",
         "loading_times": "Loading available times",
+        "time_from_must_be_before_time_to": "Start time must be before end time",
         "days": {
             "saturday": "Saturday",
             "sunday": "Sunday",
@@ -495,6 +498,7 @@
         "edit_meal": "Edit Meal",
         "select_menu": "Select Menu",
         "meal_price": "Meal Price",
+        "service_price": "Service Price",
         "meal_details": "View Meal Details",
         "menus_loaded_successfully": "Menus loaded successfully",
         "error_loading_menus": "Error loading menus",
@@ -597,7 +601,8 @@
         "loading_users": "Loading users",
         "loading_user_data": "Loading user data",
         "inquiry_sent_successfully": "Inquiry sent successfully",
-        "enter_amount": "Enter amount"
+        "add_user_successfully": "User added successfully",
+        "enter_amount": ""
     },
 
     "ratings": {
@@ -615,11 +620,13 @@
         "delete": "Delete",
         "notifications": "Notifications",
         "enable_notifications": "Enable Notifications",
-        "chat": "Chat"
+        "chat": "Chat",
+        "no_notifications": "No notifications"
     },
 
     "Table": {
-        "Loading": "Loading"
+        "Loading": "Loading",
+        "number_of_people": "Number of people at the table must be greater than 0"
     },
 
     "service": {
