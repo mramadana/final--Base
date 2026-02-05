@@ -37,14 +37,14 @@
                 </div>
                 <div class="d-flex align-items-center">
 
-                    <NuxtLink  to="/Notifications" class="notification ml-5" :class="{ 'hide-badge': !notifCount }">
+                    <NuxtLink  to="/Notifications" class="notification ml-5" :class="{ 'hide-badge': updateNotificationCount }">
                         <div class="notif-icon">
                             <!-- <i class="fas fa-bell"></i> -->
                              <img src="@/assets/images/notification-img.svg" alt="notification-img">
-                            <div class="nof-cont" v-if="notifCount" :data-number="notifCount"></div>
+                            <!-- <div class="nof-cont" v-if="notifCount" :data-number="notifCount"></div> -->
                         </div>
                     </NuxtLink>
-                    <div style="color: #fff;">{{ updateNotificationCount }} lll</div>
+                    <!-- <div style="color: #fff;">{{ updateNotificationCount }} lll</div> -->
 
                     <div class="AuthLang">
                         <GlobalLang :color-lang="true" />
@@ -64,7 +64,7 @@
 
 <script setup>
     
-    const router = useRouter();
+    // const router = useRouter();
     const route = useRoute();
 
     // Toast
@@ -117,6 +117,9 @@
         await axios.get('provider/notifications/count-unread', config).then(res => {
             if(response(res) == "success") {
                 updateNotificationCount.value = res.data.data.count;
+            } else {
+                // updateNotificationCount.value = 0;
+                // navigateTo('/Auth/login');
             }
         }).catch(err => {
             console.error(err);
@@ -164,13 +167,13 @@
 
 
     // Check if current page is notifications page
-    const isNotificationsPage = computed(() => {
-        return route.path === '/Notifications';
-    });
+    // const isNotificationsPage = computed(() => {
+    //     return route.path === '/Notifications';
+    // });
 
-    router.afterEach(() => {
-      getNotificationsCount();
-    });
+    // router.afterEach(() => {
+    //   getNotificationsCount();
+    // });
 
 
     // onMounted( async () => {
