@@ -6,65 +6,37 @@
             </h1>
             <form @submit.prevent="addInquiry" ref="addInquiryForm">
                 <!-- Number of People -->
-                <FormInput
-                    v-model:modelValue="name"
-                    name="subject"
-                    type="text"
-                    :label="$t('users.message_title')"
-                    :placeholder="$t('users.message_title')"
-                    :validation-schema="validations.numberOfPeople"
-                    :showErrors="showValidation"
-                />
+                <FormInput v-model:modelValue="name" name="subject" type="text" :label="$t('users.message_title')"
+                    :placeholder="$t('users.message_title')" :validation-schema="validations.numberOfPeople"
+                    :showErrors="showValidation" />
 
                 <div class="form-group">
                     <label class="label">{{
                         $t("users.message_content")
-                    }}</label>
+                        }}</label>
                     <div class="position-relative">
-                        <textarea
-                            v-model="descriptionAr"
-                            @input="descriptionArTouched = true"
-                            name="message"
-                            class="main_input main_area"
-                            :class="{ 'is-invalid': descriptionArError }"
-                            :placeholder="$t('users.message_content')"
-                            rows="4"
-                        >
+                        <textarea v-model="descriptionAr" @input="descriptionArTouched = true" name="message"
+                            class="main_input main_area" :class="{ 'is-invalid': descriptionArError }"
+                            :placeholder="$t('users.message_content')" rows="5">
                         </textarea>
                     </div>
-                    <p
-                        v-if="descriptionArError"
-                        class="error-message text-danger mt-1"
-                    >
+                    <p v-if="descriptionArError" class="error-message text-danger mt-1">
                         {{ descriptionArError }}
                     </p>
                 </div>
 
                 <button type="submit" class="custom-btn md" :disabled="loading">
                     {{ $t("Global.send") }}
-                    <span
-                        class="spinner-border spinner-border-sm"
-                        v-if="loading"
-                        role="status"
-                        aria-hidden="true"
-                    ></span>
+                    <span class="spinner-border spinner-border-sm" v-if="loading" role="status"
+                        aria-hidden="true"></span>
                 </button>
             </form>
         </div>
         <!-- Success Modal -->
-        <Dialog
-            v-model:visible="showInquirySuccessModal"
-            modal
-            class="custum_dialog_width without-close"
-            :draggable="false"
-        >
+        <Dialog v-model:visible="showInquirySuccessModal" modal class="custum_dialog_width without-close"
+            :draggable="false">
             <div class="text-center">
-                <img
-                    src="@/assets/images/Success.gif"
-                    alt="check-img"
-                    class="check-img lg"
-                    loading="lazy"
-                />
+                <img src="@/assets/images/Success.gif" alt="check-img" class="check-img lg" loading="lazy" />
                 <h1 class="main-title bold mb-3 hint_success">
                     {{ $t("users.inquiry_sent_successfully") }}
                 </h1>

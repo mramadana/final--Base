@@ -5,18 +5,9 @@
                 <div class="row">
                     <div class="col-12 col-md-6">
                         <!-- Customer name input -->
-                        <FormInput
-                            v-model:modelValue="name"
-                            name="name"
-                            type="text"
-                            :label="$t('Auth.customer_name')"
-                            :placeholder="$t('Auth.customer_name')"
-                            :validation-schema="validations.name"
-                            :showErrors="showValidation"
-                            :hasIcon="true"
-                            :icon="userIcon"
-                            :with_icon="true"
-                        />
+                        <FormInput v-model:modelValue="name" name="name" type="text" :label="$t('users.user_name')"
+                            :placeholder="$t('users.user_name')" :validation-schema="validations.name"
+                            :showErrors="showValidation" :hasIcon="true" :icon="userIcon" :with_icon="true" />
                     </div>
 
                     <div class="col-12 col-md-6">
@@ -25,39 +16,20 @@
                             <label class="label">
                                 {{ $t("Auth.mobile_number") }}
                             </label>
-                            <div
-                                class="with_cun_select"
-                                :class="{
-                                    'is-invalid':
-                                        phoneInputRef?.shouldShowError,
-                                }"
-                            >
-                                <FormInput
-                                    ref="phoneInputRef"
-                                    v-model:modelValue="phone"
-                                    name="phone"
-                                    type="number"
-                                    :placeholder="
-                                        $t('Auth.enter_mobile_number')
-                                    "
-                                    :validation-schema="validations.phone"
-                                    :showErrors="showValidation"
-                                    :moveErrorToParent="true"
-                                    :hasIcon="true"
-                                    :icon="mobileIcon"
-                                    :with_icon="true"
-                                />
-                                <GlobalCountryDropdown
-                                    v-model="selectedCountry"
-                                    :placeholder="$t('Auth.select_country')"
-                                />
+                            <div class="with_cun_select" :class="{
+                                'is-invalid':
+                                    phoneInputRef?.shouldShowError,
+                            }">
+                                <FormInput ref="phoneInputRef" v-model:modelValue="phone" name="phone" type="number"
+                                    :placeholder="$t('Auth.enter_mobile_number')
+                                        " :validation-schema="validations.phone" :showErrors="showValidation"
+                                    :moveErrorToParent="true" :hasIcon="true" :icon="mobileIcon" :with_icon="true" />
+                                <GlobalCountryDropdown v-model="selectedCountry"
+                                    :placeholder="$t('Auth.select_country')" />
                             </div>
                             <!-- Display validation error message for phone -->
-                            <p
-                                v-if="phoneInputRef?.shouldShowError"
-                                class="error-message text-danger mt-1"
-                                :class="phoneInputRef?.localeDir"
-                            >
+                            <p v-if="phoneInputRef?.shouldShowError" class="error-message text-danger mt-1"
+                                :class="phoneInputRef?.localeDir">
                                 {{ phoneInputRef?.errorMessage }}
                             </p>
                         </div>
@@ -65,18 +37,10 @@
 
                     <div class="col-12 col-md-6">
                         <!-- Password input -->
-                        <FormInput
-                            v-model:modelValue="password"
-                            name="password"
-                            type="password"
-                            :label="$t('Auth.password')"
-                            :placeholder="$t('Auth.please_enter_password')"
-                            :validation-schema="validations.password"
-                            :showErrors="showValidation"
-                            :hasIcon="true"
-                            :icon="lockIcon"
-                            :with_icon="true"
-                        />
+                        <FormInput v-model:modelValue="password" name="password" type="password"
+                            :label="$t('Auth.password')" :placeholder="$t('Auth.please_enter_password')"
+                            :validation-schema="validations.password" :showErrors="showValidation" :hasIcon="true"
+                            :icon="lockIcon" :with_icon="true" />
                     </div>
 
                     <div class="col-12">
@@ -87,11 +51,7 @@
 
                         <!-- Loading state -->
                         <div v-if="loadingPermissions" class="text-center py-4">
-                            <span
-                                class="spinner-border spinner-border-sm"
-                                role="status"
-                                aria-hidden="true"
-                            ></span>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                             <span class="ms-2">{{
                                 $t("users.loading_permissions")
                             }}</span>
@@ -99,61 +59,34 @@
 
                         <!-- Permissions Sections -->
                         <div v-else class="permissions-wrapper">
-                            <div
-                                v-for="(
-                                    section, sectionIndex
-                                ) in permissionSections"
-                                :key="sectionIndex"
-                                class="permission-section mb-4"
-                            >
+                            <div v-for="(
+section, sectionIndex
+                                ) in permissionSections" :key="sectionIndex" class="permission-section mb-4">
                                 <!-- Section Title -->
                                 <h5 class="section-title mb-3">
                                     {{ section.title }}
                                 </h5>
 
                                 <!-- Permissions in this section -->
-                                <div
-                                    class="permissions-section d-flex flex-wrap align-items-center gap-3"
-                                >
-                                    <div
-                                        v-for="(
-                                            permission, permIndex
-                                        ) in section.permissions"
-                                        :key="permIndex"
-                                        class="mb-3"
-                                    >
-                                        <div
-                                            class="d-flex align-items-center justify-content-between payment-field"
-                                        >
-                                            <div
-                                                class="check-text hint d-flex ml-4"
-                                            >
+                                <div class="permissions-section d-flex flex-wrap align-items-center gap-3">
+                                    <div v-for="(
+permission, permIndex
+                                        ) in section.permissions" :key="permIndex" class="mb-3">
+                                        <div class="d-flex align-items-center justify-content-between payment-field">
+                                            <div class="check-text hint d-flex ml-4">
                                                 <div class="main-title mb-0">
                                                     {{ permission.title }}
                                                 </div>
                                             </div>
 
                                             <!-- Checkbox -->
-                                            <div
-                                                class="radios form-group check-inner mb-0"
-                                            >
-                                                <div
-                                                    class="d-flex align-items-center justify-content-between gap-3"
-                                                >
-                                                    <label
-                                                        class="custom-radio custom-check"
-                                                    >
-                                                        <input
-                                                            type="checkbox"
-                                                            v-model="
-                                                                permission.is_selected
-                                                            "
-                                                            class="d-none"
-                                                        />
+                                            <div class="radios form-group check-inner mb-0">
+                                                <div class="d-flex align-items-center justify-content-between gap-3">
+                                                    <label class="custom-radio custom-check">
+                                                        <input type="checkbox" v-model="permission.is_selected
+                                                            " class="d-none" />
                                                         <span class="mark m-0">
-                                                            <i
-                                                                class="fas fa-check icon"
-                                                            ></i>
+                                                            <i class="fas fa-check icon"></i>
                                                         </span>
                                                     </label>
                                                 </div>
@@ -164,10 +97,7 @@
                             </div>
                         </div>
 
-                        <div
-                            v-if="showValidation && validations.permissions"
-                            class="text-danger mt-1"
-                        >
+                        <div v-if="showValidation && validations.permissions" class="text-danger mt-1">
                             <span v-if="getValidationError('permissions')">
                                 {{ getValidationError("permissions") }}
                             </span>
@@ -175,21 +105,20 @@
                     </div>
                 </div>
                 <!-- Submit button -->
-                <button
-                    type="submit"
-                    class="custom-btn md mt-4"
-                    :disabled="loading"
-                >
+                <button type="submit" class="custom-btn md mt-4" :disabled="loading">
                     {{ $t("sideMenu.add_user") }}
-                    <span
-                        class="spinner-border spinner-border-sm"
-                        v-if="loading"
-                        role="status"
-                        aria-hidden="true"
-                    ></span>
+                    <span class="spinner-border spinner-border-sm" v-if="loading" role="status"
+                        aria-hidden="true"></span>
                 </button>
             </form>
         </div>
+
+        <Dialog v-model:visible="addUserDialog" modal class="custum_dialog_width without-close" :draggable="false">
+        <div class="text-center dialog-content">
+            <img src="@/assets/images/Success.gif" alt="check-img" class="check-img lg" loading="lazy" />
+            <h1 class="main-title md mb-0 hint_success">{{ $t('users.add_user_successfully') }}</h1>
+        </div>
+        </Dialog>
     </div>
 </template>
 
@@ -204,6 +133,8 @@ import lockIcon from '@/assets/images/auth-img/lock.svg';
 
 const { t } = useI18n({ useScope: "global" });
 
+const addUserDialog = ref(false);
+
 // Form fields (moved before validation to avoid undefined errors)
 const name = ref("");
 const phone = ref("");
@@ -216,7 +147,7 @@ const config = computed(() => ({
 // Validation schemas
 const {
     phoneNumber,
-    customerName,
+    required,
     multipleCheckboxes,
     password: passwordValidation,
 } = useValidationSchema();
@@ -261,7 +192,7 @@ const selectedPermissions = computed(() => {
 
 // Validation schemas - exactly like login
 const validations = {
-    name: customerName("Auth.customer_name"),
+    name: required("users.user_name"),
     phone: phoneNumber("Auth.mobile_number"),
     permissions: multipleCheckboxes("Auth.permissions", 1),
     password: passwordValidation("Auth.password"),
@@ -338,8 +269,14 @@ const addUser = async () => {
             );
             console.log(res?.data.key, "res");
             if (response(res) === "success") {
+                addUserDialog.value = true;
                 successToast(res?.data?.msg);
-                navigateTo("/users");
+                setTimeout(() => {
+                    addUserDialog.value = false;
+                    setTimeout(() => {
+                        navigateTo("/users");
+                    }, 2000);
+                }, 2000);
             } else {
                 errorToast(res?.data?.msg);
             }
@@ -435,7 +372,7 @@ definePageMeta({
         }
     }
 
-    input:checked + .mark {
+    input:checked+.mark {
         background: #848484;
         border-color: #848484;
 

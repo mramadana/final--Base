@@ -140,7 +140,7 @@ const flatpickrConfig = computed(() => ({
     dateFormat: 'Y-m-d',
     disableMobile: true,
     locale: process.client ? (localStorage.getItem("locale") === "en" ? "default" : Arabic) : Arabic,
-    minDate: props.minDate,
+    minDate: props.minDate || 'today',
     maxDate: props.maxDate,
 }));
 

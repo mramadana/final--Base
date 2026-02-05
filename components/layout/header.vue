@@ -110,7 +110,7 @@
 
     // get notifications Count
     const getNotificationsCount = async () => {
-        await axios.get('manager/count-notifications', config).then(res => {
+        await axios.get('provider/notifications/count-unread', config).then(res => {
             if(response(res) == "success") {
                 notifCount.value = res.data.data.count;
             }
