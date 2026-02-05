@@ -21,7 +21,9 @@ export const useAuthStore = defineStore("auth", {
     currentPasword: null,
     lat: null,
     lng: null,
-    userType: null
+    userType: null,
+    device_id: null,
+    updateNotificationCount: 0,
   }),
   actions: {
 
@@ -187,6 +189,7 @@ export const useAuthStore = defineStore("auth", {
           country_code: "",
         };
         this.isLoggedIn = false;
+        this.device_id = null;
         navigateTo("/Auth/login");
         return { status: "success", msg: resData.data.msg };
       } else {
@@ -215,6 +218,8 @@ export const useAuthStore = defineStore("auth", {
           name: null
         };
         this.isLoggedIn = false;
+        this.device_id = null;
+        navigateTo("/Auth/login");
         return { status: "success", msg: resData.data.msg };
       } else {
         return { status: "error", msg: resData.data.msg };

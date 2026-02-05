@@ -93,6 +93,7 @@
     const store = useAuthStore();
 
     const { signInHandler } = store;
+    const { device_id } = storeToRefs(store);
 
     const loading = ref(false);
     const showValidation = ref(false);
@@ -135,7 +136,7 @@
             try {
                 const fd = new FormData(loginForm.value);
                 fd.append('country_id', selectedCountry.value?.id || '');
-                fd.append('device_id', 111);
+                fd.append('device_id', device_id.value);
                 fd.append('device_type', 'web');
     
                 // Get Returned Data From Store

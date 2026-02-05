@@ -37,13 +37,14 @@
                 </div>
                 <div class="d-flex align-items-center">
 
-                    <NuxtLink  to="/Notifications" class="notification ml-5" :class="{ 'hide-badge': !notifCount }">
+                    <NuxtLink  to="/Notifications" class="notification ml-5" :class="{ 'hide-badge': updateNotificationCount }">
                         <div class="notif-icon">
                             <!-- <i class="fas fa-bell"></i> -->
                              <img src="@/assets/images/notification-img.svg" alt="notification-img">
-                            <div class="nof-cont" v-if="notifCount" :data-number="notifCount"></div>
+                            <!-- <div class="nof-cont" v-if="notifCount" :data-number="notifCount"></div> -->
                         </div>
                     </NuxtLink>
+                    <!-- <div style="color: #fff;">{{ updateNotificationCount }} lll</div> -->
 
                     <div class="AuthLang">
                         <GlobalLang :color-lang="true" />
@@ -63,6 +64,9 @@
 
 <script setup>
     
+    // const router = useRouter();
+    const route = useRoute();
+
     // Toast
     const { successToast, errorToast } = toastMsg();
 
@@ -75,7 +79,7 @@
 
     const isActive = ref(false);
 
-    const { user, isLoggedIn, token } = storeToRefs(store);
+    const { user, isLoggedIn, token , updateNotificationCount } = storeToRefs(store);
 
     const imageheader = ref(null);
 
@@ -112,48 +116,64 @@
     const getNotificationsCount = async () => {
         await axios.get('provider/notifications/count-unread', config).then(res => {
             if(response(res) == "success") {
-                notifCount.value = res.data.data.count;
+                updateNotificationCount.value = res.data.data.count;
+            } else {
+                // updateNotificationCount.value = 0;
+                // navigateTo('/Auth/login');
             }
         }).catch(err => {
             console.error(err);
         });
     };
 
+    // route get notif count
+    watch(() => route.path, () => {
+        getNotificationsCount();
+    });
+
+    watch(() => updateNotificationCount.value, () => {
+        getNotificationsCount();
+    });
+
+
+    onMounted(() => {
+        getNotificationsCount();
+    });
+
+
     // watch token To Get The New User Data
-    watch(token, async (newVal) => {
-    if (newVal) {
-        config = {
-            headers: {
-                Authorization: `Bearer ${newVal}`
-            }
-        }
+    // watch(token, async (newVal) => {
+    // if (newVal) {
+    //     config = {
+    //         headers: {
+    //             Authorization: `Bearer ${newVal}`
+    //         }
+    //     }
 
-        // getNotificationsCount();
-    } else {
-        notifCount.value = 0;
-    }
-    });
+    //     // getNotificationsCount();
+    // } else {
+    //     notifCount.value = 0;
+    // }
+    // });
 
-    watch(notifCount, (newValue, oldValue) => {
-      // If notifCount becomes empty or not 0, hide the element
-      if (newValue == 0) {
-        notifCount.value = null;
-      }
-    });
+    // watch(notifCount, (newValue, oldValue) => {
+    //   // If notifCount becomes empty or not 0, hide the element
+    //   if (newValue == 0) {
+    //     notifCount.value = null;
+    //   }
+    // });
 
-    const router = useRouter();
-    const route = useRoute();
+    // const router = useRouter();
+
 
     // Check if current page is notifications page
-    const isNotificationsPage = computed(() => {
-        return route.path === '/Notifications';
-    });
+    // const isNotificationsPage = computed(() => {
+    //     return route.path === '/Notifications';
+    // });
 
-    router.afterEach(() => {
-      getNotificationsCount();
-      
-    });
-
+    // router.afterEach(() => {
+    //   getNotificationsCount();
+    // });
 
 
     // onMounted( async () => {
