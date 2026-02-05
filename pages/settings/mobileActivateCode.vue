@@ -105,8 +105,14 @@ const verificationCode = async () => {
 const resendCode = async () => {
     try {
         const fd = new FormData();
-        fd.append('phone', user.value.phone);
-        fd.append('country_code', user.value.country_id);
+        
+        // Get password from sessionStorage
+        if (process.client) {
+            const savedPassword = sessionStorage.getItem('changePhonePassword');
+            if (savedPassword) {
+                fd.append('old_password', savedPassword);
+            }
+        }
         
         const res = await axios.post(`provider/profile/change-phone/check-current-password-and-send-code`, fd, config);
         

@@ -57,7 +57,7 @@ export const useAuthStore = defineStore("auth", {
       if (data.key === "need_to_complete_data") {
         navigateTo("/Auth/completeInfo");
         console.log(data.key,"Redirecting to complete info");
-        return { status: "need_to_complete_data", msg: data.key };
+        return { status: "need_to_complete_data", msg: data.msg };
       }
     
       if (data.key === "success") {

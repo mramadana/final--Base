@@ -133,6 +133,7 @@
 definePageMeta({
     name: "users.users",
     layout: "default",
+    middleware: 'auth'
 });
 
 import { useI18n } from "vue-i18n";

@@ -89,7 +89,7 @@ export const useValidationSchema = () => {
       yup
         .string()
         .trim()
-        .min(14, t('Auth.iban') + " " + t('validation.min', { field: label, min: 14 }))
+        .min(24, t('Auth.iban') + " " + t('validation.min', { field: label, min: 24 }))
         .max(24, t('Auth.iban') + " " + t('validation.max', { field: label, max: 24 }))
         // .matches(/^[0-9]+$/, t('validation.iban_only_digits'))
         .label(label);

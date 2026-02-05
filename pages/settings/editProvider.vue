@@ -286,12 +286,13 @@ const updateProvider = async () => {
     showValidation.value = true;
 
     const isValid = isFormValid(formData.value, validations);
-    const imagesValid = imageUploader.value?.validate() || false;
+    const logoValid = imageUploader.value?.validate() || false;
+    const coverValid = profileImageUploader.value?.validate() || false;
 
-    if (!isValid || !imagesValid) {
+    if (!isValid || !logoValid || !coverValid) {
         // if the inputs have errors
         scrollToFirstError(formData.value, validations);
-        console.log("22222222222");
+        return;
     } else {
         console.log("Validation Passed");
         loading.value = true;
@@ -309,14 +310,14 @@ const updateProvider = async () => {
             fd.append("reservation_duration", reservationDuration.value);
 
             // Add logo if uploaded
-            fd.append("project_logo", uploadedImage.value);
-            // if (uploadedImage.value.length > 0) {
-            // }
+            if (uploadedImage.value instanceof File) {
+                fd.append("project_logo", uploadedImage.value);
+            }
 
             // Add profile image if uploaded
-            fd.append("project_cover", uploadedProfileImage.value);
-            // if (uploadedProfileImage.value.length > 0) {
-            // }
+            if (uploadedProfileImage.value instanceof File) {
+                fd.append("project_cover", uploadedProfileImage.value);
+            }
 
             const res = await axios.post(
                 "provider/profile/update-project-data",

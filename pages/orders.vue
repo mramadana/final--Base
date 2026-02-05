@@ -9,7 +9,7 @@
             :show-search="true"
             :show-select="true"
             :show-calendar="true"
-            :search-placeholder="$t('reservations.search_table')"
+            :search-placeholder="$t(authStore.userType === 'service' ? 'reservations.search_service' : 'reservations.search_table')"
             :select-options="statusOptions"
             :select-placeholder="$t('reservations.status')"
             option-label="name"
@@ -45,6 +45,9 @@ definePageMeta({
 
 import { useI18n } from "vue-i18n";
 const { t } = useI18n({ useScope: "global" });
+
+  import { useAuthStore } from '~/stores/auth';
+  const authStore = useAuthStore();
 
 const globalStore = useGlobalStore();
 

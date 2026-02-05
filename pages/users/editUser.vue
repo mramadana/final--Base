@@ -488,6 +488,7 @@ globalStore.subSubTitle = t("users.edit_user_data");
 definePageMeta({
     layout: "default",
     name: "users.edit_user_data",
+    middleware: 'auth'
 });
 
 // OnMounted - Get user data on page load

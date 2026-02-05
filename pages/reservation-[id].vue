@@ -1,7 +1,7 @@
 <template>
   <div class="layout-form">
 
-    <div :class="messageClass" v-if="messageText">
+    <div :class="messageClass" v-if="messageText && !loading">
       <i class="fas fa-info-circle message-icon"></i>
       <span>{{ messageText }}</span>
     </div>
@@ -117,6 +117,11 @@
           </div>
         </div>
       </div>
+      <button v-if="reservationData.buttons?.can_chat" class="action-btn-chat mt-3"
+        @click="navigateTo(`/chat?id=${reservationData.room_id}`)">
+        <i class="fas fa-comment-dots"></i>
+        {{ $t('reservationDetails.chat_with_client') }}
+      </button>
     </div>
 
     <Dialog v-model:visible="acceptDialog" modal class="custum_dialog_width without-close" :draggable="false">
@@ -185,7 +190,7 @@ const config = computed(() => ({
 }));
 
 // Loading state
-const loading = ref(false);
+const loading = ref(true);
 const loadingAction = ref('');
 
 // Reservation data from API
@@ -219,6 +224,7 @@ const getReservationDetails = async () => {
         paymentStatus.value = null;
       }
     }
+
   } catch (error) {
     console.error("Get reservation details error:", error);
     errorToast(t('reservationDetails.loading_error'));
@@ -437,6 +443,7 @@ $primary-blue: #3B82F6;
   &.waiting_to {
     background-color: #2A2A2A;
     color: white;
+    display: none;
   }
 
   &.pending {

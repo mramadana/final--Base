@@ -279,6 +279,7 @@ globalStore.subSubTitle = t("users.user_details");
 definePageMeta({
   name: "users.user_details",
   layout: "default",
+  middleware: 'auth'
 });
 </script>
 

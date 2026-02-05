@@ -96,6 +96,10 @@ const changePhone = async () => {
             const res = await axios.post('provider/profile/change-phone/check-current-password-and-send-code', fd, config);
             
             if (response(res) == "success") {
+                // Save password to sessionStorage for resend code
+                if (process.client) {
+                    sessionStorage.setItem('changePhonePassword', password.value);
+                }
                 successToast(res.data.msg);
                 navigateTo('/settings/mobileActivateCode');
             } else {

@@ -114,12 +114,6 @@
                                     " />
                             <input type="hidden" name="category_id" :value="mainSection || ''" />
 
-                            <!-- Country Dropdown -->
-                            <GlobalCustomDropdown v-model="country" :options="countryOptions" option-value="id"
-                                :placeholder="$t('Auth.select_country')" :label="$t('Auth.country')"
-                                :showValidation="showValidation" :validation-schema="validationsStep2.country" />
-                            <input type="hidden" name="country" :value="country || ''" />
-
                             <!-- Region Dropdown -->
                             <GlobalCustomDropdown v-model="region" :options="regionOptions" option-value="id"
                                 :placeholder="$t('Auth.select_region')" :label="$t('Auth.region')"
@@ -279,7 +273,6 @@ const projectDescEn = ref("");
 
 // Form fields - Step 2
 const mainSection = ref(null);
-const country = ref(null);
 const region = ref(null);
 const commercialRegNumber = ref("");
 
@@ -299,7 +292,6 @@ const formData = computed(() => ({
 
 const formDataStep2 = computed(() => ({
     mainSection: mainSection.value,
-    country: country.value,
     region: region.value,
     map_desc: address.value,
     commercialRegNumber: commercialRegNumber.value,
@@ -359,7 +351,6 @@ const validations = {
 
 const validationsStep2 = {
     mainSection: required("Auth.main_section"),
-    country: required("Auth.country"),
     region: required("Auth.region"),
     // commercialRegNumber: required('Auth.commercial_reg_number')
     commercialRegNumber: commerciaRumber(),
@@ -375,14 +366,12 @@ const validationsStep3 = {
 // Dropdown options
 const sectionOptions = ref([]);
 
-const countryOptions = ref([]);
-
 const handleUpdateAddress = (newAddress) => {
     location.value = newAddress;
     address.value = newAddress.address;
 };
 
-// Fetch categories and countries on mount
+// Fetch categories on mount and load regions based on user's country_id
 onMounted(async () => {
     const categoriesRes = await axios.get(
         "provider/available-categories",
@@ -390,21 +379,17 @@ onMounted(async () => {
     );
     sectionOptions.value = categoriesRes.data.data || [];
 
-    const countriesRes = await axios.get("get-countries", config.value);
-    countryOptions.value = countriesRes.data.data || [];
-});
-
-const regionOptions = ref([]);
-
-watch(country, async (countryId) => {
-    if (countryId) {
+    // Load regions based on user's country_id
+    if (user.value?.country_id) {
         const res = await axios.get(
-            `get-regions?country_id=${countryId}`,
+            `get-regions?country_id=${user.value.country_id}`,
             config.value,
         );
         regionOptions.value = res.data.data || [];
     }
 });
+
+const regionOptions = ref([]);
 
 // Progress calculation
 const progressWidth = computed(() => {
