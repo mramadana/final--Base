@@ -37,7 +37,7 @@
                 </div>
                 <div class="d-flex align-items-center">
 
-                    <NuxtLink  to="/Notifications" class="notification ml-5" :class="{ 'hide-badge': updateNotificationCount }">
+                    <NuxtLink  to="/Notifications" class="notification ml-5" :class="{ 'hide-badge': !updateNotificationCount || updateNotificationCount === 0 }">
                         <div class="notif-icon">
                             <!-- <i class="fas fa-bell"></i> -->
                              <img src="@/assets/images/notification-img.svg" alt="notification-img">
@@ -131,55 +131,15 @@
         getNotificationsCount();
     });
 
-    watch(() => updateNotificationCount.value, () => {
-        getNotificationsCount();
-    });
+    // watch(() => updateNotificationCount.value, () => {
+    //     getNotificationsCount();
+    // });
 
 
     onMounted(() => {
         getNotificationsCount();
     });
-
-
-    // watch token To Get The New User Data
-    // watch(token, async (newVal) => {
-    // if (newVal) {
-    //     config = {
-    //         headers: {
-    //             Authorization: `Bearer ${newVal}`
-    //         }
-    //     }
-
-    //     // getNotificationsCount();
-    // } else {
-    //     notifCount.value = 0;
-    // }
-    // });
-
-    // watch(notifCount, (newValue, oldValue) => {
-    //   // If notifCount becomes empty or not 0, hide the element
-    //   if (newValue == 0) {
-    //     notifCount.value = null;
-    //   }
-    // });
-
-    // const router = useRouter();
-
-
-    // Check if current page is notifications page
-    // const isNotificationsPage = computed(() => {
-    //     return route.path === '/Notifications';
-    // });
-
-    // router.afterEach(() => {
-    //   getNotificationsCount();
-    // });
-
-
-    // onMounted( async () => {
-    //    await getNotificationsCount();
-    // });
-
+    
     onMounted(() => {
         store.user.image
         imageheader.value = user.value.image

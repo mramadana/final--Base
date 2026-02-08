@@ -88,7 +88,7 @@
         "please_confirm_password": "الرجاء تأكيد كلمة المرور",
         "definitely_new_password": "تأكيد كلمة المرور الجديدة",
         "confirm_password": "برجاء إعادة تعيين كلمة المرور الجديدة",
-        "provider_Name": "اسم مقدم الخدمة",
+        "provider_Name": "اسم المقدم ",
         "customer_name": "اسم العميل",
         "enter_username": "الرجاء ادخال إسم المستخدم",
         "please_mobile_number": "الرجاء ادخال رقم الجوال",
@@ -365,7 +365,11 @@
         "reject_success": "تم رفض الحجز بنجاح",
         "payment_pending_msg": "تم قبول الحجز بنجاح بانتظار الدفع من قبل العميل لتأكيد الحجز",
         "payment_completed_msg": "تم تسديد قيمة الطلب بالكامل من قبل العميل وتأكيد الحجز",
-        "payment_failed_msg": "لم يتم تسديد قيمة الطلب بالكامل من قبل العميل وتأكيد الحجز"
+        "payment_failed_msg": "لم يتم تسديد قيمة الطلب بالكامل من قبل العميل وتأكيد الحجز",
+        "requested_employee": "اسم الموظف المطلوب",
+        "execution_duration": "مدة التنفيذ",
+        "execution_time": "معاد التنفيذ",
+        "customer_review": "اراء العميل"
     },
 
     "tables": {

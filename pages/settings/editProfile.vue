@@ -5,8 +5,8 @@
 
                 <div class="col-12 col-md-8">
                     <!-- اسم العميل -->
-                    <FormInput v-model:modelValue="name" name="name" type="text" :label="$t('Auth.customer_name')"
-                        :placeholder="$t('Auth.customer_name')" :validation-schema="validations.name"
+                    <FormInput v-model:modelValue="name" name="name" type="text" :label="$t('Auth.provider_Name')"
+                        :placeholder="$t('Auth.provider_Name')" :validation-schema="validations.name"
                         :showErrors="showValidation" />
 
                     <!-- البريد الإلكتروني -->
@@ -112,7 +112,7 @@ const { isFormValid, scrollToFirstError } = useFormValidation();
 
 // Validation schemas
 const {
-    customerName,
+    providerName,
     email: emailValidation,
     bankName,
     accountNumber,
@@ -121,7 +121,7 @@ const {
 } = useValidationSchema();
 
 const validations = {
-    name: customerName("Auth.customer_name"),
+    name: providerName("Auth.provider_Name"),
     email: emailValidation("Auth.email"),
     bankName: bankName("Auth.bank_name"),
     accountNumber: accountNumber("Auth.account_number"),

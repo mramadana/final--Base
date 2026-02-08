@@ -67,8 +67,8 @@
       <div class="table-card mb-4">
         <img :src="reservationData.table_info.image?.file_name || 'https://i.imgur.com/rM195Vn.jpg'" alt="صورة طاولة"
           class="table-image" />
-        <span class="table-rating" v-if="reservationData.rate"> <i class="fas fa-star"></i> {{ reservationData.rate
-        }}</span>
+        <!-- <span class="table-rating" v-if="reservationData.rate"> <i class="fas fa-star"></i> {{ reservationData.rate
+        }}</span> -->
       </div>
 
       <div class="restaurant-details">
@@ -101,18 +101,18 @@
 
     <div class="card-section" v-if="reservationData.services_info && reservationData.services_info.length > 0">
       <h2 class="section-title">{{ $t('reservationDetails.requested_services') }}</h2>
-      <div class="services-list">
-        <div v-for="service in reservationData.services_info" :key="service.id" class="service-item">
+      <div class="services-list row">
+        <div v-for="service in reservationData.services_info" :key="service.id" class="service-item col-12 col-md-6">
           <div class="service-name">{{ service.name }}</div>
-          <div class="service-details">
+          <div class="service-details flex-column">
             <span v-if="service.employee_name" class="service-detail">
-              <i class="fas fa-user"></i> {{ service.employee_name }}
+              <i class="fas fa-user"></i> <span>{{ $t('reservationDetails.requested_employee') }}</span> {{ service.employee_name }}
             </span>
             <span v-if="service.duration" class="service-detail">
-              <i class="fas fa-clock"></i> {{ service.duration }}
+              <i class="fas fa-clock"></i> <span>{{ $t('reservationDetails.execution_duration') }}</span> {{ service.duration }}
             </span>
             <span v-if="service.time" class="service-detail">
-              <i class="fas fa-calendar-alt"></i> {{ service.time }}
+              <i class="fas fa-calendar-alt"></i> <span>{{ $t('reservationDetails.execution_time') }}</span> {{ service.time }}
             </span>
           </div>
         </div>
@@ -122,6 +122,17 @@
         <i class="fas fa-comment-dots"></i>
         {{ $t('reservationDetails.chat_with_client') }}
       </button>
+    </div>
+
+    <div v-if="reservationData.rate" class="service-item">
+      <div class="service-name">{{ $t('reservationDetails.customer_review') }}</div>
+      <div class="service-details justify-content-between">
+        {{ reservationData?.rate?.comment }}
+        <span class="service-detail rate-star">
+          <i class="fas fa-star"></i>
+            {{ reservationData?.rate?.rate }}
+        </span>
+      </div>
     </div>
 
     <Dialog v-model:visible="acceptDialog" modal class="custum_dialog_width without-close" :draggable="false">
@@ -165,6 +176,7 @@ const { t } = useI18n({ useScope: 'global' });
 
 definePageMeta({
   name: 'reservations.reservation_details',
+  middleware: 'auth',
 });
 
 
@@ -754,5 +766,11 @@ $primary-blue: #3B82F6;
   font-size: 1rem;
   cursor: pointer;
   font-weight: 500;
+}
+
+.rate-star {
+  padding: 5px;
+  background-color: var(--main-bg);
+  border-radius: 5px;
 }
 </style>

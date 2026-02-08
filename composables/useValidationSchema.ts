@@ -214,6 +214,16 @@ export const useValidationSchema = () => {
         .max(50, t('Auth.customer_name') + " " + t('validation.max', { field: label, max: 50 }))
         .label(label);
 
+        // provider name 
+      const providerName = (label: string) =>
+      yup
+        .string()
+        .trim()
+        .required(t('validation.required_with_label', { field: t('Auth.provider_Name') }))
+        .min(3, t('Auth.provider_Name') + " " + t('validation.min', { field: label, min: 3 }))
+        .max(50, t('Auth.provider_Name') + " " + t('validation.max', { field: label, max: 50 }))
+        .label(label);
+
     // Project Description Schema
     const Notes = (labelKey: string) =>
       yup
@@ -355,6 +365,7 @@ export const useValidationSchema = () => {
     otpCode,
     fullName,
     customerName,
+    providerName,
     projectDescription_ar,
     projectDescription_en,
     email,

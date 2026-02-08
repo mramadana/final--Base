@@ -46,6 +46,7 @@ onMounted(() => {
     payload.data.type == 'block_notification' ? errorToast(payload.notification.title) : successToast(payload.notification.title, 'info')
     updateNotificationCount.value++;
     payload.data.type == 'block_notification' ? navigateTo("/Auth/login") : null;
+    payload.data.type == 'account_deleted_notification' ? navigateTo("/Auth/login") : null;
     if (route.path === '/Notifications') {
       await refreshNuxtData('notifications')
     }
