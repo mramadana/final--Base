@@ -196,23 +196,29 @@ const signUp = async () => {
         try {
             const fd = new FormData(signUpForm.value);
 
-            fd.append("country_id", selectedCountry.value?.id || "");
+            const countryId = selectedCountry.value?.id || "";
+
+            fd.append("country_id", countryId);
             fd.append("device_id", device_id.value);
             fd.append("device_type", "web");
 
-            const res = await signUpHandler(fd);
+            const verificationData = {
+                name: name.value,
+                phone: phone.value,
+                email: email.value,
+                password: password.value,
+                country_id: countryId,
+            };
+
+            const res = await signUpHandler(fd, verificationData);
             console.log(res, "res");
 
             if (res.status === "success") {
                 successToast(res.msg);
 
-                // Store name, email, password in localStorage
+                // Store register data needed on activate account page.
                 if (process.client) {
-                    localStorage.setItem('verificationCode', JSON.stringify({
-                        name: name.value,
-                        email: email.value,
-                        password: password.value
-                    }));
+                    localStorage.setItem('verificationCode', JSON.stringify(verificationData));
                 }
 
                 showValidation.value = false; // This will auto-reset touched in all FormInputs

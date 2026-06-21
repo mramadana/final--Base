@@ -11,6 +11,7 @@ export const useAuthStore = defineStore("auth", {
     user: {
       phone: "",
       country_code: "",
+      country_id: "",
     },
     token: null,
     isLoggedIn: false,
@@ -77,7 +78,7 @@ export const useAuthStore = defineStore("auth", {
 
     // Sign Up
 
-    async signUpHandler(formData) {
+    async signUpHandler(formData, verificationData = {}) {
       const { data, error } = await submitApiForm("provider/auth/register", formData);
     
       if (error) {
@@ -86,7 +87,11 @@ export const useAuthStore = defineStore("auth", {
       }
     
       if (data.key === "success") {
-        this.user = data.data;
+        this.user = {
+          ...(data.data || {}),
+          phone: data.data?.phone || verificationData.phone || "",
+          country_id: data.data?.country_id || verificationData.country_id || "",
+        };
         navigateTo("/Auth/activateAccount");
         return { status: "success", msg: data.msg };
       } else {
@@ -190,6 +195,7 @@ export const useAuthStore = defineStore("auth", {
         this.user = {
           phone: "",
           country_code: "",
+          country_id: "",
         };
         this.isLoggedIn = false;
         this.device_id = null;
@@ -216,6 +222,7 @@ export const useAuthStore = defineStore("auth", {
         this.user = {
           phone: "",
           country_code: "",
+          country_id: "",
           image: null,
           email: null,
           name: null
