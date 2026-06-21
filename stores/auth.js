@@ -47,7 +47,7 @@ export const useAuthStore = defineStore("auth", {
       if (data.key === "need_active_package") {
         console.log("Redirecting to complete payment");
         navigateTo("/Auth/completePayment");
-        return { status: "need_active_package", msg: "Active package required" };
+        return { status: "need_active_package", msg: data.msg };
       }
       
       // Debug: Check for any variation of the key
@@ -174,7 +174,10 @@ export const useAuthStore = defineStore("auth", {
         headers: { Authorization: `Bearer ${this.token}` },
       };
 
-      const resData = await axios.post("provider/sign-out" , {} , config);
+      const formData = new FormData();
+      formData.append('device_id', this.device_id);
+      
+      const resData = await axios.post("provider/sign-out" , formData , config);
       if (
         response(resData) == "success" ||
         response(resData) == "blocked" ||

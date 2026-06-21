@@ -72,9 +72,8 @@ const { successToast, errorToast } = toastMsg();
 // Axios
 const axios = useApi();
 
-// Get phone, country_id, and code from localStorage
-const forgetPasswordPhone = ref('');
-const forgetPasswordCountryId = ref('');
+// Get email and code from localStorage
+const forgetPasswordEmail = ref('');
 const forgetPasswordCode = ref('');
 
 // Form Data
@@ -139,9 +138,8 @@ const resetPassword = async () => {
         loading.value = true;
 
         try {
-            // Add phone, country_id, and code from localStorage
-            fd.append('phone', forgetPasswordPhone.value);
-            fd.append('country_id', forgetPasswordCountryId.value);
+            // Add email and code from localStorage
+            fd.append('email', forgetPasswordEmail.value);
             fd.append('code', forgetPasswordCode.value);
 
             const res = await axios.post(`provider/auth/forget-password/reset-password`, fd);
@@ -167,9 +165,8 @@ const resetPassword = async () => {
 
 // Load data from localStorage on mount
 onMounted(() => {
-    // Get phone, country_id, and code from localStorage
-    forgetPasswordPhone.value = localStorage.getItem('forgetPasswordPhone') || '';
-    forgetPasswordCountryId.value = localStorage.getItem('forgetPasswordCountryId') || '';
+    // Get email and code from localStorage
+    forgetPasswordEmail.value = localStorage.getItem('forgetPasswordEmail') || '';
     forgetPasswordCode.value = localStorage.getItem('forgetPasswordCode') || '';
 });
 

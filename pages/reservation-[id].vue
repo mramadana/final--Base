@@ -270,8 +270,12 @@ const messageClass = computed(() => {
   } else if (bookingStatus.value === 'مكتمل') {
     return 'status-message success';
   } else if (bookingStatus.value === 'حجوزات نشطه') {
-    return 'status-message success';
-  } else if (bookingStatus.value === 'بأنتظار الرد') {
+    return reservationData.value.services_info && reservationData.value.services_info.length > 0 
+      ? 'status-message waiting_to' 
+      : 'status-message success';
+  } else if (bookingStatus.value === 'بأنتظار الرد' || bookingStatus.value === 'مجدول') {
+    return 'status-message waiting_to';
+  } else if (bookingStatus.value === 'قيد الدفع') {
     return 'status-message waiting_to';
   }
   return 'status-message warning';

@@ -3,7 +3,7 @@
         <div class="custom-width with-auth p-0 mt-4">
             <img src="@/assets/images/Logo.svg" alt="login-image" class="logo-image d-block mx-auto mb-4" />
             <h1 class="main-title bold lg mb-4">{{ $t("Auth.activation_code_auth") }}</h1>
-            <p class="desc mb-4 auth-desc">{{ $t("Auth.verification_info", { phone: forgetPasswordPhone }) }}</p>
+            <p class="desc mb-4 auth-desc">{{ $t("Auth.verification_info", { email: forgetPasswordEmail }) }}</p>
             <form @submit.prevent="verificationCode">
                 <div class="row">
                     <div class="col-12 col-md-8 mr-auto">
@@ -60,9 +60,8 @@ const { successToast, errorToast } = toastMsg();
 // Axios
 const axios = useApi();
 
-// Get phone and country_id from localStorage
-const forgetPasswordPhone = ref('');
-const forgetPasswordCountryId = ref('');
+// Get email from localStorage
+const forgetPasswordEmail = ref('');
 
 // Variables
 const loading = ref(false);
@@ -79,8 +78,7 @@ const verificationCode = async () => {
   const fd = new FormData();
 
   fd.append('code', bindModal.value);
-  fd.append('phone', forgetPasswordPhone.value);
-  fd.append('country_id', forgetPasswordCountryId.value);
+  fd.append('email', forgetPasswordEmail.value);
 
   try {
     const res = await axios.post('provider/auth/forget-password/verify-code', fd);
@@ -105,8 +103,7 @@ const verificationCode = async () => {
 const resendCode = async () => {
   try {
     const fd = new FormData();
-    fd.append('phone', forgetPasswordPhone.value);
-    fd.append('country_id', forgetPasswordCountryId.value);
+    fd.append('email', forgetPasswordEmail.value);
     
     const res = await axios.post('provider/auth/resend-code', fd);
 
@@ -127,9 +124,8 @@ const resendCode = async () => {
 
 // Load data from localStorage on mount
 onMounted(() => {
-  // Get phone and country_id from localStorage
-  forgetPasswordPhone.value = localStorage.getItem('forgetPasswordPhone') || '';
-  forgetPasswordCountryId.value = localStorage.getItem('forgetPasswordCountryId') || '';
+  // Get email from localStorage
+  forgetPasswordEmail.value = localStorage.getItem('forgetPasswordEmail') || '';
   
   // Start countdown
   if (otpComponent.value) {

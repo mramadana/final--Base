@@ -80,6 +80,7 @@
         "restore_password": "اعاده تعين كلمه المرور",
         "confirmation": "تأكيد",
         "Please_enter_mobile_number": "الرجاء ادخال البيانات التاليةلاعادة تعين كلمه المرور ",
+        "Please_enter_email": "الرجاء ادخال البريد الإلكتروني لاعادة تعيين كلمة المرور",
         "please_enter_activation_code": "برجاء ادخال كود التفعيل المرسل لك",
         "havent_received_code": "لم تستلم الكود بعد ؟",
         "resend_code": "إعادة ارسال الرمز",

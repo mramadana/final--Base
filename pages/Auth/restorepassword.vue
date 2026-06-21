@@ -6,29 +6,14 @@
           <img src="@/assets/images/Logo.svg" alt="login-image" class="logo-image d-block mt-5 mx-auto mb-4">
           <div class="text-center mb-5">
             <h1 class="main-title bold lg mb-4">{{ $t("Auth.restore_password") }}</h1>
-            <p class="main-title disc">{{ $t("Auth.Please_enter_mobile_number") }}</p>
+            <p class="main-title disc">{{ $t("Auth.Please_enter_email") }}</p>
           </div>
 
-          <div class="form-group">
-            <label class="label">
-              {{ $t('Auth.mobile_number') }}
-            </label>
-            <div class="with_cun_select" 
-                 :class="{ 'is-invalid': phoneInputRef?.shouldShowError }">
-              <FormInput ref="phoneInputRef" v-model:modelValue="phone" name="phone" type="number"
-                :placeholder="$t('Auth.enter_mobile_number')" :validation-schema="validations.phone"
-                :showErrors="showValidation" :moveErrorToParent="true" :hasIcon="true" :icon="mobileIcon"
+          <!-- Email input -->
+            <FormInput v-model:modelValue="email" name="email" type="email" :label="$t('Auth.email')"
+                :placeholder="$t('Auth.enter_email')" :validation-schema="validations.email"
+                :showErrors="showValidation" :hasIcon="true" :icon="smsIcon"
                 :with_icon="true" />
-              <GlobalCountryDropdown v-model="selectedCountry"
-                :placeholder="$t('Auth.select_country')" />
-            </div>
-            <!-- Display validation error message for phone -->
-            <p v-if="phoneInputRef?.shouldShowError" class="error-message text-danger mt-1" 
-               :class="phoneInputRef?.localeDir">
-              {{ phoneInputRef?.errorMessage }}
-            </p>
-          </div>
-
           <button type="submit" class="custom-btn w-100 mr-auto">
             {{ $t('Auth.send_code') }}
             <span class="spinner-border spinner-border-sm" v-if="loading" role="status" aria-hidden="true"></span>
@@ -57,17 +42,16 @@ import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 
 // Icons
-import mobileIcon from '@/assets/images/auth-img/mobile.svg';
+import smsIcon from '@/assets/images/auth-img/sms.svg';
 
 const { locale, t } = useI18n({ useScope: 'global' });
 
 // Validation schemas
-const { phoneNumber } = useValidationSchema();
+const { email: emailValidation } = useValidationSchema();
 const validations = {
-  phone: phoneNumber('Auth.mobile_number')
+  email: emailValidation('Auth.email')
 };
 
-const selectedCountry = ref(null);
 
 // success response
 const { response } = responseApi();
@@ -93,20 +77,14 @@ const config = {
 };
 
 const forgetForm = ref(null);
-const phone = ref('');
+const email = ref('');
 const loading = ref(false);
-const errors = ref([]);
 const showValidation = ref(false);
-
-// FormInput ref for phone
-const phoneInputRef = ref(null);
 
 // Form data (reactive object for validation)
 const formData = computed(() => ({
-  phone: phone.value
+  email: email.value
 }));
-
-// Phone validation computed properties - removed since using FormInput ref
 
 // use the composable for the validation - exactly like your example
 const { isFormValid, scrollToFirstError } = useFormValidation();
@@ -134,18 +112,16 @@ const forgetPassword = async () => {
 
     try {
       const fd = new FormData(forgetForm.value);
-      fd.append('country_id', selectedCountry.value?.id || '');
 
       const res = await axios.post('provider/auth/forget-password/send-code', fd);
 
       if (response(res) === "success") {
-        // Store phone and country_id in localStorage for next page
-        localStorage.setItem('forgetPasswordPhone', phone.value);
-        localStorage.setItem('forgetPasswordCountryId', selectedCountry.value?.id || selectedCountry.value?.key || '');
+        // Store email in localStorage for next page
+        localStorage.setItem('forgetPasswordEmail', email.value);
         
         successToast(res.data.msg);
         // Reset form on success
-        phone.value = '';
+        email.value = '';
         showValidation.value = false;
         navigateTo('/Auth/restorepassword-check-code');
       } else {
