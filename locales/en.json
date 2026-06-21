@@ -111,7 +111,7 @@
         "create_new_account": "Create New Account",
         "create_acc": "Create Account",
         "back": "Back",
-        "verification_info": "Please enter the activation code sent to the following mobile number to complete account setup",
+        "verification_info": "Please enter the activation code sent to the following email {email} to complete account setup",
         "activation_code": "Please enter the activation code sent to the following mobile number to complete password reset",
         "project_basic_data": "Basic Project Data",
         "project_name_ar": "Project name in Arabic",

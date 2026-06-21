@@ -3,7 +3,7 @@
         <div class="custom-width with-auth p-0 mt-4">
             <img src="@/assets/images/Logo.svg" alt="login-image" class="logo-image d-block mx-auto mb-4" />
             <h1 class="main-title bold lg mb-4">{{ $t("Auth.activation_code_auth") }}</h1>
-            <p class="desc mb-4 auth-desc">{{ $t("Auth.verification_info") }} &nbsp; {{ verificationPhone }}</p>
+            <p class="desc mb-4 auth-desc">{{ $t("Auth.verification_info", { email: verificationEmail }) }}</p>
             <form @submit.prevent="verificationCode">
                 <div class="row">
                     <div class="col-12 col-md-8 mr-auto">
@@ -51,7 +51,7 @@ import { useAuthStore } from '~/stores/auth';
 // Store
 const store = useAuthStore();
 const { verificationHandler } = store;
-const { user, notificationToken, device_id } = storeToRefs(store);
+const { user, device_id } = storeToRefs(store);
 
 // Variables
 const loading = ref(false);
@@ -69,6 +69,7 @@ const getStoredVerificationData = () => {
 };
 
 const verificationData = computed(() => getStoredVerificationData());
+const verificationEmail = computed(() => user.value?.email || verificationData.value.email || "");
 const verificationPhone = computed(() => user.value?.phone || verificationData.value.phone || "");
 const verificationCountryId = computed(() => user.value?.country_id || verificationData.value.country_id || "");
 
@@ -84,13 +85,13 @@ const verificationCode = async () => {
     const storedData = verificationData.value;
 
     fd.append('code', bindModal.value);
+    fd.append('email', verificationEmail.value);
     fd.append('phone', verificationPhone.value);
     fd.append('country_id', verificationCountryId.value);
     fd.append('device_id', device_id.value);
     fd.append('device_type', 'web');
     // Append stored data from register
     if (storedData.name) fd.append('name', storedData.name);
-    if (storedData.email) fd.append('email', storedData.email);
     if (storedData.password) fd.append('password', storedData.password);
 
     // Get Returned Data From Store
@@ -104,8 +105,7 @@ const verificationCode = async () => {
 const resendCode = async () => {
     try {
         const fd = new FormData();
-        fd.append("country_id", verificationCountryId.value);
-        fd.append("phone", verificationPhone.value);
+        fd.append("email", verificationEmail.value);
 
         const res = await axios.post("provider/auth/resend-code", fd);
 
